@@ -1,9 +1,7 @@
 package edu.vt.ece5574.sim;
 import java.util.Properties;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.FileNotFoundException;
-import java.util.Date;
 
 //Maybe we shouldn't do json or XML?  There's a java properties file format
 //that might be of interest: 

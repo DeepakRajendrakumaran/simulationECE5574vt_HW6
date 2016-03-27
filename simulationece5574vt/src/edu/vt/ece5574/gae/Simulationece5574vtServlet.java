@@ -12,7 +12,11 @@ public class Simulationece5574vtServlet extends HttpServlet {
 		Simulation sim = new Simulation(0);
 		String[] temp = new String[10];
 
-		sim.simentry(temp);
+		// run is the entry point and is called with a list of strings
+		//similarly to how it could be called from the cmdline
+		//This is how doLoop is called so it's necessary to build it here 
+		//or have the simulation build its list
+		sim.run(temp);
 		
 		resp.setContentType("text/plain");
 		resp.getWriter().println("Simulation Started");
