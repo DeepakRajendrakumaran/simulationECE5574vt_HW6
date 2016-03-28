@@ -27,11 +27,7 @@ public class WaterLevel  {
 		waterLvl = new AtomicInteger(0);
 	}
 	
-<<<<<<< HEAD
-	public WaterLevel(int waterLevel_, SimState state_){
-=======
 	public WaterLevel(int waterLevel_,SimState state_){
->>>>>>> branch 'master' of https://github.com/DuttaB/simulationece5574vt.git
 		state = (Simulation)state_;
 		waterLvl = new AtomicInteger(waterLevel_);
 	}
@@ -59,7 +55,7 @@ public class WaterLevel  {
 
 	}
 
-	public void robotWaterLevelChange(int severity){
+	public void robotWaterLevelChange(int rate){
 
 		int val = waterLvl.get();
 		val = val - rate*100;

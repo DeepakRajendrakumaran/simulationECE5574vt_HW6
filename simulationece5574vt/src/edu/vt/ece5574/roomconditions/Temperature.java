@@ -27,11 +27,7 @@ public class Temperature  {
 		temp = new AtomicInteger(75);
 	}
 	
-<<<<<<< HEAD
-	public Temperature(int temperature_, SimState state_){
-=======
 	public Temperature(int temperature_,SimState state_){
->>>>>>> branch 'master' of https://github.com/DuttaB/simulationece5574vt.git
 		state = (Simulation)state_;
 		temp = new AtomicInteger(temperature_);
 	}
