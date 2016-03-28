@@ -22,7 +22,6 @@ public class Simulation extends SimState {
 	public Configuration config;
 	
 	private static final long serialVersionUID = 1;
-    public Continuous2D room = new Continuous2D(1.0,100,100);
     public int numRobots;
     
     
@@ -63,12 +62,10 @@ public class Simulation extends SimState {
     public void start() {
         super.start();  // very important!  This resets and cleans out the Schedule.
         
-        //clear the room of previous actors
-        room.clear();
-
+      //clear the room of previous actors
         int numBuildings = Integer.parseInt(config.getProp("numBuildings"));
-
-        for(int i = 0; i < numRobots; i++){
+        //Incorrect method of adding robots
+     /*   for(int i = 0; i < numRobots; i++){
         	Robot agent = new Robot(room.getWidth() * 0.5 + random.nextDouble() - 0.5,
 					room.getHeight() * 0.5 + random.nextDouble() - 0.5,Color.WHITE, new Integer(i+numBuildings).toString(), "0");
         	room.setObjectLocation(agent,
@@ -76,8 +73,7 @@ public class Simulation extends SimState {
         					room.getHeight() * 0.5 + random.nextDouble() - 0.5));
         	agents.put(new Integer(i+1).toString(), agent);
         	schedule.scheduleRepeating(agent);
-        }
-
+        }*/
         for(int i = 0; i < numBuildings; i++){
         	agents.put(new Integer(i).toString(), new Building(new Integer(i).toString()));
         }
