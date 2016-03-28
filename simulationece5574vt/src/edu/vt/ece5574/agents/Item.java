@@ -9,8 +9,8 @@ public class Item {
 	private String buildingID;
 	public Obstacle type;
 	
-	public Item(String id, Obstacle type){
-		buildingID = id;
+	public Item(String buildingID, Obstacle type){
+		this.buildingID = buildingID;
 		this.type = type;
 	}
 

@@ -80,4 +80,20 @@ public class Building extends Agent{
 		// TODO Auto-generated method stub
 		
 	}
+
+	
+	public int getFloorHeight() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public int getFloorWidth() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public int getNumRooms() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

@@ -1,6 +1,12 @@
 package edu.vt.ece5574.agents;
 
 import java.awt.Color;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.Vector;
+
 import edu.vt.ece5574.events.Event;
 import edu.vt.ece5574.events.FireEvent;
 import edu.vt.ece5574.events.IntruderEvent;
@@ -11,6 +17,7 @@ import edu.vt.ece5574.sim.Simulation;
 import sim.engine.SimState;
 import sim.util.Double2D;
 import sim.util.MutableDouble2D;
+import sim.util.MutableInt2D;
 
 public class Robot extends Agent {
 
@@ -32,16 +39,6 @@ public class Robot extends Agent {
     
     public double getY() { return loc.y; }
     public void setY( double newY ) { loc.y = newY; }
-    
-  //  public double getVelocityX() { return velocity.x; }
-  //  public void setVelocityX( double newX ) { velocity.x = newX; }
-    
-  //  public double getVelocityY() { return velocity.y; }
-   // public void setVelocityY( double newY ) { velocity.y = newY; }
- 
-  //  public double getSpeed() { return speed; }
-  //  public void setSpeed( double newSpeed ) { speed = newSpeed; }   
-    
     public double getRadius() { return radius; }
     public void setRadius( double newRadius ) 
         {
@@ -49,10 +46,7 @@ public class Robot extends Agent {
         scale = 2 * radius;  
         } 
     
-    
-    
-	
-	public Robot( double newX, double newY,  Color c , String rID, String buildingID)
+    public Robot( double newX, double newY,  Color c , String rID, String buildingID)
     {
     super(c, 2 * 2, rID, buildingID);  // scale is twice the radius
     
@@ -67,6 +61,31 @@ public class Robot extends Agent {
     
     //speed = 0.1;
     }
+    
+    
+  
+    
+    private MutableInt2D robot_loc;
+    private Vector<MutableInt2D> lastVisitedLocs;
+    private int noOfSavedLocs =0;
+    private int toBeSavedLocs =0;
+    
+    
+	/**
+	 * Constructor to initialize position, id.
+	 * @param rID : Robot ID
+	 * @param bID : Building ID
+	 * @param x_loc : x coordinate position of the robot
+	 * @param y_loc : y coordinate position of the robot
+	 */
+	public Robot(String rID, String bID, int x_loc, int y_loc, SimState state){
+		super(rID, bID);
+		robot_loc = new MutableInt2D(x_loc,y_loc);
+		lastVisitedLocs = new Vector<MutableInt2D>();
+		Simulation simState = (Simulation)state;
+		Building bld = (Building)simState.getAgentByID(buildingID);
+		toBeSavedLocs = (int)(bld.getFloorHeight()*bld.getFloorWidth())/bld.getNumRooms();
+	}
 	
 	/**
 	 * Not sure if this constructor will be used but it can be for testing and sets
@@ -76,11 +95,82 @@ public class Robot extends Agent {
 	 */
 	public Robot(String rID, String bID){
 		super(rID, bID);
-		loc = new MutableDouble2D(2,2);
-		radius = 2;
+		robot_loc = new MutableInt2D(2,2);
+	}
+	/**
+	 * Logic to simulate 'normal' movement of robot in the building 
+	 * @param state 
+	 */
+	public void randomMovement(SimState state){
+		Simulation simState = (Simulation)state;
+		Building bld = (Building)simState.getAgentByID(buildingID);
+		int x_pos = robot_loc.x;
+		int y_pos = robot_loc.x;
+		MutableInt2D new_loc;
+		LinkedList<MutableInt2D> validGridList = new LinkedList<MutableInt2D>();
+		SortedSet<Integer> set = new TreeSet<Integer>(); 
+		for(int dx = -1; dx < 2; dx++){
+			for(int dy = -1; dy < 2; dy++){
+				if((dx==0) && (dy==0))
+					continue;
+				int x = dx+x_pos;
+				int y = dy+y_pos;
+				if(bld.checkStep(x,y)==true){
+					int weight = checkIfRecentlyVisited(x,y);
+					if(weight ==0)
+						validGridList.add(new MutableInt2D(x,y));	
+					else
+						set.add(Integer.valueOf(weight));						
+						
+				}
+			}
+		}
+		if(validGridList.isEmpty()){
+			new_loc = lastVisitedLocs.elementAt(set.last()-1);
+		}
+		else{
+			int nextLocIndex = state.random.nextInt(validGridList.size());
+			new_loc = validGridList.get(nextLocIndex);
+			
+		}
+		updateVisitedLocs(new_loc);
+		robot_loc.x = new_loc.x;
+		robot_loc.y = new_loc.y;
+		//To-do Update location in server
+				
 	}
 	
+	/**
+	 * Add the latest location visited by the robot and update the visited loc list 
+	 * @param new_loc 
+	 */
+	private void updateVisitedLocs(MutableInt2D new_loc){
+		lastVisitedLocs.add(new_loc);
+		if(toBeSavedLocs == noOfSavedLocs)
+			lastVisitedLocs.remove(noOfSavedLocs);
+		else
+			noOfSavedLocs++;
+	}
 
+	/**
+	 * Check if the given loc is in the recently visited loc list 
+	 * @param x
+	 * @param y 
+	 */
+	private int checkIfRecentlyVisited(int x, int y){
+		int weight=0;
+		int index=0;
+	    for ( Iterator<MutableInt2D> iter = this.lastVisitedLocs.iterator(); iter.hasNext(); ) {  
+	    	MutableInt2D temp = (MutableInt2D) iter.next();  
+	    	index=index+1;
+	        if((temp.x==x)&&(temp.y==y)){
+	        	weight=index;
+	        	break;
+	        }
+	
+	    }  
+	    return (weight);
+	}
 
 	public void dealWithEvents(SimState state){
 		Simulation simState = (Simulation)state;
@@ -149,7 +239,9 @@ public class Robot extends Agent {
 		}
 	}
 	
-	public void randomMovement(SimState state) {
+	//To-do:Will take out later
+	/*
+	public void randomMovement_old(SimState state) {
 		Simulation simState = (Simulation)state;
 		double xd = (state.random.nextDouble() - 0.5);
         double yd = (state.random.nextDouble() - 0.5);
@@ -176,7 +268,7 @@ public class Robot extends Agent {
         loc.y = ym;
         simState.room.setObjectLocation(this, new Double2D(xm, ym));
 	}
-	
+	*/
 	@Override
 	public void step(SimState state) {
 		
