@@ -30,10 +30,12 @@ public class Robot extends Agent {
     List<Coordinate> route = null;
     Coordinate nextPoint = null;
     
-    public double getX() { return robot_loc.x; }
+    public int getX() { return robot_loc.x; }
     
     
-    public double getY() { return robot_loc.y; }
+    public int getY() { return robot_loc.y;}
+    
+    public boolean isBusy() { return handlingEvent; }
     
     
     
