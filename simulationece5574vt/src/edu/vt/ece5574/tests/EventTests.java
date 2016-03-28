@@ -21,6 +21,12 @@ import edu.vt.ece5574.sim.Simulation;
 public class EventTests {
 
 	Simulation sim;
+
+	Building bld;
+	Robot rob1;
+	Robot rob10;
+	Robot rob5;
+	Robot rob2;
 	
 	@Before
 	public void init(){
@@ -46,11 +52,16 @@ public class EventTests {
 			e.printStackTrace();
 		}*/
 		sim = new Simulation(1);
-		sim.addAgent(new Building("0"));
-		sim.addAgent(new Robot("1", "0"));
-		sim.addAgent(new Robot("10", "0"));
-		sim.addAgent(new Robot("5", "0"));
-		sim.addAgent(new Robot("2", "0"));
+		bld = new Building("0");
+		rob1 = new Robot("1", "0");
+		rob10 = new Robot("10", "0");
+		rob5 = new Robot("5", "0");
+		rob2 = new Robot("2", "0");
+		sim.addAgent(bld);
+		sim.addAgent(rob1);
+		sim.addAgent(rob10);
+		sim.addAgent(rob5);
+		sim.addAgent(rob2);
 	}
 	
 	
@@ -60,19 +71,16 @@ public class EventTests {
 		String details = 
 				"{"
 				+ "\"messageId\": \"0\","
-				+ "\"body\":{"
-					+ "\"id\": [\"2\", \"1\"]," //id is the id of the agent to handle the event
-					+ "\"message\": {"
-						+ "\"msg_type\": \"fire\","
-						+ "\"body\": {"
-							+ "\"building\": \"0\","
-							+ "\"room\": 1,"
-							+ "\"floor\": 2,"
-							+ "\"xpos\": 3,"
-							+ "\"ypos\": 4,"
-							+ "\"severity\": 5,"
-							+ "\"action\": \"Extinguish\""
-							+ "}"
+				+ "\"message\": {"
+					+ "\"msg_type\": \"fire\","
+					+ "\"body\": {"
+						+ "\"building\": \"0\","
+						+ "\"room\": 1,"
+						+ "\"floor\": 2,"
+						+ "\"xpos\": 3,"
+						+ "\"ypos\": 4,"
+						+ "\"severity\": 5,"
+						+ "\"action\": \"Extinguish\""
 						+ "}"
 					+ "}"
 				+ "}";
@@ -94,19 +102,16 @@ public class EventTests {
 		String details = 
 				"{"
 				+ "\"messageId\": \"0\","
-				+ "\"body\":{"
-					+ "\"id\": [\"3\"]," //id is the id of the agent to handle the event
-					+ "\"message\": {"
-						+ "\"msg_type\": \"fire\","
-						+ "\"body\": {"
-							+ "\"building\": \"0\","
-							+ "\"room\": 1,"
-							+ "\"floor\": 2,"
-							+ "\"xpos\": 3,"
-							+ "\"ypos\": 4,"
-							+ "\"severity\": 5,"
-							+ "\"action\": \"Extinguish\""
-							+ "}"
+				+ "\"message\": {"
+					+ "\"msg_type\": \"fire\","
+					+ "\"body\": {"
+						+ "\"building\": \"0\","
+						+ "\"room\": 1,"
+						+ "\"floor\": 2,"
+						+ "\"xpos\": 3,"
+						+ "\"ypos\": 4,"
+						+ "\"severity\": 5,"
+						+ "\"action\": \"Extinguish\""
 						+ "}"
 					+ "}"
 				+ "}";
@@ -129,19 +134,16 @@ public class EventTests {
 		String details = 
 				"{"
 				+ "\"messageId\": \"0\","
-				+ "\"body\":{"
-					+ "\"id\": [\"3\", \"1\"]," //id is the id of the agent to handle the event
-					+ "\"message\": {"
-						+ "\"msg_type\": \"fire\","
-						+ "\"body\": {"
-							+ "\"building\": \"0\","
-							+ "\"room\": 1,"
-							+ "\"floor\": 2,"
-							+ "\"xpos\": 3,"
-							+ "\"ypos\": 4,"
-							+ "\"severity\": 5,"
-							+ "\"action\": \"Extinguish\""
-							+ "}"
+				+ "\"message\": {"
+					+ "\"msg_type\": \"fire\","
+					+ "\"body\": {"
+						+ "\"building\": \"0\","
+						+ "\"room\": 1,"
+						+ "\"floor\": 2,"
+						+ "\"xpos\": 3,"
+						+ "\"ypos\": 4,"
+						+ "\"severity\": 5,"
+						+ "\"action\": \"Extinguish\""
 						+ "}"
 					+ "}"
 				+ "}";
@@ -164,19 +166,16 @@ public class EventTests {
 		String details = 
 				"{"
 				+ "\"messageId\": \"0\","
-				+ "\"body\":{"
-					+ "\"id\": [\"1\"]," //id is the id of the agent to handle the event
-					+ "\"message\": {"
-						+ "\"msg_type\": \"water leak\","
-						+ "\"body\": {"
-							+ "\"building\": \"0\","
-							+ "\"room\": 1,"
-							+ "\"floor\": 2,"
-							+ "\"xpos\": 3,"
-							+ "\"ypos\": 4,"
-							+ "\"severity\": 5,"
-							+ "\"action\": \"fix plumbing\""
-							+ "}"
+				+ "\"message\": {"
+					+ "\"msg_type\": \"water leak\","
+					+ "\"body\": {"
+						+ "\"building\": \"0\","
+						+ "\"room\": 1,"
+						+ "\"floor\": 2,"
+						+ "\"xpos\": 3,"
+						+ "\"ypos\": 4,"
+						+ "\"severity\": 5,"
+						+ "\"action\": \"fix plumbing\""
 						+ "}"
 					+ "}"
 				+ "}";
@@ -199,19 +198,16 @@ public class EventTests {
 		String details = 
 				"{"
 				+ "\"messageId\": \"0\","
-				+ "\"body\":{"
-					+ "\"id\": [\"1\"]," //id is the id of the agent to handle the event
-					+ "\"message\": {"
-						+ "\"msg_type\": \"intruder\","
-						+ "\"body\": {"
-							+ "\"building\": \"0\","
-							+ "\"room\": 1,"
-							+ "\"floor\": 2,"
-							+ "\"xpos\": 3,"
-							+ "\"ypos\": 4,"
-							+ "\"severity\": 5,"
-							+ "\"action\": \"defend\""
-							+ "}"
+				+ "\"message\": {"
+					+ "\"msg_type\": \"intruder\","
+					+ "\"body\": {"
+						+ "\"building\": \"0\","
+						+ "\"room\": 1,"
+						+ "\"floor\": 2,"
+						+ "\"xpos\": 3,"
+						+ "\"ypos\": 4,"
+						+ "\"severity\": 5,"
+						+ "\"action\": \"defend\""
 						+ "}"
 					+ "}"
 				+ "}";
@@ -234,19 +230,16 @@ public class EventTests {
 		String details = 
 				"{"
 				+ "\"messageId\": \"0\","
-				+ "\"body\":{"
-					+ "\"id\": [\"1\"]," //id is the id of the agent to handle the event
-					+ "\"message\": {"
-						+ "\"msg_type\": \"move robot\","
-						+ "\"body\": {"
-							+ "\"building\": \"0\","
-							+ "\"room\": 1,"
-							+ "\"floor\": 2,"
-							+ "\"xpos\": 3,"
-							+ "\"ypos\": 4,"
-							+ "\"severity\": 5,"
-							+ "\"action\": \"move\""
-							+ "}"
+				+ "\"message\": {"
+					+ "\"msg_type\": \"move robot\","
+					+ "\"body\": {"
+						+ "\"building\": \"0\","
+						+ "\"room\": 1,"
+						+ "\"floor\": 2,"
+						+ "\"xpos\": 3,"
+						+ "\"ypos\": 4,"
+						+ "\"severity\": 5,"
+						+ "\"action\": \"move\""
 						+ "}"
 					+ "}"
 				+ "}";
@@ -269,19 +262,16 @@ public class EventTests {
 		String details = 
 				"{"
 				+ "\"messageId\": \"0\","
-				+ "\"body\":{"
-					+ "\"id\": [\"5\",\"10\",\"1\"]," //id is the id of the agent to handle the event
-					+ "\"message\": {"
-						+ "\"msg_type\": \"water leak\","
-						+ "\"body\": {"
-							+ "\"building\": \"0\","
-							+ "\"room\": 1,"
-							+ "\"floor\": 2,"
-							+ "\"xpos\": 3,"
-							+ "\"ypos\": 4,"
-							+ "\"severity\": 5,"
-							+ "\"message\": \"There was a water leak in the building\""
-							+ "}"
+				+ "\"message\": {"
+					+ "\"msg_type\": \"water leak\","
+					+ "\"body\": {"
+						+ "\"building\": \"0\","
+						+ "\"room\": 1,"
+						+ "\"floor\": 2,"
+						+ "\"xpos\": 3,"
+						+ "\"ypos\": 4,"
+						+ "\"severity\": 5,"
+						+ "\"message\": \"There was a water leak in the building\""
 						+ "}"
 					+ "}"
 				+ "}";
@@ -304,14 +294,11 @@ public class EventTests {
 		String details = 
 				"{"
 				+ "\"messageId\": \"0\","
-				+ "\"body\":{"
-					+ "\"id\": [\"4\",\"10\",\"1\"]," //id is the id of the agent to handle the event
-					+ "\"message\": {"
-						+ "\"msg_type\": \"message\","
-						+ "\"body\": {"
-							+ "\"building\": \"0\","
-							+ "\"message\": \"Electricity will be off between 9am-5pm.\""
-							+ "}"
+				+ "\"message\": {"
+					+ "\"msg_type\": \"message\","
+					+ "\"body\": {"
+						+ "\"building\": \"0\","
+						+ "\"message\": \"Electricity will be off between 9am-5pm.\""
 						+ "}"
 					+ "}"
 				+ "}";
@@ -328,7 +315,8 @@ public class EventTests {
 	@Test
 	public void insertFire(){
 		FireEvent event = createFire();
-		sim.incomingEvent(event);
+		rob1.addEvent(event);
+		rob2.addEvent(event);
 		Agent agent = sim.getAgentByID("1");
 		assertEquals("0", agent.getEventList().get(0).getEventID());
 	}
@@ -336,7 +324,8 @@ public class EventTests {
 	@Test(expected=IndexOutOfBoundsException.class)
 	public void insertFireGetOOBEvent(){
 		FireEvent event = createFire();
-		sim.incomingEvent(event);
+		rob1.addEvent(event);
+		rob2.addEvent(event);
 		Agent agent = sim.getAgentByID("1");
 		LinkedList<Event> events = agent.getEventList();
 		assertEquals("0", events.get(0).getEventID());
@@ -360,7 +349,7 @@ public class EventTests {
 	@Test
 	public void insertWaterLeak(){
 		WaterLeakEvent event = createWaterLeak();
-		sim.incomingEvent(event);
+		rob1.addEvent(event);
 		Agent agent = sim.getAgentByID("1");
 		LinkedList<Event> events = agent.getEventList();
 		assertEquals("0", events.get(0).getEventID());
@@ -369,7 +358,7 @@ public class EventTests {
 	@Test
 	public void checkNoEventsBadRobotID(){
 		WaterLeakEvent event = createWaterLeak();
-		sim.incomingEvent(event);
+		rob1.addEvent(event);
 		Agent agent = sim.getAgentByID("1");
 		LinkedList<Event> events = agent.getEventList();
 		assertEquals(1, events.size());
@@ -386,7 +375,7 @@ public class EventTests {
 	@Test
 	public void insertIntruder(){
 		IntruderEvent event = createIntruder();
-		sim.incomingEvent(event);
+		rob1.addEvent(event);
 		Agent agent = sim.getAgentByID("1");
 		LinkedList<Event> events = agent.getEventList();
 		assertEquals("0", events.get(0).getEventID());
@@ -400,7 +389,7 @@ public class EventTests {
 	@Test
 	public void insertMoveRobot(){
 		MoveRobotEvent event = createMoveRobot();
-		sim.incomingEvent(event);
+		rob1.addEvent(event);
 		Agent agent = sim.getAgentByID("1");
 		LinkedList<Event> events = agent.getEventList();
 		assertEquals("0", events.get(0).getEventID());
@@ -414,7 +403,9 @@ public class EventTests {
 	@Test
 	public void insertUserWaterLeakNoRobots(){
 		WaterLeakEvent event = createWaterLeakForUser();
-		sim.incomingEvent(event);
+		rob1.addEvent(event);
+		rob10.addEvent(event);
+		rob5.addEvent(event);
 		Agent agent = sim.getAgentByID("0");
 		LinkedList<Event> events = agent.getEventList();
 		assertEquals(0, events.size());
@@ -423,7 +414,9 @@ public class EventTests {
 	@Test
 	public void insertUserWaterLeak(){
 		WaterLeakEvent event = createWaterLeakForUser();
-		sim.incomingEvent(event);
+		rob1.addEvent(event);
+		rob5.addEvent(event);
+		rob10.addEvent(event);
 		Agent agent = sim.getAgentByID("5");
 		LinkedList<Event> events = agent.getEventList();
 		assertEquals(1, events.size());
@@ -446,7 +439,11 @@ public class EventTests {
 	@Test
 	public void agentAddedButRequestingByBadID(){
 		UserMessageEvent event = createUserMessage();
-		sim.incomingEvent(event);
+		Robot rob4 = new Robot("4", "0");
+		sim.addAgent(rob4);
+		rob1.addEvent(event);
+		rob4.addEvent(event);
+		rob10.addEvent(event);
 		Agent agent = sim.getAgentByID("5");
 		LinkedList<Event> events = agent.getEventList();
 		assertEquals(0, events.size());
@@ -464,19 +461,16 @@ public class EventTests {
 		String details =  //missing ending "}"
 				"{"
 				+ "\"messageId\": \"0\","
-				+ "\"body\":{"
-					+ "\"id\": [\"1\"]," //id is the id of the agent to handle the event
-					+ "\"message\": {"
-						+ "\"msg_type\": \"move robot\","
-						+ "\"body\": {"
-							+ "\"building\": \"0\","
-							+ "\"room\": 1,"
-							+ "\"floor\": 2,"
-							+ "\"xpos\": 3,"
-							+ "\"ypos\": 4,"
-							+ "\"severity\": 5,"
-							+ "\"action\": \"move\""
-							+ "}"
+				+ "\"message\": {"
+					+ "\"msg_type\": \"move robot\","
+					+ "\"body\": {"
+						+ "\"building\": \"0\","
+						+ "\"room\": 1,"
+						+ "\"floor\": 2,"
+						+ "\"xpos\": 3,"
+						+ "\"ypos\": 4,"
+						+ "\"severity\": 5,"
+						+ "\"action\": \"move\""
 						+ "}"
 					+ "}";
 		MoveRobotEvent event = new MoveRobotEvent();
@@ -485,22 +479,19 @@ public class EventTests {
 	
 	@Test 
 	public void misspelledField(){
-		String details =  //missing ending "}"
+		String details =  
 				"{"
 				+ "\"messageId\": \"0\","
-				+ "\"body\":{"
-					+ "\"id\": [\"1\"]," //id is the id of the agent to handle the event
-					+ "\"message\": {"
-						+ "\"msg_type\": \"move robot\","
-						+ "\"body\": {"
-							+ "\"building\": \"0\","
-							+ "\"rom\": 1," //misspell room to rom
-							+ "\"floor\": 2,"
-							+ "\"xpos\": 3,"
-							+ "\"ypos\": 4,"
-							+ "\"severity\": 5,"
-							+ "\"action\": \"move\""
-							+ "}"
+				+ "\"message\": {"
+					+ "\"msg_type\": \"move robot\","
+					+ "\"body\": {"
+						+ "\"building\": \"0\","
+						+ "\"rom\": 1," //misspell room to rom
+						+ "\"floor\": 2,"
+						+ "\"xpos\": 3,"
+						+ "\"ypos\": 4,"
+						+ "\"severity\": 5,"
+						+ "\"action\": \"move\""
 						+ "}"
 					+ "}"
 				+ "}";
@@ -510,21 +501,18 @@ public class EventTests {
 	
 	@Test
 	public void missingRequiredField(){
-		String details =  //missing ending "}"
+		String details =  
 				"{"
 				+ "\"messageId\": \"0\","
-				+ "\"body\":{"
-					+ "\"id\": [\"1\"]," //id is the id of the agent to handle the event
-					+ "\"message\": {"
-						+ "\"msg_type\": \"move robot\","
-						+ "\"body\": {"
-							+ "\"building\": \"0\"," //missing room number
-							+ "\"floor\": 2,"
-							+ "\"xpos\": 3,"
-							+ "\"ypos\": 4,"
-							+ "\"severity\": 5,"
-							+ "\"action\": \"move\""
-							+ "}"
+				+ "\"message\": {"
+					+ "\"msg_type\": \"move robot\","
+					+ "\"body\": {"
+						+ "\"building\": \"0\"," //missing room number
+						+ "\"floor\": 2,"
+						+ "\"xpos\": 3,"
+						+ "\"ypos\": 4,"
+						+ "\"severity\": 5,"
+						+ "\"action\": \"move\""
 						+ "}"
 					+ "}"
 				+ "}";
@@ -535,7 +523,9 @@ public class EventTests {
 	@Test
 	public void badIDRequested(){
 		FireEvent event = createFireBadRobotID();
-		sim.incomingEvent(event);
+		Robot rob11 = new Robot("11", "0");
+		sim.addAgent(rob11);
+		rob11.addEvent(event); //add it to 11 just because (and to get rid of warning)
 		
 		//check it wasn't added to the event list of any of our active agents
 		Agent agent = sim.getAgentByID("1");
@@ -566,8 +556,9 @@ public class EventTests {
 	@Test
 	public void badAndGoodIDsRequested(){
 		FireEvent event = createFireBadAndGoodRobotID();
+
+		rob1.addEvent(event);
 		
-		sim.incomingEvent(event);
 		//Check that the event was still added to ID 1
 		Agent agent = sim.getAgentByID("1");
 		assertNotNull(agent);

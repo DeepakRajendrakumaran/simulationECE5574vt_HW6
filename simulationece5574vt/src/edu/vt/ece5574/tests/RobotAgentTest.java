@@ -1,8 +1,11 @@
 package edu.vt.ece5574.tests;
 
 import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import edu.vt.ece5574.agents.Building;
 import edu.vt.ece5574.agents.Robot;
 import edu.vt.ece5574.events.FireEvent;
 import edu.vt.ece5574.sim.Simulation;
@@ -16,24 +19,29 @@ import edu.vt.ece5574.sim.Simulation;
 public class RobotAgentTest {
 
 	Simulation sim;
-	Robot Rob;
+	Building bld;
+	Robot rob;
 	
 	@Before
 	public void init(){
 		sim = new Simulation(1);
-		String rID ="";
-		String bID="";
+		String rID ="1";
+		String bID="0";
+		bld = new Building(bID);
+		sim.addAgent(bld);
+		
 		//To-Do:Figure out how to add agents
-		Rob = new Robot(rID,bID,5,100,sim);
+		rob = new Robot(rID,bID,5,100);
+		sim.addAgent(rob);
 	}
 	
 	@Test(timeout=1000)
 	public void randomMovement(){
-		double initial_x= Rob.getX();
-		double initial_y= Rob.getY();
+		double initial_x= rob.getX();
+		double initial_y= rob.getY();
 		
-		Rob.randomMovement(sim);
-		assertFalse((Rob.getX()==initial_x)&&(Rob.getY()==initial_y));
+		rob.randomMovement(sim);
+		assertFalse((rob.getX()==initial_x)&&(rob.getY()==initial_y));
 			
 		
 	}
@@ -41,40 +49,38 @@ public class RobotAgentTest {
 	@Test(timeout=1000)
 	public void respondtoNoEvent(){
 		
-		Rob.step(sim);
-		assertFalse(Rob.isBusy());
+		rob.step(sim);
+		assertFalse(rob.isBusy());
 		
 	}
 	
 	@Test(timeout=1000)
 	public void respondtoFireEvent(){
-		//FireEvent event = createFire();
 		String details = 
 				"{"
 				+ "\"messageId\": \"0\","
-				+ "\"body\":{"
-				+ "\"msg_type\": \"fire\","
-				+ "\"body\": {"
-				+ "\"building\": 0,"
-				+ "\"room\": 1,"
-				+ "\"floor\": 2,"
-				+ "\"xpos\": 3,"
-				+ "\"ypos\": 4,"
-				+ "\"severity\": 5,"
-				+ "\"action\": \"Extinguish\","
-				+ "\"robots\": [0,1]" //id is the id of the agent to handle the event
-				+ "}"
-				+ "}"
+				+ "\"message\": {"
+					+ "\"msg_type\": \"fire\","
+					+ "\"body\": {"
+						+ "\"building\": \"0\","
+						+ "\"room\": 1,"
+						+ "\"floor\": 2,"
+						+ "\"xpos\": 3,"
+						+ "\"ypos\": 4,"
+						+ "\"severity\": 5,"
+						+ "\"action\": \"Extinguish\""
+						+ "}"
+					+ "}"
 				+ "}";
 		
 		FireEvent event = new FireEvent();
 		event.init(details);
-		sim.incomingEvent(event);
-		while((Rob.getX()!= event.getX_pos())&&(Rob.getY()!= event.getY_pos())){
-			Rob.step(sim);
+		rob.addEvent(event);
+		while((rob.getX()!= event.getX_pos())&&(rob.getY()!= event.getY_pos())){
+			rob.step(sim);
 		}
 		
-		assertEquals((int)Rob.getX(),event.getX_pos());
+		assertEquals((int)rob.getX(),event.getX_pos());
 		
 	}
 }

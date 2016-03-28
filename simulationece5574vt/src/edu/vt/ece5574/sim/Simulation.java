@@ -74,24 +74,6 @@ public class Simulation extends SimState {
         }*/
     }
     
-    /**
-     * For *any* incoming event, there's at least 1 associated ID of a user accepting 
-     * that event.  Take that ID and find the agent for it.  Add the event to that agent's 
-     * event list. 
-     * 
-     * This only adds the event to agents who have been added to the simulation and does *not*
-     * create new ones if unseen ids are provided.  It will only skip over them
-     * @param event The event to add.  
-     */
-    public void incomingEvent(Event event){
-    	LinkedList<String> acceptingAgents = event.getAgentsToAccept();
-    	for(int i = 0; i < acceptingAgents.size(); i++){
-    		Agent agent = agents.get(acceptingAgents.get(i));
-    		if(agent != null){ //The agent must be in the agent list to be able to act on an event
-    			agent.addEvent(event);
-    		}
-    	}
-    }
     
     /**
      * Add an agent into the environment. It gets placed into the global agent list if 

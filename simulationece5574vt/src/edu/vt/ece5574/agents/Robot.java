@@ -48,7 +48,7 @@ public class Robot extends Agent {
 	 * @param x_loc : x coordinate position of the robot
 	 * @param y_loc : y coordinate position of the robot
 	 */
-	public Robot(String rID, String bID, int x_loc, int y_loc, SimState state){
+	public Robot(String rID, String bID, int x_loc, int y_loc){
 		super(rID, bID);
 		robot_loc = new MutableInt2D(x_loc,y_loc);
 		lastVisitedLocs = new Vector<MutableInt2D>();

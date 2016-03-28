@@ -18,7 +18,6 @@ public abstract class Event {
 
 
 	protected String eventID = "-1"; 
-	protected LinkedList<String> agentsToAccept = null;
 	protected long room = -1;
 	protected int floor = -1;
 	protected int x_pos = -1;
@@ -31,7 +30,7 @@ public abstract class Event {
 	protected String newAgentID = "-1";
 	
 	public Event(){
-		agentsToAccept = new LinkedList<String>();
+
 	}
 	
 
@@ -48,20 +47,6 @@ public abstract class Event {
 				return false;
 			}
 			eventID = (String) attr;
-			
-			json = (JSONObject) json.get("body");
-
-			JSONArray ids = (JSONArray) json.get("id");
-			if(ids != null){
-				for(int i = 0 ; i < ids.size(); i++){
-					String id = (String) ids.get(i);
-					agentsToAccept.add(id);
-				}
-			}
-			else{
-				System.err.println("Missing IDs to send event to in incoming message from the server.");
-				return false;
-			}
 
 			json = (JSONObject) json.get("message");
 			
@@ -182,14 +167,6 @@ public abstract class Event {
 	}
 	
 	/**
-	 * Gets all of the IDs of Robots who will need to respond to this event
-	 * @return The linked list of robot ids
-	 */
-	public LinkedList<String> getAgentsToAccept(){
-		return agentsToAccept;
-	}
-	
-	/**
 	 * Gets the type of emergency this is.  Water leak, fire, intruder, etc.
 	 * @return The emergency type by string
 	 */
@@ -258,20 +235,28 @@ public abstract class Event {
 		return message;
 	}
 	
-	
+	/**
+	 * Just get the event type of the incoming message to be able to build the event
+	 * itself correctly. 
+	 * 
+	 * @param details The string of the JSON returned from the push service
+	 * @return The string of the key "msg_type" in the message or null if it could not be found 
+	 */
 	public static String getEventType(String details){
 		JSONParser parser = new JSONParser();
 		try{
 			Object obj = parser.parse(details);
+			if(obj == null) return null;
 			JSONObject json = (JSONObject) obj;
 
 
-			json = (JSONObject) json.get("body");
 			json = (JSONObject) json.get("message");
+			if(json == null) return null;
 			
 			Object attr = json.get("msg_type");
 			if(attr == null){
 				System.err.println("Missing required type.");
+				return null;
 			}
 			else{
 				return (String) attr;
