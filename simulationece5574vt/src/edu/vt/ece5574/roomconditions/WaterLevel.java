@@ -58,7 +58,7 @@ public class WaterLevel  {
 	public void robotWaterLevelChange(int rate){
 
 		int val = waterLvl.get();
-		val = val - severity*100;
+		val = val - rate*100;
 		waterLvl.set(val);
 	}
 
