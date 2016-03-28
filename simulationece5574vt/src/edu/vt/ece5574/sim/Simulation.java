@@ -134,6 +134,7 @@ public class Simulation extends SimState {
     		return false;
     	}
     	agents.put(agent.getID(), agent);
+    	schedule.scheduleRepeating(agent);
     	return true;
     }
     
