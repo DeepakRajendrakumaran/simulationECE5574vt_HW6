@@ -32,7 +32,7 @@ public class RobotAgentTest {
 		
 		//To-Do:Figure out how to add agents
 		rob = new Robot(rID,bID,5,100);
-		sim.addAgent(rob);
+		assertTrue(sim.addAgent(rob));
 	}
 	
 	@Test(timeout=1000)
