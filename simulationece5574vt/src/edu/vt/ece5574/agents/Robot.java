@@ -19,9 +19,7 @@ import sim.util.MutableInt2D;
 
 public class Robot extends Agent {
 
-	private static final long serialVersionUID = 1;
-	private boolean busy=false;
-	
+	private static final long serialVersionUID = 1;	
     
     private MutableInt2D robot_loc;
     private Vector<MutableInt2D> lastVisitedLocs;
@@ -38,7 +36,7 @@ public class Robot extends Agent {
     public double getY() { return robot_loc.y; }
     
     
-    public boolean isBusy() { return busy; }
+    
     
     
 	/**
@@ -108,6 +106,7 @@ public class Robot extends Agent {
 		robot_loc.x = new_loc.x;
 		robot_loc.y = new_loc.y;
 		//To-do Update location in server
+		simState.storage.updRobotPos(super.getID(), robot_loc.x, robot_loc.y);
 				
 	}
 	
@@ -143,20 +142,7 @@ public class Robot extends Agent {
 	    return (weight);
 	}
 
-	public void dealWithEvents(SimState state){
-		Simulation simState = (Simulation)state;
-		//Can't have a loop like this.  
-		//The step function should be short and handling all events
-		//inside a single step would be insanity.  They need to be 
-		//broken down.  This may be your plan in the end but I figured I'd 
-		//make a note regardless
-		while(events.size()!=0){
-			currEvent = events.removeFirst();
-			busy=true;
-			reactToEvent(simState);
-			
-		}
-	}
+
 	public void addressEvent(){
 		if(currEvent instanceof FireEvent){
 			//Address FireEvent
@@ -174,19 +160,7 @@ public class Robot extends Agent {
 		else if(currEvent instanceof WaterLeakEvent){
 			//Address event
 		}
-		busy=false;
-	}
-	
-	public void reactToEvent(Simulation simState){
-		double xpos = currEvent.getX_pos();
-		double ypos = currEvent.getY_pos();
-		//To-Do: Logic to move towards the event location
-		//Waiting for Mohit to provide the methods
-		
-		//To-DO: Update location in server
-		if((robot_loc.x==xpos) && (robot_loc.y==ypos)){
-			addressEvent();
-		}
+		handlingEvent=false;
 	}
 	
 	
@@ -201,6 +175,8 @@ public class Robot extends Agent {
 		updateVisitedLocs(new_loc);
 		robot_loc.x = new_loc.x;
 		robot_loc.y = new_loc.y;
+		simState.storage.updRobotPos(super.getID(), robot_loc.x, robot_loc.y);
+		
 		if((robot_loc.x == currEvent.getX_pos()) && (robot_loc.y == currEvent.getY_pos() )){
 			addressEvent();
 		}
@@ -215,8 +191,6 @@ public class Robot extends Agent {
 	public void dealWithHouseEvents(SimState state,Building bld){
 		currEvent = events.removeFirst();
 		handlingEvent = true;
-		double xpos = currEvent.getX_pos();
-		double ypos = currEvent.getY_pos();
 		Coordinate curr_coord = new Coordinate(robot_loc.x,
 				robot_loc.y);
 		Coordinate dest_coord = new Coordinate(currEvent.getX_pos(),
