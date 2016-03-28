@@ -27,7 +27,7 @@ public class Temperature  {
 		temp = new AtomicInteger(75);
 	}
 	
-	public Temperature(int temperature_){
+	public Temperature(int temperature_,SimState state_){
 		state = (Simulation)state_;
 		temp = new AtomicInteger(temperature_);
 	}

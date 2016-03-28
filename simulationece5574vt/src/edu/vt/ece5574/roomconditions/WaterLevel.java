@@ -27,7 +27,7 @@ public class WaterLevel  {
 		waterLvl = new AtomicInteger(0);
 	}
 	
-	public WaterLevel(int waterLevel_){
+	public WaterLevel(int waterLevel_,SimState state_){
 		state = (Simulation)state_;
 		waterLvl = new AtomicInteger(waterLevel_);
 	}
