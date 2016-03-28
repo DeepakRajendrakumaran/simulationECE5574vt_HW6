@@ -2,6 +2,7 @@ package edu.vt.ece5574.agents;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
@@ -19,7 +20,6 @@ import sim.util.MutableInt2D;
 public class Robot extends Agent {
 
 	private static final long serialVersionUID = 1;
-	private Event currEvent = null;
 	private boolean busy=false;
 	
     
@@ -27,6 +27,10 @@ public class Robot extends Agent {
     private Vector<MutableInt2D> lastVisitedLocs;
     private int noOfSavedLocs =0;
     private int toBeSavedLocs =0;
+    private boolean handlingEvent=false;
+    private Event currEvent = null;
+    List<Coordinate> route = null;
+    Coordinate nextPoint = null;
     
     public double getX() { return robot_loc.x; }
     
@@ -48,9 +52,10 @@ public class Robot extends Agent {
 		super(rID, bID);
 		robot_loc = new MutableInt2D(x_loc,y_loc);
 		lastVisitedLocs = new Vector<MutableInt2D>();
-		Simulation simState = (Simulation)state;
-		Building bld = (Building)simState.getAgentByID(buildingID);
-		toBeSavedLocs = (int)(bld.getFloorHeight()*bld.getFloorWidth())/bld.getNumRooms();
+		toBeSavedLocs = 8;
+		//Simulation simState = (Simulation)state;
+		//Building bld = (Building)simState.getAgentByID(buildingID);
+		//toBeSavedLocs = (int)(bld.getFloorHeight()*bld.getFloorWidth())/bld.getNumRooms();
 	}
 	
 	/**
@@ -185,28 +190,59 @@ public class Robot extends Agent {
 	}
 	
 	
+	public void moveToEventSrc(SimState state){
+		Simulation simState = (Simulation)state;
+		int x_inc,y_inc;
+		x_inc =  nextPoint.x - robot_loc.x;
+		y_inc =  nextPoint.y - robot_loc.y;
+		x_inc = (x_inc)/(Math.abs(x_inc));
+		y_inc = (y_inc)/(Math.abs(y_inc));
+		MutableInt2D new_loc = new MutableInt2D(robot_loc.x + x_inc, robot_loc.y + y_inc);
+		updateVisitedLocs(new_loc);
+		robot_loc.x = new_loc.x;
+		robot_loc.y = new_loc.y;
+		if((robot_loc.x == currEvent.getX_pos()) && (robot_loc.y == currEvent.getY_pos() )){
+			addressEvent();
+		}
+		else if((robot_loc.x == nextPoint.x) && (robot_loc.y == nextPoint.y )){
+			nextPoint = route.get(0);
+			route.remove(0);
+		}
+		
+	}
+	
+	
+	public void dealWithHouseEvents(SimState state,Building bld){
+		currEvent = events.removeFirst();
+		handlingEvent = true;
+		double xpos = currEvent.getX_pos();
+		double ypos = currEvent.getY_pos();
+		Coordinate curr_coord = new Coordinate(robot_loc.x,
+				robot_loc.y);
+		Coordinate dest_coord = new Coordinate(currEvent.getX_pos(),
+				currEvent.getY_pos());
+		route = bld.getRoute(curr_coord, dest_coord);
+		moveToEventSrc(state);
+		
+	}
+	
 	@Override
 	public void step(SimState state) {
 		
 		Simulation simState = (Simulation)state;
+		Building bld = (Building)simState.getAgentByID(buildingID);
 		
-		//Check for events
-		
-		if(busy==true){		
-
-			reactToEvent(simState);
+		if(handlingEvent == true){
+			moveToEventSrc(state);
 		}
-		if(!(events ==null)){
-		if(events.isEmpty()){
-			//if no event, move randomly to collect sensor data
+		else if(events.isEmpty()){
 			randomMovement(state);
 		}
 		else{
-			//in case of events react
-			dealWithEvents(state);
+			dealWithHouseEvents(state, bld);
 		}
 		
-		}
+		
 	}
 
 }
