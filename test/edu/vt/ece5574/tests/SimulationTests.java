@@ -15,7 +15,7 @@ public class SimulationTests {
 	@Before
 	public void init(){
 		sim = new Simulation(1);
-		sim.addAgent(new Building(100, 100, 2, 4, "0"));
+		sim.addAgent(new Building("0"));
 	}
 
 	@Test
@@ -53,7 +53,7 @@ public class SimulationTests {
 	
 	@Test
 	public void agentAddBuildingAgent(){
-		assertTrue(sim.addAgent(new Building(100, 100, 2, 4, "1")));
+		assertTrue(sim.addAgent(new Building("1")));
 	}
 	
 	@Test
