@@ -1,8 +1,8 @@
 package edu.vt.ece5574.agents;
 
-import java.awt.Color;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
@@ -15,60 +15,30 @@ import edu.vt.ece5574.events.UserMessageEvent;
 import edu.vt.ece5574.events.WaterLeakEvent;
 import edu.vt.ece5574.sim.Simulation;
 import sim.engine.SimState;
-import sim.util.Double2D;
-import sim.util.MutableDouble2D;
 import sim.util.MutableInt2D;
 
 public class Robot extends Agent {
 
-	private static final long serialVersionUID = 1;
-	private Event currEvent = null;
-	//private  Building bld;
-	private boolean busy=false;
-	
-	public MutableDouble2D loc, velocity;
-    public MutableDouble2D newLoc = new MutableDouble2D();
-  //  public MutableDouble2D sumVector = new MutableDouble2D(0,0);
-
-    public double  radius =2;
-    
-    public boolean isBusy() { return busy; }
-        
-    public double getX() { return loc.x; }
-    public void setX( double newX ) { loc.x = newX; }
-    
-    public double getY() { return loc.y; }
-    public void setY( double newY ) { loc.y = newY; }
-    public double getRadius() { return radius; }
-    public void setRadius( double newRadius ) 
-        {
-        radius = newRadius;
-        scale = 2 * radius;  
-        } 
-    
-    public Robot( double newX, double newY,  Color c , String rID, String buildingID)
-    {
-    super(c, 2 * 2, rID, buildingID);  // scale is twice the radius
-    
-    
-    //bld = blding;
-    
-    loc = new MutableDouble2D(newX, newY);
-    //velocity = new MutableDouble2D(0, 0);
-    
-    radius = 2;
-    
-    
-    //speed = 0.1;
-    }
-    
-    
-  
+	private static final long serialVersionUID = 1;	
     
     private MutableInt2D robot_loc;
     private Vector<MutableInt2D> lastVisitedLocs;
     private int noOfSavedLocs =0;
     private int toBeSavedLocs =0;
+    private boolean handlingEvent=false;
+    private Event currEvent = null;
+    List<Coordinate> route = null;
+    Coordinate nextPoint = null;
+    
+    public int getX() { return robot_loc.x; }
+    
+    
+    public int getY() { return robot_loc.y;}
+    
+    public boolean isBusy() { return handlingEvent; }
+    
+    
+    
     
     
 	/**
@@ -78,13 +48,14 @@ public class Robot extends Agent {
 	 * @param x_loc : x coordinate position of the robot
 	 * @param y_loc : y coordinate position of the robot
 	 */
-	public Robot(String rID, String bID, int x_loc, int y_loc, SimState state){
+	public Robot(String rID, String bID, int x_loc, int y_loc){
 		super(rID, bID);
 		robot_loc = new MutableInt2D(x_loc,y_loc);
 		lastVisitedLocs = new Vector<MutableInt2D>();
-		Simulation simState = (Simulation)state;
-		Building bld = (Building)simState.getAgentByID(buildingID);
-		toBeSavedLocs = (int)(bld.getFloorHeight()*bld.getFloorWidth())/bld.getNumRooms();
+		toBeSavedLocs = 8;
+		//Simulation simState = (Simulation)state;
+		//Building bld = (Building)simState.getAgentByID(buildingID);
+		//toBeSavedLocs = (int)(bld.getFloorHeight()*bld.getFloorWidth())/bld.getNumRooms();
 	}
 	
 	/**
@@ -137,6 +108,7 @@ public class Robot extends Agent {
 		robot_loc.x = new_loc.x;
 		robot_loc.y = new_loc.y;
 		//To-do Update location in server
+		simState.storage.updRobotPos(super.getID(), robot_loc.x, robot_loc.y);
 				
 	}
 	
@@ -172,20 +144,7 @@ public class Robot extends Agent {
 	    return (weight);
 	}
 
-	public void dealWithEvents(SimState state){
-		Simulation simState = (Simulation)state;
-		//Can't have a loop like this.  
-		//The step function should be short and handling all events
-		//inside a single step would be insanity.  They need to be 
-		//broken down.  This may be your plan in the end but I figured I'd 
-		//make a note regardless
-		while(events.size()!=0){
-			currEvent = events.removeFirst();
-			busy=true;
-			reactToEvent(simState);
-			
-		}
-	}
+
 	public void addressEvent(){
 		if(currEvent instanceof FireEvent){
 			//Address FireEvent
@@ -203,94 +162,63 @@ public class Robot extends Agent {
 		else if(currEvent instanceof WaterLeakEvent){
 			//Address event
 		}
-		busy=false;
+		handlingEvent=false;
 	}
 	
-	public void reactToEvent(Simulation simState){
-		double xpos = currEvent.getX_pos();
-		double ypos = currEvent.getY_pos();
-		if(loc.x<xpos){
-			if((loc.x+1)<xpos)
-				loc.x=loc.x+1;
-			else
-				loc.x=xpos;
-		}
-		else if(loc.x>xpos){
-			if((loc.x-1)>xpos)
-				loc.x=loc.x-1;
-			else
-				loc.x=xpos;
-		}
-		if(loc.y<ypos){
-			if((loc.y+1)<ypos)
-				loc.y=loc.y+1;
-			else
-				loc.y=ypos;
-		}
-		else if(loc.y>ypos){
-			if((loc.y-1)>ypos)
-				loc.y=loc.y-1;
-			else
-				loc.y=ypos;
-		}
-		simState.room.setObjectLocation(this, new Double2D(loc.x, loc.y));
-		if((loc.x==xpos) && (loc.y==ypos)){
+	
+	public void moveToEventSrc(SimState state){
+		Simulation simState = (Simulation)state;
+		int x_inc,y_inc;
+		x_inc =  nextPoint.x - robot_loc.x;
+		y_inc =  nextPoint.y - robot_loc.y;
+		x_inc = (x_inc)/(Math.abs(x_inc));
+		y_inc = (y_inc)/(Math.abs(y_inc));
+		MutableInt2D new_loc = new MutableInt2D(robot_loc.x + x_inc, robot_loc.y + y_inc);
+		updateVisitedLocs(new_loc);
+		robot_loc.x = new_loc.x;
+		robot_loc.y = new_loc.y;
+		simState.storage.updRobotPos(super.getID(), robot_loc.x, robot_loc.y);
+		
+		if((robot_loc.x == currEvent.getX_pos()) && (robot_loc.y == currEvent.getY_pos() )){
 			addressEvent();
 		}
+		else if((robot_loc.x == nextPoint.x) && (robot_loc.y == nextPoint.y )){
+			nextPoint = route.get(0);
+			route.remove(0);
+		}
+		
 	}
 	
-	//To-do:Will take out later
-	/*
-	public void randomMovement_old(SimState state) {
-		Simulation simState = (Simulation)state;
-		double xd = (state.random.nextDouble() - 0.5);
-        double yd = (state.random.nextDouble() - 0.5);
-        double xm = loc.x + xd;
-        double ym = loc.y + yd;
-        
-        if(!(xm >= 0 && xm < simState.room.getWidth())){
-       	  if(xm < 0){
-       		  xm=0;
-       	  }
-       	  else if(xm >= simState.room.getWidth()){
-       		  xm = simState.room.getWidth()-1;
-       	  }
-         }
-        else if(!(ym >= 0 && ym < simState.room.getHeight())){
-       	 if(ym<0){
-       		 ym=0;
-       	 }
-       	 else if(ym >= simState.room.getHeight()){
-       		 ym = simState.room.getHeight()-1;
-       	 }
-        }
-        loc.x = xm;
-        loc.y = ym;
-        simState.room.setObjectLocation(this, new Double2D(xm, ym));
+	
+	public void dealWithHouseEvents(SimState state,Building bld){
+		currEvent = events.removeFirst();
+		handlingEvent = true;
+		Coordinate curr_coord = new Coordinate(robot_loc.x,
+				robot_loc.y);
+		Coordinate dest_coord = new Coordinate(currEvent.getX_pos(),
+				currEvent.getY_pos());
+		route = bld.getRoute(curr_coord, dest_coord);
+		moveToEventSrc(state);
+		
 	}
-	*/
+	
 	@Override
 	public void step(SimState state) {
 		
 		Simulation simState = (Simulation)state;
+		Building bld = (Building)simState.getAgentByID(buildingID);
 		
-		//Check for events
-		
-		if(busy==true){		
-
-			reactToEvent(simState);
+		if(handlingEvent == true){
+			moveToEventSrc(state);
 		}
-		if(!(events ==null)){
-		if(events.isEmpty()){
-			//if no event, move randomly to collect sensor data
+		else if(events.isEmpty()){
 			randomMovement(state);
 		}
 		else{
-			//in case of events react
-			dealWithEvents(state);
+			dealWithHouseEvents(state, bld);
 		}
 		
-		}
+		
 	}
 
 }

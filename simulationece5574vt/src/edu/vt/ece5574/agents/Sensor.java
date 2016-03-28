@@ -45,7 +45,7 @@ public class Sensor extends Agent {
 
 			if(simState.random.nextInt(10000) > 1000){
 				FireEvent fireEvent = new FireEvent();
-				simState.incomingEvent(fireEvent);
+				addEvent(fireEvent);
 			}
 
 		}
@@ -54,7 +54,7 @@ public class Sensor extends Agent {
 		else if(sensorType == "WATERLEAK"){
 			if(simState.random.nextInt(10000) < 100){
 				WaterLeakEvent leakEvent = new WaterLeakEvent();
-				simState.incomingEvent(leakEvent);
+				addEvent(leakEvent);
 			}
 
 		}

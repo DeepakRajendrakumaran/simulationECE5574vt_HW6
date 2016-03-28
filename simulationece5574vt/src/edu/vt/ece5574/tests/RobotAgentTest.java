@@ -2,14 +2,14 @@ package edu.vt.ece5574.tests;
 
 import static org.junit.Assert.*;
 
-import java.awt.Color;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.vt.ece5574.agents.Building;
 import edu.vt.ece5574.agents.Robot;
 import edu.vt.ece5574.events.FireEvent;
 import edu.vt.ece5574.sim.Simulation;
-import sim.util.Double2D;
+
 
 /**
  * Test Robot Agent and see that they respond to events.
@@ -19,25 +19,29 @@ import sim.util.Double2D;
 public class RobotAgentTest {
 
 	Simulation sim;
-	Robot Rob;
+	Building bld;
+	Robot rob;
 	
 	@Before
 	public void init(){
 		sim = new Simulation(1);
-		Rob = new Robot(sim.room.getWidth() * 0.5 + sim.random.nextDouble() - 0.5,
-				sim.room.getHeight() * 0.5 + sim.random.nextDouble() - 0.5,Color.WHITE, "1", "0");
-    	sim.room.setObjectLocation(Rob,
-    			new Double2D(sim.room.getWidth() * 0.5 + sim.random.nextDouble() - 0.5,
-    					sim.room.getHeight() * 0.5 + sim.random.nextDouble() - 0.5));
+		String rID ="1";
+		String bID="0";
+		bld = new Building(bID);
+		sim.addAgent(bld);
+		
+		//To-Do:Figure out how to add agents
+		rob = new Robot(rID,bID,5,100);
+		assertTrue(sim.addAgent(rob));
 	}
 	
 	@Test(timeout=1000)
 	public void randomMovement(){
-		double initial_x= Rob.loc.x;
-		double initial_y= Rob.loc.y;
+		double initial_x= rob.getX();
+		double initial_y= rob.getY();
 		
-		Rob.randomMovement(sim);
-		assertFalse((Rob.loc.x==initial_x)&&(Rob.loc.y==initial_y));
+		rob.randomMovement(sim);
+		assertFalse((rob.getX()==initial_x)&&(rob.getY()==initial_y));
 			
 		
 	}
@@ -45,40 +49,38 @@ public class RobotAgentTest {
 	@Test(timeout=1000)
 	public void respondtoNoEvent(){
 		
-		Rob.step(sim);
-		assertFalse(Rob.isBusy());
+		rob.step(sim);
+		assertFalse(rob.isBusy());
 		
 	}
 	
 	@Test(timeout=1000)
 	public void respondtoFireEvent(){
-		//FireEvent event = createFire();
 		String details = 
 				"{"
 				+ "\"messageId\": \"0\","
-				+ "\"body\":{"
-				+ "\"msg_type\": \"fire\","
-				+ "\"body\": {"
-				+ "\"building\": 0,"
-				+ "\"room\": 1,"
-				+ "\"floor\": 2,"
-				+ "\"xpos\": 3,"
-				+ "\"ypos\": 4,"
-				+ "\"severity\": 5,"
-				+ "\"action\": \"Extinguish\","
-				+ "\"robots\": [0,1]" //id is the id of the agent to handle the event
-				+ "}"
-				+ "}"
+				+ "\"message\": {"
+					+ "\"msg_type\": \"fire\","
+					+ "\"body\": {"
+						+ "\"building\": \"0\","
+						+ "\"room\": 1,"
+						+ "\"floor\": 2,"
+						+ "\"xpos\": 3,"
+						+ "\"ypos\": 4,"
+						+ "\"severity\": 5,"
+						+ "\"action\": \"Extinguish\""
+						+ "}"
+					+ "}"
 				+ "}";
 		
 		FireEvent event = new FireEvent();
 		event.init(details);
-		sim.incomingEvent(event);
-		while((Rob.loc.x!= event.getX_pos())&&(Rob.loc.y!= event.getY_pos())){
-			Rob.step(sim);
+		rob.addEvent(event);
+		while((rob.getX()!= event.getX_pos())&&(rob.getY()!= event.getY_pos())){
+			rob.step(sim);
 		}
 		
-		assertEquals((int)Rob.loc.x,event.getX_pos());
+		assertEquals((int)rob.getX(),event.getX_pos());
 		
 	}
 }

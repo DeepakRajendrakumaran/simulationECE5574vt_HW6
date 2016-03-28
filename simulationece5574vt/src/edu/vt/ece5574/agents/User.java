@@ -48,16 +48,6 @@ public class User extends Agent{
 	
 	
 	
-	public String getUserID()
-	{
-		return super.id;
-	}
-	
-	public String getBuildingID()
-	{
-		return super.buildingID;
-	}
-	
 	public void setBuildingID(String id)
 	{
 		super.buildingID = id;

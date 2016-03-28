@@ -25,7 +25,7 @@ public class Users {
 	{		
 		for (int i=0; i<userList.size();++i)
 		{
-			if(userList.get(i).getUserID().equals(id))
+			if(userList.get(i).getID().equals(id))
 			{
 				//The building is found
 				return userList.get(i);
@@ -44,7 +44,7 @@ public class Users {
 	{		
 		for (int i=0; i<userList.size();++i)
 		{
-			if(userList.get(i).getUserID().equals(id))
+			if(userList.get(i).getID().equals(id))
 			{
 				//The building is found
 				return true;
@@ -62,7 +62,7 @@ public class Users {
 	{
 		for (int i=0; i<userList.size();++i)
 		{
-			if(userList.get(i).getUserID().equals(id))
+			if(userList.get(i).getID().equals(id))
 			{
 				//The building is found
 				userList.remove(i);
@@ -77,7 +77,7 @@ public class Users {
 		{
 			if (userList.get(i).isAppUser())
 			{
-				String userID = userList.get(i).getUserID();
+				String userID = userList.get(i).getID();
 				arrAppInstalledUsers.add(userID);
 			}
 		}		
@@ -91,7 +91,7 @@ public class Users {
 		{
 			if (userList.get(i).getBuildingID().equals(buildingID))
 			{
-				String userID = userList.get(i).getUserID();
+				String userID = userList.get(i).getID();
 				arrUserID.add(userID);
 			}
 		}		

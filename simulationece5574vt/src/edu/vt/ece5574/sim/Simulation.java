@@ -5,12 +5,8 @@ import java.util.LinkedList;
 
 import edu.vt.ece5574.agents.Agent;
 import edu.vt.ece5574.agents.Building;
-import edu.vt.ece5574.agents.Robot;
 import edu.vt.ece5574.events.Event;
 import sim.engine.*;
-import sim.field.continuous.Continuous2D;
-import sim.util.Double2D;
-import java.awt.*;
 
 /**
  * The root of the simulation.  This is where things get started and the magic happens.
@@ -22,12 +18,13 @@ public class Simulation extends SimState {
 	public Configuration config;
 	
 	private static final long serialVersionUID = 1;
-    public Continuous2D room = new Continuous2D(1.0,100,100);
     public int numRobots;
     
     
  
     public HashMap<String, Agent> agents; //map the agent id to the agent itself
+    
+    public StorageAPI storage;
     
     public Simulation(long seed){
     	super(seed); //needs to be first line, can't just set seed here
@@ -51,6 +48,7 @@ public class Simulation extends SimState {
         }
         */
         agents = new HashMap<String, Agent>();
+        storage = new StorageAPI();
     }
     
 	public void run(String[] args) {
@@ -58,49 +56,24 @@ public class Simulation extends SimState {
 		doLoop(Simulation.class, args);
 		System.exit(0);
 	}
+	
+	public void end(){
+		//empty for now
+	}
 
 
     public void start() {
         super.start();  // very important!  This resets and cleans out the Schedule.
         
         //clear the room of previous actors
-        room.clear();
-
+        /*room.clear();
         int numBuildings = Integer.parseInt(config.getProp("numBuildings"));
-
-        for(int i = 0; i < numRobots; i++){
-        	Robot agent = new Robot(room.getWidth() * 0.5 + random.nextDouble() - 0.5,
-					room.getHeight() * 0.5 + random.nextDouble() - 0.5,Color.WHITE, new Integer(i+numBuildings).toString(), "0");
-        	room.setObjectLocation(agent,
-        			new Double2D(room.getWidth() * 0.5 + random.nextDouble() - 0.5,
-        					room.getHeight() * 0.5 + random.nextDouble() - 0.5));
-        	agents.put(new Integer(i+1).toString(), agent);
-        	schedule.scheduleRepeating(agent);
-        }
-
+      
         for(int i = 0; i < numBuildings; i++){
         	agents.put(new Integer(i).toString(), new Building(new Integer(i).toString()));
-        }
+        }*/
     }
     
-    /**
-     * For *any* incoming event, there's at least 1 associated ID of a user accepting 
-     * that event.  Take that ID and find the agent for it.  Add the event to that agent's 
-     * event list. 
-     * 
-     * This only adds the event to agents who have been added to the simulation and does *not*
-     * create new ones if unseen ids are provided.  It will only skip over them
-     * @param event The event to add.  
-     */
-    public void incomingEvent(Event event){
-    	LinkedList<String> acceptingAgents = event.getAgentsToAccept();
-    	for(int i = 0; i < acceptingAgents.size(); i++){
-    		Agent agent = agents.get(acceptingAgents.get(i));
-    		if(agent != null){ //The agent must be in the agent list to be able to act on an event
-    			agent.addEvent(event);
-    		}
-    	}
-    }
     
     /**
      * Add an agent into the environment. It gets placed into the global agent list if 
@@ -134,6 +107,7 @@ public class Simulation extends SimState {
     		return false;
     	}
     	agents.put(agent.getID(), agent);
+    	schedule.scheduleRepeating(agent);
     	return true;
     }
     

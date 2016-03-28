@@ -31,9 +31,9 @@ public class TestReceiveNotifications {
 	@BeforeClass
 	  public static void testSetup() {
 	    
-	    String receiverPassword=new String("password");
+	    String receiverPassword=new String("Caetest5574");
 	    
-        String receiverUserName=new String("simulation.ece5574");
+        String receiverUserName=new String("test.ece5574");
         testNotifications.setAccountDetails(receiverUserName, receiverPassword);
 	  }
 	
