@@ -46,7 +46,7 @@ public class EventTests {
 			e.printStackTrace();
 		}*/
 		sim = new Simulation(1);
-		sim.addAgent(new Building(100, 100, 2, 4, "0"));
+		sim.addAgent(new Building("0"));
 		sim.addAgent(new Robot("1", "0"));
 		sim.addAgent(new Robot("10", "0"));
 		sim.addAgent(new Robot("5", "0"));
