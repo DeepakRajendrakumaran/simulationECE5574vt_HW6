@@ -71,7 +71,7 @@ public class Simulation extends SimState {
         super.start();  // very important!  This resets and cleans out the Schedule.
         
         //clear the room of previous actors
-        room.clear();
+        /*room.clear();
 
         int numBuildings = Integer.parseInt(config.getProp("numBuildings"));
 
@@ -87,7 +87,7 @@ public class Simulation extends SimState {
 
         for(int i = 0; i < numBuildings; i++){
         	agents.put(new Integer(i).toString(), new Building(new Integer(i).toString()));
-        }
+        }*/
     }
     
     /**
