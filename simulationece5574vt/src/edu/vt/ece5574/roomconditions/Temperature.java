@@ -32,7 +32,7 @@ public class Temperature  {
 		temp = new AtomicInteger(temperature_);
 	}
 
-	public int getTemperature(void){
+	public int getTemperature(){
 
 		return temp.get();
 	}

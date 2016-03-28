@@ -32,7 +32,7 @@ public class WaterLevel  {
 		waterLvl = new AtomicInteger(waterLevel_);
 	}
 
-	public int getWaterLevel(void){
+	public int getWaterLevel(){
 
 		return waterLvl.get();
 	}
