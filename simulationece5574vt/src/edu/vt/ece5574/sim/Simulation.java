@@ -5,12 +5,8 @@ import java.util.LinkedList;
 
 import edu.vt.ece5574.agents.Agent;
 import edu.vt.ece5574.agents.Building;
-import edu.vt.ece5574.agents.Robot;
 import edu.vt.ece5574.events.Event;
 import sim.engine.*;
-import sim.field.continuous.Continuous2D;
-import sim.util.Double2D;
-import java.awt.*;
 
 /**
  * The root of the simulation.  This is where things get started and the magic happens.
@@ -22,7 +18,6 @@ public class Simulation extends SimState {
 	public Configuration config;
 	
 	private static final long serialVersionUID = 1;
-    public Continuous2D room = new Continuous2D(1.0,100,100);
     public int numRobots;
     
     
@@ -72,19 +67,8 @@ public class Simulation extends SimState {
         
         //clear the room of previous actors
         /*room.clear();
-
         int numBuildings = Integer.parseInt(config.getProp("numBuildings"));
-
-        for(int i = 0; i < numRobots; i++){
-        	Robot agent = new Robot(room.getWidth() * 0.5 + random.nextDouble() - 0.5,
-					room.getHeight() * 0.5 + random.nextDouble() - 0.5,Color.WHITE, new Integer(i+numBuildings).toString(), "0");
-        	room.setObjectLocation(agent,
-        			new Double2D(room.getWidth() * 0.5 + random.nextDouble() - 0.5,
-        					room.getHeight() * 0.5 + random.nextDouble() - 0.5));
-        	agents.put(new Integer(i+1).toString(), agent);
-        	schedule.scheduleRepeating(agent);
-        }
-
+      
         for(int i = 0; i < numBuildings; i++){
         	agents.put(new Integer(i).toString(), new Building(new Integer(i).toString()));
         }*/
