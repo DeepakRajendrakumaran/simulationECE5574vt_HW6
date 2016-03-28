@@ -61,6 +61,10 @@ public class Simulation extends SimState {
 		doLoop(Simulation.class, args);
 		System.exit(0);
 	}
+	
+	public void end(){
+		//empty for now
+	}
 
 
     public void start() {
