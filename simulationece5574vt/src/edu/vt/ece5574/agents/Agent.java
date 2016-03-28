@@ -1,9 +1,13 @@
 package edu.vt.ece5574.agents;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import edu.vt.ece5574.events.Event;
+import edu.vt.ece5574.sim.PushAPICaller;
+import edu.vt.ece5574.sim.Simulation;
+import sim.engine.SimState;
 import sim.engine.Steppable;
 import sim.portrayal.simple.OvalPortrayal2D;
 
@@ -90,6 +94,24 @@ public abstract class Agent extends OvalPortrayal2D implements Steppable {
 	 */
 	public void setMessageWaiting(){
 		messageWaiting = true;
+	}
+	public void step(SimState state) {
+		Simulation simState = (Simulation)state;
+		ArrayList<Event> myEvents =checkPushNotification();
+		/*for(Event e:myEvents){
+		if(e!=null)
+		simState.incomingEvent(e);
+		}*/
+		
+	}
+	
+	public ArrayList<Event> checkPushNotification(){
+		ArrayList<Event> myEvents=new ArrayList<Event>();
+		if(messageWaiting){
+		myEvents=PushAPICaller.callPushSystemAPI(id);
+		}
+		return myEvents;
+		
 	}
 	
 }
