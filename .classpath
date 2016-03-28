@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="simulationece5574vt/src"/>
-	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="lib" path="simulationece5574vt/war/WEB-INF/lib/appengine-api-1.0-sdk-1.9.30.jar"/>
 	<classpathentry kind="lib" path="simulationece5574vt/war/WEB-INF/lib/appengine-api-labs.jar"/>
 	<classpathentry kind="lib" path="simulationece5574vt/war/WEB-INF/lib/appengine-endpoints-deps.jar"/>

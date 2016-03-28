@@ -18,7 +18,7 @@ public class Simulationece5574vtServlet extends HttpServlet {
 		Runnable myRunnable = new Runnable(){		
 			public void run(){
 				Simulation sim = new Simulation(0);
-				String[] temp = new String[10];
+				String[] temp = new String[0];
 
 				System.out.println("Starting simulation Thread");
 
