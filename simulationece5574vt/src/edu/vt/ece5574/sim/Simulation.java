@@ -29,6 +29,8 @@ public class Simulation extends SimState {
  
     public HashMap<String, Agent> agents; //map the agent id to the agent itself
     
+    public StorageAPI storage;
+    
     public Simulation(long seed){
     	super(seed); //needs to be first line, can't just set seed here
     	/*
@@ -51,6 +53,7 @@ public class Simulation extends SimState {
         }
         */
         agents = new HashMap<String, Agent>();
+        storage = new StorageAPI();
     }
     
 	public void run(String[] args) {
