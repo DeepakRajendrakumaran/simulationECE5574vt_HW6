@@ -11,7 +11,6 @@ import edu.vt.ece5574.events.Event;
 import edu.vt.ece5574.events.FireEvent;
 import edu.vt.ece5574.events.IntruderEvent;
 import edu.vt.ece5574.events.MoveRobotEvent;
-import edu.vt.ece5574.events.UserMessageEvent;
 import edu.vt.ece5574.events.WaterLeakEvent;
 import edu.vt.ece5574.sim.Simulation;
 import sim.engine.SimState;
@@ -34,18 +33,8 @@ public class Robot extends Agent {
     private int toBeSavedLocs =0;
     private boolean handlingEvent=false;
     private Event currEvent = null;
-    List<Coordinate> route = null;
-    Coordinate nextPoint = null;
-    
-    public int getX() { return robot_loc.x; }
-    
-    
-    public int getY() { return robot_loc.y;}
-    
-    public boolean isBusy() { return handlingEvent; }
-    
-    
-    
+    private List<Coordinate> route = null;
+    private Coordinate nextPoint = null;
     
     
 	/**
@@ -75,6 +64,24 @@ public class Robot extends Agent {
 		super(rID, bID);
 		robot_loc = new MutableInt2D(2,2);
 	}
+	
+	/**
+   	 * Get current robot x coordinate
+   	 */
+    public int getX() { return robot_loc.x; }
+    
+    /**
+   	 * Get current robot y coordinate
+   	 */
+    public int getY() { return robot_loc.y;}
+    
+    /**
+	 * Check if robot is busy dealing with an event
+	 */
+    public boolean isBusy() { return handlingEvent; }
+    
+    
+    
 	/**
 	 * Logic to simulate 'normal' movement of robot in the building 
 	 * @param state 
@@ -114,14 +121,14 @@ public class Robot extends Agent {
 		updateVisitedLocs(new_loc);
 		robot_loc.x = new_loc.x;
 		robot_loc.y = new_loc.y;
-		//To-do Update location in server
+		
 		simState.storage.updRobotPos(super.getID(), robot_loc.x, robot_loc.y);
 				
 	}
 	
 	/**
 	 * Add the latest location visited by the robot and update the visited loc list 
-	 * @param new_loc 
+	 * @param new_loc - New location to be added  to the visited location.
 	 */
 	private void updateVisitedLocs(MutableInt2D new_loc){
 		lastVisitedLocs.add(new_loc);
@@ -132,7 +139,7 @@ public class Robot extends Agent {
 	}
 
 	/**
-	 * Check if the given loc is in the recently visited loc list 
+	 * Check if the given location is in the recently visited location list 
 	 * @param x
 	 * @param y 
 	 */
@@ -152,28 +159,31 @@ public class Robot extends Agent {
 	}
 
 
+
+	/**
+	 * This is where the robot deals with the event after reaching the event location
+	 */
 	public void addressEvent(){
 		
 		if(currEvent instanceof FireEvent){
-			//Address FireEvent
-			
+			((FireEvent) currEvent).turn_fireOff();			
 		}
 		else if(currEvent instanceof IntruderEvent){
-			//Address event
+			((IntruderEvent) currEvent).dealWithIntruder();
 		}
 		else if(currEvent instanceof MoveRobotEvent){
-			//Address event
-		}
-		else if(currEvent instanceof UserMessageEvent){
-			//Address event
+			((MoveRobotEvent) currEvent).RobotReachedLoc();
 		}
 		else if(currEvent instanceof WaterLeakEvent){
-			//Address event
+			((WaterLeakEvent) currEvent).turn_LeakOff();
 		}
 		handlingEvent=false;
 	}
 	
-	
+	/**
+	 * Take one step while moving towards an event location
+	 * @param state 
+	 */
 	public void moveToEventSrc(SimState state){
 		Simulation simState = (Simulation)state;
 		int x_inc,y_inc;
@@ -188,12 +198,15 @@ public class Robot extends Agent {
 		robot_loc.x = new_loc.x;
 		robot_loc.y = new_loc.y;
 		simState.storage.updRobotPos(super.getID(), robot_loc.x, robot_loc.y);
-		
-		
-		
+			
 	}
 	
-	
+	/**
+	 * Obtain route and get started moving towards an event after noticing an event
+	 * First step after noticing an event
+	 * @param state 
+	 * @param bld - building in which the robot is moving
+	 */
 	public void dealWithHouseEvents(SimState state,Building bld){
 		currEvent = events.removeFirst();
 		handlingEvent = true;

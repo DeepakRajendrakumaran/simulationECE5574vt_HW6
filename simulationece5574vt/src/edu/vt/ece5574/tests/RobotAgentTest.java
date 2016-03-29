@@ -8,7 +8,9 @@ import org.junit.Test;
 import edu.vt.ece5574.agents.Building;
 import edu.vt.ece5574.agents.Robot;
 import edu.vt.ece5574.events.FireEvent;
+import edu.vt.ece5574.events.IntruderEvent;
 import edu.vt.ece5574.events.MoveRobotEvent;
+import edu.vt.ece5574.events.WaterLeakEvent;
 import edu.vt.ece5574.sim.Simulation;
 
 
@@ -62,6 +64,7 @@ public class RobotAgentTest {
 	public void randomMovement(){
 		String rID ="1";
 		Robot rob = new Robot(rID,bID,2,5);
+		sim.addAgent(rob);
 		double initial_x= rob.getX();
 		double initial_y= rob.getY();
 		rob.randomMovement(sim);
@@ -74,6 +77,7 @@ public class RobotAgentTest {
 	public void respondtoNoEvent(){
 		String rID ="1";
 		Robot rob = new Robot(rID,bID,2,5);
+		sim.addAgent(rob);
 		rob.step(sim);
 		assertFalse(rob.isBusy());
 		
@@ -83,6 +87,7 @@ public class RobotAgentTest {
 	public void moveToaPoint(){
 		String rID ="1";
 		Robot rob = new Robot(rID,bID,2,5);
+		sim.addAgent(rob);
 
 		String details = 
 				"{"
@@ -93,8 +98,8 @@ public class RobotAgentTest {
 						+ "\"building\": \"0\","
 						+ "\"room\": 1,"
 						+ "\"floor\": 1,"
-						+ "\"xpos\": 53,"
-						+ "\"ypos\": 42,"
+						+ "\"xpos\": 3,"
+						+ "\"ypos\": 2,"
 						+ "\"severity\": 5,"
 						+ "\"action\": \"move\""
 						+ "}"
@@ -128,9 +133,9 @@ public class RobotAgentTest {
 					+ "\"body\": {"
 						+ "\"building\": \"0\","
 						+ "\"room\": 1,"
-						+ "\"floor\": 2,"
-						+ "\"xpos\": 29,"
-						+ "\"ypos\": 32,"
+						+ "\"floor\": 1,"
+						+ "\"xpos\": 2,"
+						+ "\"ypos\": 3,"
 						+ "\"severity\": 5,"
 						+ "\"action\": \"Extinguish\""
 						+ "}"
@@ -146,8 +151,114 @@ public class RobotAgentTest {
 				break;
 		}
 		
-		assertEquals((int)rob.getX(),event.getX_pos());
-		assertEquals((int)rob.getY(),event.getY_pos());
+		assertFalse(event.is_fireActive());
+		
+	}
+	
+	@Test(timeout=1000)
+	public void respondtoWaterEvent(){
+		String rID ="1";
+		Robot rob = new Robot(rID,bID,2,4);
+
+		String details = 
+				"{"
+				+ "\"messageId\": \"0\","
+				+ "\"message\": {"
+					+ "\"msg_type\": \"water leak\","
+					+ "\"body\": {"
+						+ "\"building\": \"0\","
+						+ "\"room\": 1,"
+						+ "\"floor\": 1,"
+						+ "\"xpos\": 7,"
+						+ "\"ypos\": 9,"
+						+ "\"severity\": 5,"
+						+ "\"action\": \"fix plumbing\""
+						+ "}"
+					+ "}"
+				+ "}";
+		
+		WaterLeakEvent event = new WaterLeakEvent();
+		event.init(details);
+		rob.addEvent(event);
+		while(true){
+			rob.step(sim);
+			if(rob.isBusy()==false)
+				break;
+		}
+		
+		assertFalse(event.is_WaterLeakActive());
+		
+	}
+	
+	
+	@Test(timeout=1000)
+	public void respondtoMoveRobotEvent(){
+		String rID ="1";
+		Robot rob = new Robot(rID,bID,2,4);
+
+		String details = 
+				"{"
+				+ "\"messageId\": \"0\","
+				+ "\"message\": {"
+					+ "\"msg_type\": \"move robot\","
+					+ "\"body\": {"
+						+ "\"building\": \"0\","
+						+ "\"room\": 1,"
+						+ "\"floor\": 1,"
+						+ "\"xpos\": 8,"
+						+ "\"ypos\": 7,"
+						+ "\"severity\": 5,"
+						+ "\"action\": \"move\""
+						+ "}"
+					+ "}"
+				+ "}";
+		
+		MoveRobotEvent event = new MoveRobotEvent();
+		event.init(details);
+		rob.addEvent(event);
+		while(true){
+			rob.step(sim);
+			if(rob.isBusy()==false)
+				break;
+		}
+		
+		assertTrue(event.hasRobotReachedLoc());
+		
+	}
+	
+	
+	@Test(timeout=1000)
+	public void respondtoIntruderEvent(){
+		String rID ="1";
+		Robot rob = new Robot(rID,bID,3,4);
+
+		String details = 
+				"{"
+				+ "\"messageId\": \"0\","
+				+ "\"message\": {"
+					+ "\"msg_type\": \"intruder\","
+					+ "\"body\": {"
+						+ "\"building\": \"0\","
+						+ "\"room\": 1,"
+						+ "\"floor\": 1,"
+						+ "\"xpos\": 2,"
+						+ "\"ypos\": 3,"
+						+ "\"severity\": 5,"
+						+ "\"action\": \"defend\""
+						+ "}"
+					+ "}"
+				+ "}";
+		
+		IntruderEvent event = new IntruderEvent();
+		event.init(details);
+		rob.addEvent(event);
+		while(true){
+			rob.step(sim);
+			if(rob.isBusy()==false)
+				break;
+		}
+		
+		assertFalse(event.is_intruderActive());
 		
 	}
 }

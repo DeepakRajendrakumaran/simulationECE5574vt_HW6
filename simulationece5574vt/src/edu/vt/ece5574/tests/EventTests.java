@@ -596,7 +596,6 @@ public class EventTests {
 	public void testFireCreated(){
 		FireEvent event = createFire();
 		assertTrue(event.is_fireActive());
-		assertFalse(false);
 	}
 	
 	
