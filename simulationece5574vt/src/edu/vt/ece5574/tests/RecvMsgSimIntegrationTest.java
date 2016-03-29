@@ -40,7 +40,7 @@ public class RecvMsgSimIntegrationTest {
 	
 	@BeforeClass
 	public static void setUpClass() throws Exception {
-	    String receiverPassword=new String("Cae@5574");
+	    String receiverPassword=new String("password");
 	    
         String receiverUserName=new String("simulation.ece5574");
         testNotifications.setAccountDetails(receiverUserName, receiverPassword);
@@ -72,7 +72,7 @@ public class RecvMsgSimIntegrationTest {
        String sendingHost="smtp.gmail.com";
        int sendingPort=465;
        String username= "test.ece5574@gmail.com";
-       String password= "Caetest5574";
+       String password= "password";
 
        Properties props = new Properties();
 
