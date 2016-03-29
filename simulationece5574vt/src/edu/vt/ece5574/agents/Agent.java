@@ -96,7 +96,6 @@ public abstract class Agent extends OvalPortrayal2D implements Steppable {
 		messageWaiting = true;
 	}
 	public void step(SimState state) {
-		Simulation simState = (Simulation)state;
 		ArrayList<Event> myEvents =checkPushNotification();
 		for(Event e:myEvents){
 		if(e!=null)

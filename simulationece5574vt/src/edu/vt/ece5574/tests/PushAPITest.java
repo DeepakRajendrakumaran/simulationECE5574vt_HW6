@@ -20,6 +20,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+
 import edu.vt.ece5574.events.Event;
 import edu.vt.ece5574.sim.PushAPICaller;
 
@@ -28,12 +30,34 @@ import edu.vt.ece5574.sim.PushAPICaller;
 public class PushAPITest {
 	
 String xapikey;
+
+//Define a custom response handler for API calls
+ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
+
+    public String handleResponse(final HttpResponse response) //throws ClientProtocolException, IOException 
+    {
+        int status = response.getStatusLine().getStatusCode();
+        try{
+        if (status == 200) {
+            HttpEntity entity = response.getEntity();
+            return entity != null ? EntityUtils.toString(entity) : null;
+        } 
+        else {
+            return("Unexpected response status");
+        }
+        }
+        catch(Exception e){
+        	return e.getMessage();
+        }
+    }
+
+};;
 @Rule
 public ExpectedException exception = ExpectedException.none();
 
 @Before
 public void init(){
-String xapikey="F2yxLdt3dNfvsncGwl0g8eCik3OxNej3LO9M2iHj";
+xapikey="F2yxLdt3dNfvsncGwl0g8eCik3OxNej3LO9M2iHj";
 }
 
 //Check that the function returns no events for incorrect user id
@@ -65,13 +89,68 @@ public void callgetMessageType(){
 //Check if correct number of events and event types are returned
 @Test
 public void validateEventType(){
-ArrayList<Event> myEvents=PushAPICaller.callPushSystemAPI("JohnDoe7");
-assertEquals(2,myEvents.size());
-assertEquals("edu.vt.ece5574.events.FireEvent",myEvents.get(0).getClass().getName().toString());
-
+	
+	//Post a message for a dummy user and validate the event generated
+	 CloseableHttpClient httpclient = HttpClients.createDefault();	
+	 try {
+	    	
+	        HttpPost httppost = new HttpPost("https://2bj29vv7f3.execute-api.us-east-1.amazonaws.com/testing");
+	        httppost.addHeader("x-api-key", xapikey);
+	        String JSON_STRING=
+	        		"{"
+					+ "\"id\": [\"Dummy\"],"
+					+ "\"message\": {"
+						+ "\"msg_type\": \"fire\","
+						+ "\"body\": {"
+							+ "\"building\": \"0\","
+							+ "\"room\": 1,"
+							+ "\"floor\": 2,"
+							+ "\"xpos\": 3,"
+							+ "\"ypos\": 4,"
+							+ "\"severity\": 5,"
+							+ "\"action\": \"Extinguish\""
+							+ "}"
+						+ "}"
+					+ "}";
+	        
+	        StringEntity requestEntity = new StringEntity(
+	        	    JSON_STRING);
+	        httppost.setEntity(requestEntity);
+	       
+	        //Execute the get method
+	        String responseBody = httpclient.execute(httppost, responseHandler);
+	        if(responseBody=="Unexpected response status"){
+	        	System.out.println(responseBody);
+	        	
+	        }
+	        ArrayList<Event> myEvents=PushAPICaller.callPushSystemAPI("Dummy");
+	        //Only one fire event should be generated as per the input JSON
+	        assertEquals(1,myEvents.size());
+	        assertEquals("edu.vt.ece5574.events.FireEvent",myEvents.get(0).getClass().getName().toString());
+	 }
+	 catch(Exception e){
+		 System.out.println(e.getMessage());
+	 }
 }
 
-
+//Check if the message is getting deleted after reading
+@Test
+public void checkIfMessageDeleted(){
+	 CloseableHttpClient httpclient = HttpClients.createDefault();	
+	 try {
+		 HttpGet httpget = new HttpGet("https://2bj29vv7f3.execute-api.us-east-1.amazonaws.com/testing/Dummy/messages");
+		 httpget.addHeader("x-api-key", xapikey);
+		 
+		  String responseBody = httpclient.execute(httpget, responseHandler);
+		  
+		  //responseBody shouldn't have any message as the message should be deleted after reading
+		  assertEquals("Unexpected response status",responseBody);
+	       
+	 }
+	 catch(Exception e){
+		 System.out.println(e.getMessage());
+	 }
+}
 
 
 }
