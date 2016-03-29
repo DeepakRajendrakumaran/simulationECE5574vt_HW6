@@ -586,4 +586,69 @@ public class EventTests {
 		//check it didn't create a new agent ID 3
 		assertNull(sim.getAgentByID("3"));
 	}
+	
+	/**
+	 * Test simple mechanism to start and stop events
+	 * @author Deepak Rajendrakumaran
+	 *
+	 */
+	@Test
+	public void testFireCreated(){
+		FireEvent event = createFire();
+		assertTrue(event.is_fireActive());
+		assertFalse(false);
+	}
+	
+	
+	@Test
+	public void testWaterLeakCreated(){
+		WaterLeakEvent event = createWaterLeak();
+		assertTrue(event.is_WaterLeakActive());
+	}
+	
+	
+	@Test
+	public void testIntruderCreated(){
+		IntruderEvent event = createIntruder();
+		assertTrue(event.is_intruderActive());
+	}
+	
+	
+	
+	@Test
+	public void testMoveRobotCreated(){
+		MoveRobotEvent event = createMoveRobot();
+		assertFalse(event.hasRobotReachedLoc());
+	}
+	@Test
+	public void testFireRemoved(){
+		FireEvent event = createFire();
+		event.turn_fireOff();
+		assertFalse(event.is_fireActive());
+	}
+	
+	
+	@Test
+	public void testWaterLeakRemoved(){
+		WaterLeakEvent event = createWaterLeak();
+		event.turn_LeakOff();
+		assertFalse(event.is_WaterLeakActive());
+	}
+	
+	
+	@Test
+	public void testIntruderRemoved(){
+		IntruderEvent event = createIntruder();
+		event.dealWithIntruder();
+		assertFalse(event.is_intruderActive());
+	}
+	
+	
+	
+	@Test
+	public void testMoveRobotRemoved(){
+		MoveRobotEvent event = createMoveRobot();
+		event.RobotReachedLoc();
+		assertTrue(event.hasRobotReachedLoc());
+	}
 }
