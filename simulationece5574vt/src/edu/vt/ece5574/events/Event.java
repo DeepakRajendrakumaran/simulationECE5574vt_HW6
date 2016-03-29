@@ -1,9 +1,6 @@
 package edu.vt.ece5574.events;
 
 
-import java.util.LinkedList;
-
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;

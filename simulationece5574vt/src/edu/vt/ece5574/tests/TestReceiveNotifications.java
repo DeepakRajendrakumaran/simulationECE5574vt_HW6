@@ -1,7 +1,7 @@
 //author: Saket Vishwasrao
 /*
  Please talk to the team for passwords of user accounts
- 
+
  */
 
 
@@ -20,6 +20,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -27,66 +28,84 @@ import org.junit.Test;
 public class TestReceiveNotifications {
 
 	static ReadNotifications testNotifications = new ReadNotifications();
+	static Simulation sim= new Simulation(10);
+	
+	@Before
+	public void setUp(){
+		testNotifications.deleteAll();
+	}
 	
 	@BeforeClass
 	  public static void testSetup() {
-	    
+
 	    String receiverPassword=new String("password");
-	    
+
         String receiverUserName=new String("simulation.ece5574");
         testNotifications.setAccountDetails(receiverUserName, receiverPassword);
 	  }
-	
-	
+
+
 //this checks if a single email is sent and received
 //Please ensure the inbox does not contain prior messages with subject Simulation_ECE5574 is empty before running tests
-	
+
+	@Test
+	public void testdeleteAll(){
+		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com","test 1"," ");
+		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com","test 2"," ");
+		testNotifications.deleteAll();
+
+		String[] result= testNotifications.readGmail(sim);
+		assertEquals(result.length,0);
+
+	}
+
+
 	@Test
 	public void testReadGmail() {
-		
+
 		//send mail
 		String subject="Simulation_ECE5574";
 		String text = "userID1";
 		String result[]= new String [1];
 		String expected[] = new String [1];
-		Simulation sim= new Simulation(10);
 		expected[0]=text;
-		
+
 		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com",subject+":"+text,text);
 		result= testNotifications.readGmail(sim);
         assertEquals(expected[0].toString(), result[0].toString());
- 
+
 	}
 //This test sends multiple emails and check if they are received and read correctly
 	@Test
 	public void testManyReadGmail() {
-		
+
 		//send mail
 		String subject="Simulation_ECE5574";
 		String text1 = "userID1";
 		String text2 = "userID2";
 		String result[]= new String [2];
 		String expected[] = new String [2];
-		Simulation sim= new Simulation(10);
 		expected[0]=text1;
 		expected[1] =text2;
-		
+
 		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com",subject+":"+text1," ");
 		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com",subject+":"+text2," ");
 		result= testNotifications.readGmail(sim);
 
-		
-		
+
+
 		assertArrayEquals(expected, result);
-		
+
 	}
-	
-	
+
+
+
+
 	public void sendGmail(String from, String to, String subject, String text){
-		 
+
         // This will send mail from -->sender@gmail.com to -->receiver@gmail.com
 
-     
+
 	   //specify parameters
        String sendingHost="smtp.gmail.com";
        int sendingPort=465;
@@ -106,7 +125,7 @@ public class TestReceiveNotifications {
 
         Message simpleMessage = new MimeMessage(session1);
 
-      
+
 
        InternetAddress fromAddress = null;
        InternetAddress toAddress = null;
@@ -140,12 +159,12 @@ public class TestReceiveNotifications {
 
            e.printStackTrace();
            System.out.println("Email failed");
-                      
+
 
        }
 
    }
-	
-	
-	
+
+
+
 }
