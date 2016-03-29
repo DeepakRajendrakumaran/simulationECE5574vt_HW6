@@ -23,7 +23,7 @@ public class FireSensor extends Sensor {
 	}
 
 
-
+	@Override
 	public void handleSensorEvents(){
 		//do nothing in base class
 		while(events.size()!=0)
@@ -39,7 +39,7 @@ public class FireSensor extends Sensor {
 
 	@Override
 	public void step(SimState state) {
-		
+		super.step(state);
 		if(events.isEmpty()){
 			//do routine sensor checks
 		}

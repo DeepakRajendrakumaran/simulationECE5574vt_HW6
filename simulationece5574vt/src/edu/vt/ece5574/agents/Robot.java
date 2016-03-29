@@ -208,6 +208,8 @@ public class Robot extends Agent {
 		Simulation simState = (Simulation)state;
 		Building bld = (Building)simState.getAgentByID(buildingID);
 		
+		super.step(state);
+		
 		if(handlingEvent == true){
 			moveToEventSrc(state);
 		}
