@@ -1,4 +1,5 @@
 package edu.vt.ece5574.events;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The class for all FireEvents with attributes specific to these types
@@ -8,27 +9,28 @@ package edu.vt.ece5574.events;
 /**
  * Edit: Added simple flags to allow starting and stopping an event to allow sensor/robot interaction
  * @author Deepak Rajendrakumaran
+ * @co-author Ameya Khandekar
  */
 public class FireEvent extends Event {
 
-	private boolean fireActive;
+	private AtomicBoolean fireActive;
 	
 	public FireEvent() {
-		fireActive = true;
+		fireActive = new AtomicBoolean(true);
 	}
 	
 	/**
 	 * used by sensor to check if even still active
 	 */
 	public boolean is_fireActive() {
-		return fireActive;
+		return fireActive.get();
 	}
 	
 	/**
 	 * used to robot to signal that event has been dealt with
 	 */
 	public void turn_fireOff() {
-		 fireActive = false;
+		 fireActive.set(false); 
 	}
 
 	

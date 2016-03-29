@@ -124,12 +124,12 @@ public class SensorAgentTest {
 		firesensor.addEvent(event);
 		while(true){
 			rob.step(sim);
-			firesensor.step(sim);
+			//firesensor.step(sim);
 
 			if(rob.isBusy()==false)
 				break;
 		}
-		
+		firesensor.step(sim);
 		assertFalse(firesensor.getFireStatus());
 		
 	}
