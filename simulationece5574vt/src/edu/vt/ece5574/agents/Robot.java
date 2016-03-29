@@ -224,6 +224,8 @@ public class Robot extends Agent {
 		Simulation simState = (Simulation)state;
 		Building bld = (Building)simState.getAgentByID(buildingID);
 		
+		super.step(state);
+		
 		if(handlingEvent == true){
 			if(robot_loc.x == currEvent.getX_pos() && robot_loc.y == currEvent.getY_pos()){
 				addressEvent();

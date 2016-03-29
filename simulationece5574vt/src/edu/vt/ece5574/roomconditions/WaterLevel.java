@@ -27,12 +27,12 @@ public class WaterLevel  {
 		waterLvl = new AtomicInteger(0);
 	}
 	
-	public WaterLevel(int waterLevel_){
+	public WaterLevel(int waterLevel_,SimState state_){
 		state = (Simulation)state_;
 		waterLvl = new AtomicInteger(waterLevel_);
 	}
 
-	public int getWaterLevel(void){
+	public int getWaterLevel(){
 
 		return waterLvl.get();
 	}
@@ -58,7 +58,7 @@ public class WaterLevel  {
 	public void robotWaterLevelChange(int rate){
 
 		int val = waterLvl.get();
-		val = val - severity*100;
+		val = val - rate*100;
 		waterLvl.set(val);
 	}
 
