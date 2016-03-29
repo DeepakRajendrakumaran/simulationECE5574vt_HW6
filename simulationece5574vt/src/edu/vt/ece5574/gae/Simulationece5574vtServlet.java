@@ -86,7 +86,7 @@ public class Simulationece5574vtServlet extends HttpServlet {
 			resp.setContentType("text/plain");
 			resp.getWriter().println("Opening the simulation log file");
 
-			//Call the find the simulation file
+			//Call the simulation log file
 		}
 
 	}
@@ -94,7 +94,6 @@ public class Simulationece5574vtServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		super.doPost(req, resp);
 
 		if(isSimulatorRunning == 1)
 		{
@@ -106,7 +105,7 @@ public class Simulationece5574vtServlet extends HttpServlet {
 		}
 		else
 		{
-			//Call the find the simulation file
+			//Update the config file
 
 			System.out.println("Simulation config file uploaded");
 			resp.setContentType("text/plain");
