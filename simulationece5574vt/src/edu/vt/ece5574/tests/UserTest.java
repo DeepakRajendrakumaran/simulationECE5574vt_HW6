@@ -111,6 +111,7 @@ public class UserTest {
 				+ "}"
 			+ "}";
 		
+	@Before
 	public void initialize(){
 		sim = new Simulation(1);
 		String uID ="1";
@@ -118,7 +119,7 @@ public class UserTest {
 		bld = new Building(bID);
 		sim.addAgent(bld);		
 		//To-Do:Figure out how to add agents
-		usr = new User(uID,bID,true,5,100);
+		usr = new User(uID,bID,true);
 		assertTrue(sim.addAgent(usr));
 	}
 	
