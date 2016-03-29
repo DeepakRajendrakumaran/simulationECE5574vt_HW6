@@ -15,9 +15,7 @@ import sim.engine.SimState;
  * @author Vedahari Narasimhan Ganesan 
  */
 
-public class User extends Agent{
-	
-	LinkedList<Event> userEvents;
+public class User extends Agent{	
 	private static final long serialVersionUID = 1;
 	private boolean isAppUser;
 	private Coordinate location;
@@ -27,18 +25,12 @@ public class User extends Agent{
 	private boolean waterLeakNotification = false;
 	private boolean intruderNotification = false;
 	
-	/** Constructor to create a User in the Simulation Component
-	 * @param usrID - ID of the user in the system
-	 * @param building
-	 * @param bAppUser
-	 * @param loc
-	 */
-	public User(String usrID, String buildingID, boolean bAppUser, Coordinate loc){
+	public User(String usrID, String buildingID, boolean bAppUser, int x, int y){
 		super(usrID, buildingID);
 		isAppUser = bAppUser;
-		location = loc;
-	}
-	
+		location = new Coordinate(x,y);		
+	}	
+
 	/**
 	 * @param usrID
 	 * @param building
@@ -79,9 +71,9 @@ public class User extends Agent{
 	 * Handler Function to handle different events received by an User
 	 */
 	public void handleUserEvents(){
-		while(userEvents.size()!=0)
+		while(events.size()!=0)
 		{
-			Event currentEvent = userEvents.removeFirst();
+			Event currentEvent = events.removeFirst();
 			clearAllNotification();
 			if(currentEvent instanceof IntruderEvent){
 				//Evaluate this is caused by this user
@@ -126,6 +118,7 @@ public class User extends Agent{
 	 * @param bAppUser
 	 */
 	public void setAppUser(boolean bAppUser){
+		//System.out.println("App user is set as "+bAppUser);
 		isAppUser = bAppUser;
 	}
 	
@@ -152,18 +145,20 @@ public class User extends Agent{
 	}	
 	
 	private void clearAllNotification(){
-		fireNotification = false;
-		intruderNotification = false;
-		waterLeakNotification = false;
+		setFireNotification(false);
+		setIntruderNotification(false);
+		setWaterLeakNotification(false);
 	}
 	
 	private void setWaterLeakNotification(boolean value)
 	{
+		//System.out.println("setWaterLeakNotification entered with value as "+ value);
 		waterLeakNotification = value;
 	}
 	
 	public boolean getWaterLeakNotification()
 	{
+		//System.out.println("waterLeakNotification is "+waterLeakNotification);
 		return waterLeakNotification;		
 	}
 	
@@ -174,6 +169,7 @@ public class User extends Agent{
 	
 	public boolean getFireNotification()
 	{
+		//System.out.println("getFireNotification is "+fireNotification);
 		return fireNotification;		
 	}
 	
@@ -192,8 +188,9 @@ public class User extends Agent{
 	 */
 	@Override
 	public void step(SimState state) {
-		//Simulation simState = (Simulation)state;
 		super.step(state);
+		//System.out.println("User Step entered");
+		Simulation simState = (Simulation)state;		
 		if(events.isEmpty()){
 			//if no event, create event for the robots to handle
 			createRandomMovement(state);
