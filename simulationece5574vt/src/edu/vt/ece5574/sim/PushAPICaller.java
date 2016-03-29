@@ -61,7 +61,7 @@ public static ArrayList<Event> callPushSystemAPI(String userID) {
         //Execute the get method
         String responseBody = httpclient.execute(httpget, responseHandler);
         if(responseBody=="Unexpected response status"){
-        	System.out.println(responseBody);
+        	//System.out.println(responseBody);
         	return myEvents;
         }
         
@@ -83,8 +83,8 @@ public static ArrayList<Event> callPushSystemAPI(String userID) {
         	httpdelete = new HttpDelete(url+messageId);
       	  	httpdelete.addHeader("x-api-key", "F2yxLdt3dNfvsncGwl0g8eCik3OxNej3LO9M2iHj");
       	  	
-      	  	//Delete statement temporarily committed.
-      	    //httpclient.execute(httpdelete, responseHandler);
+      	  	//Delete the message once read
+      	    httpclient.execute(httpdelete, responseHandler);
         		
         }
         return myEvents;

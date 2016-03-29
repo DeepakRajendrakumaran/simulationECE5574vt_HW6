@@ -193,6 +193,7 @@ public class User extends Agent{
 	@Override
 	public void step(SimState state) {
 		//Simulation simState = (Simulation)state;
+		super.step(state);
 		if(events.isEmpty()){
 			//if no event, create event for the robots to handle
 			createRandomMovement(state);

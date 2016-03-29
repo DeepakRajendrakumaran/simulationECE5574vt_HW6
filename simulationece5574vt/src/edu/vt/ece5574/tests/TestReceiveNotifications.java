@@ -33,7 +33,7 @@ public class TestReceiveNotifications {
 	    
 	    String receiverPassword=new String("password");
 	    
-        String receiverUserName=new String("simulation.ece5574@gmail.com");
+        String receiverUserName=new String("simulation.ece5574");
         testNotifications.setAccountDetails(receiverUserName, receiverPassword);
 	  }
 	
@@ -46,13 +46,13 @@ public class TestReceiveNotifications {
 		
 		//send mail
 		String subject="Simulation_ECE5574";
-		String text = "userID:1";
+		String text = "userID1";
 		String result[]= new String [1];
 		String expected[] = new String [1];
 		Simulation sim= new Simulation(10);
 		expected[0]=text;
 		
-		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com",subject,text);
+		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com",subject+":"+text,text);
 		result= testNotifications.readGmail(sim);
         assertEquals(expected[0].toString(), result[0].toString());
  
@@ -63,16 +63,16 @@ public class TestReceiveNotifications {
 		
 		//send mail
 		String subject="Simulation_ECE5574";
-		String text1 = "userID:1";
-		String text2 = "userID:2";
+		String text1 = "userID1";
+		String text2 = "userID2";
 		String result[]= new String [2];
 		String expected[] = new String [2];
 		Simulation sim= new Simulation(10);
 		expected[0]=text1;
 		expected[1] =text2;
 		
-		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com",subject,text1);
-		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com",subject,text2);
+		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com",subject+":"+text1," ");
+		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com",subject+":"+text2," ");
 		result= testNotifications.readGmail(sim);
 
 		
