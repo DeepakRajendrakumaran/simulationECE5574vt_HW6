@@ -6,6 +6,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
 import edu.vt.ece5574.sim.Simulation;
+/**
+ * This is the main user side interface of the simulator. This is the link between the simulator 
+ * and web page interfaces like upload config file, start, stop, view log etc.
+ * This is based on Google App Engine framework and JavaServlet Technology.
+ * @author: Bishwajit Dutta, bdutta@vt.edu
+ * */
 
 @SuppressWarnings("serial")
 public class Simulationece5574vtServlet extends HttpServlet {
