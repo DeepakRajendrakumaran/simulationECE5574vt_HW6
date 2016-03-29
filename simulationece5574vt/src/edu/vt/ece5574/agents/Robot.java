@@ -17,6 +17,13 @@ import edu.vt.ece5574.sim.Simulation;
 import sim.engine.SimState;
 import sim.util.MutableInt2D;
 
+/**
+ * The logic for robot movement
+ * 1-move around the building to sense changes
+ * 2-React to an event 
+ * @author Deepak Rajendrakumaran
+ *
+ */
 public class Robot extends Agent {
 
 	private static final long serialVersionUID = 1;	
@@ -119,7 +126,7 @@ public class Robot extends Agent {
 	private void updateVisitedLocs(MutableInt2D new_loc){
 		lastVisitedLocs.add(new_loc);
 		if(toBeSavedLocs == noOfSavedLocs)
-			lastVisitedLocs.remove(noOfSavedLocs);
+			lastVisitedLocs.remove(noOfSavedLocs-1);
 		else
 			noOfSavedLocs++;
 	}
@@ -146,6 +153,7 @@ public class Robot extends Agent {
 
 
 	public void addressEvent(){
+		
 		if(currEvent instanceof FireEvent){
 			//Address FireEvent
 			
@@ -171,21 +179,17 @@ public class Robot extends Agent {
 		int x_inc,y_inc;
 		x_inc =  nextPoint.x - robot_loc.x;
 		y_inc =  nextPoint.y - robot_loc.y;
-		x_inc = (x_inc)/(Math.abs(x_inc));
-		y_inc = (y_inc)/(Math.abs(y_inc));
+		if(x_inc!=0)
+			x_inc = (x_inc)/(Math.abs(x_inc));
+		if(y_inc!=0)
+			y_inc = (y_inc)/(Math.abs(y_inc));
 		MutableInt2D new_loc = new MutableInt2D(robot_loc.x + x_inc, robot_loc.y + y_inc);
 		updateVisitedLocs(new_loc);
 		robot_loc.x = new_loc.x;
 		robot_loc.y = new_loc.y;
 		simState.storage.updRobotPos(super.getID(), robot_loc.x, robot_loc.y);
 		
-		if((robot_loc.x == currEvent.getX_pos()) && (robot_loc.y == currEvent.getY_pos() )){
-			addressEvent();
-		}
-		else if((robot_loc.x == nextPoint.x) && (robot_loc.y == nextPoint.y )){
-			nextPoint = route.get(0);
-			route.remove(0);
-		}
+		
 		
 	}
 	
@@ -198,6 +202,18 @@ public class Robot extends Agent {
 		Coordinate dest_coord = new Coordinate(currEvent.getX_pos(),
 				currEvent.getY_pos());
 		route = bld.getRoute(curr_coord, dest_coord);
+		if(route.size()==0){
+			System.out.println("nextPoint: Not present\n");
+			nextPoint = new Coordinate(currEvent.getX_pos(),
+					currEvent.getY_pos());
+			System.out.println("nextPoint, X="+ nextPoint.x+",Y="+nextPoint.y+"\n");
+		}
+		else{
+			
+			
+			nextPoint = route.remove(0);
+			System.out.println("nextPoint, X="+ nextPoint.x+",Y="+nextPoint.y+"\n");
+		}
 		moveToEventSrc(state);
 		
 	}
@@ -208,8 +224,26 @@ public class Robot extends Agent {
 		Simulation simState = (Simulation)state;
 		Building bld = (Building)simState.getAgentByID(buildingID);
 		
+		super.step(state);
+		
 		if(handlingEvent == true){
-			moveToEventSrc(state);
+			if(robot_loc.x == currEvent.getX_pos() && robot_loc.y == currEvent.getY_pos()){
+				addressEvent();
+			}
+			else {
+				if((robot_loc.x == nextPoint.x) && (robot_loc.y == nextPoint.y )){
+					if(route.size()==0){
+						nextPoint = new Coordinate(currEvent.getX_pos(),
+								currEvent.getY_pos());
+					}
+					else{
+						nextPoint = route.remove(0);
+					}
+				}
+				else
+					moveToEventSrc(state);
+			}
+			
 		}
 		else if(events.isEmpty()){
 			randomMovement(state);

@@ -78,6 +78,7 @@ public class Building extends Agent{
 	@Override
 	public void step(SimState arg0) {
 		// TODO Auto-generated method stub
+		super.step(arg0);
 		
 	}
 

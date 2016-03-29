@@ -35,13 +35,7 @@ public class Sensor extends Agent {
 	@Override
 	public void step(SimState state) {
 		
-		if(events.isEmpty()){
-			//do routine sensor checks
-		}
-		else{
-			//in case of events react
-			handleSensorEvents();
-		}			
+		super.step(state);
 	}
 
 
