@@ -80,62 +80,31 @@ public class ReadNotifications implements Steppable{
                         //go through all mails
                     	
                     	
-                    	if(message[i].getSubject().equals("Simulation_ECE5574")){
-                    		//System.out.println(message[i].getSubject());
-                    		//System.out.println(message[i].getContent());
-                    		//some messages maybe multipart
-                    		if(message[i].getContent() instanceof Multipart){
-                    			Multipart multipart = (Multipart) message[i].getContent();
-                        		for (int j = 0; j < multipart.getCount(); j++) {
-                        			Part bodyPart = multipart.getBodyPart(j);
-                        			if (bodyPart.isMimeType("text/plain")) {
-                        				System.out.println("CONTENT:" + bodyPart.getContent());
-                                        String split[];
-                                        String userID;
-                                        split = bodyPart.getContent().toString().split("\\n");
-                                        if(split.length==1){
-                                        	
-                                        	
-                                        	userID=split[0].replace("\n","").replace("\r", "");
-                                        	//check for userID, delete email if userID found
-                                            if(userID!=null){
-                                            	if(sim.agentPushReceived(userID)){
-                                            		message[i].setFlag(Flags.Flag.DELETED, true); //delete message
-                                            	}
-                                            }
-                                        	result[i]= userID;
-                                        	System.out.println(result[i]);
-                  
-                                        	continue;
-                                        	}
-                                        }
-                        		}
-                    		}
-                    		else{
-                    			System.out.println("CONTENT:" + message[i].getContent());
-                                String split[];
-                                split = message[i].getContent().toString().split("\\n");
-                                if(split.length==1){
-                                	
-                                	
-                                	String userID;
-                                	userID=split[0].replace("\n","").replace("\r", "");
-                                	//check for userID, delete email if userID found
-                                    if(userID!=null){
-                                    	if(sim.agentPushReceived(userID)){
-                                    		message[i].setFlag(Flags.Flag.DELETED, true);   //delete message
-                                    	}
-                                    }
-                                	result[i]= userID;
-                                	System.out.println(result[i]);
-          
+                    	String[] subject= message[i].getSubject().split(":");
+                    	if(subject.length==2){
+                    		System.out.println(subject[0]);
+                        	if(subject[0].equals("Simulation_ECE5574")){
+                        		
+                        		System.out.println(message[i].getSubject());
+
+                          	  	if(subject[1]!=null){
+                          	  	   //message[i].setFlag(Flags.Flag.DELETED, true);   //delete message
+                                	if(sim.agentPushReceived(subject[1])){
+                                		message[i].setFlag(Flags.Flag.DELETED, true);   //delete message
                                 	}
                                 }
-                    		}
-                    		
-                    		 
-                    		
+                        	}
+                        		//System.out.println(message[i].getContent());
+                        	result[i]= subject[1];
+                        	System.out.println(result[i]);
                     	}
+                    	
+                    }	//some messages maybe multipart
+                    		
+                    /*	
+                    		
+                    		*/
+                    	
                         
  
                     //close connections

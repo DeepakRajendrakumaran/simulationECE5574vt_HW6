@@ -24,7 +24,15 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v7.0"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="simulationece5574vt/war/WEB-INF/lib/commons-codec-1.9.jar"/>
+	<classpathentry kind="lib" path="simulationece5574vt/war/WEB-INF/lib/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="simulationece5574vt/war/WEB-INF/lib/fluent-hc-4.5.2.jar"/>
 	<classpathentry kind="lib" path="simulationece5574vt/war/WEB-INF/lib/httpclient-4.5.2.jar"/>
+	<classpathentry kind="lib" path="simulationece5574vt/war/WEB-INF/lib/httpclient-cache-4.5.2.jar"/>
+	<classpathentry kind="lib" path="simulationece5574vt/war/WEB-INF/lib/httpclient-win-4.5.2.jar"/>
 	<classpathentry kind="lib" path="simulationece5574vt/war/WEB-INF/lib/httpcore-4.4.4.jar"/>
+	<classpathentry kind="lib" path="simulationece5574vt/war/WEB-INF/lib/httpmime-4.5.2.jar"/>
+	<classpathentry kind="lib" path="simulationece5574vt/war/WEB-INF/lib/jna-4.1.0.jar"/>
+	<classpathentry kind="lib" path="simulationece5574vt/war/WEB-INF/lib/jna-platform-4.1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
