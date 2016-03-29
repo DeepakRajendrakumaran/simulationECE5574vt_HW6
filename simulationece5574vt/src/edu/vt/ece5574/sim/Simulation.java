@@ -25,7 +25,7 @@ public class Simulation extends SimState {
     
     public Simulation(long seed){
     	super(seed); //needs to be first line, can't just set seed here
-    	/*
+    	
     	config = new Configuration("config.properties");
     	
     	numRobots = Integer.parseInt(config.getProp("numRobots"));
@@ -43,7 +43,7 @@ public class Simulation extends SimState {
             	System.out.println("Ignore other message noting the job number and seed value.");
         	}
         }
-        */
+        
         agents = new HashMap<String, Agent>();
         storage = new StorageAPI();
     }

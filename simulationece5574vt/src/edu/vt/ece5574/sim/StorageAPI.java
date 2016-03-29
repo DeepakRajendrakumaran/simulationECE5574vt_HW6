@@ -16,6 +16,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONObject;
+import edu.vt.ece5574.gae.log;
 
 
 public class StorageAPI {
@@ -101,6 +102,9 @@ public class StorageAPI {
 	{
 		try 
 		{
+			//hackish. need to write new module to disperse updates
+			log.updateEvent("robot", robotID, xpos, ypos);
+
 			JSONObject json = new JSONObject();
 			URI uri = new URI ( baseURL + "robots/" + robotID );
 			HttpResponse response;
@@ -126,6 +130,9 @@ public class StorageAPI {
 	{
 		try 
 		{
+			//hackish. need to write new module to disperse updates
+			log.updateEvent("user", userID, xpos, ypos);
+
 			JSONObject json = new JSONObject();
 			URI uri = new URI ( baseURL + "users/" + userID );
 			HttpResponse response;
