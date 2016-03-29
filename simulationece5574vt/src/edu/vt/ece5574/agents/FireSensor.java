@@ -29,7 +29,17 @@ public class FireSensor extends Sensor {
 		while(events.size()!=0)
 		{
 			Event currentEvent = events.removeFirst();
-			//take appropriate action.
+			if(currentEvent instanceof FireEvent){
+				FireEvent fireevent = (FireEvent)currentEvent;
+				if(fireevent.is_fireActive()){
+					//send sensor data = "Fire Active" to storage API.
+				}
+				else{
+					//send sensor data = "Fire de-activated"
+				}
+				
+			}
+			
 				
 		}
 	}

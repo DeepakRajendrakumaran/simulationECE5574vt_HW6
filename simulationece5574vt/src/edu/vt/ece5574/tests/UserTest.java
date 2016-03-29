@@ -50,9 +50,8 @@ public class UserTest {
 	
 	@Test
 	public void checkDefaultUser() {
-		int id = 5;
 		User user = new User("1", "0");
-		assertEquals(user.getID(), id);
+		assertEquals(user.getID(), "1");
 		assertEquals(user.getBuildingID(),"0");
 		assertEquals(user.isAppUser(),false);
 	}

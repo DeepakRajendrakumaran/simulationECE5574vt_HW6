@@ -22,8 +22,6 @@ package edu.vt.ece5574.sim;
 import java.util.*;
 import javax.mail.Folder;
 import javax.mail.Message;
-import javax.mail.Multipart;
-import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
 
