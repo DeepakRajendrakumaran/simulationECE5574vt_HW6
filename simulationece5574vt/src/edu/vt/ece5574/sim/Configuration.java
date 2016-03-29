@@ -114,7 +114,10 @@ public class Configuration {
 	}
 	
 	public String getProp(String propName){
-		String property =  allProp.getProperty(propName);
+		String property = null;
+		if(allProp != null){
+			property =  allProp.getProperty(propName);
+		}
 		if(property == null) {
 			System.err.println("Failed to load property named " + propName);
         }

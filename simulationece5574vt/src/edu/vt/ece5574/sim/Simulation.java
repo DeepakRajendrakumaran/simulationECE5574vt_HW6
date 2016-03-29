@@ -17,7 +17,6 @@ public class Simulation extends SimState {
 	private static final long serialVersionUID = 1;
     public int numRobots;
     
-    
  
     public HashMap<String, Agent> agents; //map the agent id to the agent itself
     
@@ -25,13 +24,27 @@ public class Simulation extends SimState {
     
     public Simulation(long seed){
     	super(seed); //needs to be first line, can't just set seed here
-    	
-    	config = new Configuration("config.properties");
-    	
-    	numRobots = Integer.parseInt(config.getProp("numRobots"));
-        boolean debug = Boolean.parseBoolean(config.getProp("debug")); //will be read in from config.  If it's a debug, we'll set seed manually
+    	boolean debug ;
+
+/*    	config = new Configuration("config.properties");
+    	if(config != null){
+    		numRobots = Integer.parseInt(config.getProp("numRobots"));
+    		debug = Boolean.parseBoolean(config.getProp("debug")); //will be read in from config.  If it's a debug, we'll set seed manually
+    		seed = Long.parseLong(config.getProp("seedValue"));
+
+    	}
+
+    	else{	
+    		numRobots = 0;
+    		debug = false;
+    		seed = 5;
+    	}	
+    	*/
+    	//
+		numRobots = 0;
+		debug = false;
+		seed = 5;
         //seed = 5;
-        seed = Long.parseLong(config.getProp("seedValue"));
         
         if(debug){
         	if(seed == 0){
