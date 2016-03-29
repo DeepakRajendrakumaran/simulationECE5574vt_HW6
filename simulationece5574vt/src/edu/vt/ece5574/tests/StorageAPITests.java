@@ -69,5 +69,17 @@ public class StorageAPITests{
 		assertEquals( 200 , var.deleteRequest(uri).getStatusLine().getStatusCode() );
     }
 	
-	
+    @Test
+    public void updateRobot()
+    {
+    	StorageAPI var = new StorageAPI();
+    	assertEquals( var.updRobotPos( "robot1", 10 , 20 ) ,  true ) ;
+    }
+    
+    @Test
+    public void updateUser()
+    {
+    	StorageAPI var = new StorageAPI();
+    	assertEquals( var.updUserPos( "user1", 10 , 20 ) ,  true ) ;
+    }
 }
