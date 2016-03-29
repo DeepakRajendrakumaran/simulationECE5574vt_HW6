@@ -2,30 +2,30 @@ package edu.vt.ece5574.agents;
 
 
 import edu.vt.ece5574.events.Event;
-import edu.vt.ece5574.events.FireEvent;
+import edu.vt.ece5574.events.WaterLeakEvent;
 import edu.vt.ece5574.sim.Simulation;
 import sim.engine.SimState;
 
 //Class for sensors. - Author - Ameya Khandekar
 
-public class FireSensor extends Sensor {
+public class WaterLeakSensor extends Sensor {
 	
 
 
 
 	private static final long serialVersionUID = 1;
- 
 
-	private boolean fireStatus;
+
+	private boolean waterleakStatus;
 
 	//Constructors for Sensor class :- for now only providing support for 1st Agent class constructor
-	public FireSensor(String id_, String buildingID_){
-		super(id_,buildingID_,"fire");
+	public WaterLeakSensor(String id_, String buildingID_){
+		super(id_,buildingID_,"waterleak");
 	
 	}
 
-	public boolean getFireStatus(){
-		return fireStatus;
+	public boolean getWaterLeakStatus(){
+		return waterleakStatus;
 	}
 
 	@Override
@@ -33,15 +33,15 @@ public class FireSensor extends Sensor {
 		while(events.size()!=0)
 		{
 			Event currentEvent = events.removeFirst();
-			if(currentEvent instanceof FireEvent){
-				FireEvent fireevent = (FireEvent)currentEvent;
-				if(fireevent.is_fireActive()){
-					//send sensor data = "Fire Active" to storage API.
-					fireStatus = true;
+			if(currentEvent instanceof WaterLeakEvent){
+				WaterLeakEvent waterleakevent = (WaterLeakEvent)currentEvent;
+				if(waterleakevent.is_WaterLeakActive()){
+					//send sensor data = "WaterLeak Active" to storage API.
+					waterleakStatus = true;
 				}
 				else{
-					//send sensor data = "Fire de-activated" to storage API.
-					fireStatus = false;
+					//send sensor data = "WaterLeak de-activated" to storage API.
+					waterleakStatus = false;
 				}
 				
 			}
