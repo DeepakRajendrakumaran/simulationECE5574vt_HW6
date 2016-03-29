@@ -20,6 +20,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -28,6 +29,12 @@ public class TestReceiveNotifications {
 
 	static ReadNotifications testNotifications = new ReadNotifications();
 	static Simulation sim= new Simulation(10);
+	
+	@Before
+	public void setUp(){
+		testNotifications.deleteAll();
+	}
+	
 	@BeforeClass
 	  public static void testSetup() {
 
@@ -63,7 +70,6 @@ public class TestReceiveNotifications {
 		String expected[] = new String [1];
 		expected[0]=text;
 
-		testNotifications.deleteAll();
 		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com",subject+":"+text,text);
 		result= testNotifications.readGmail(sim);
         assertEquals(expected[0].toString(), result[0].toString());
@@ -82,7 +88,6 @@ public class TestReceiveNotifications {
 		expected[0]=text1;
 		expected[1] =text2;
 
-		testNotifications.deleteAll();
 		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com",subject+":"+text1," ");
 		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com",subject+":"+text2," ");
 		result= testNotifications.readGmail(sim);

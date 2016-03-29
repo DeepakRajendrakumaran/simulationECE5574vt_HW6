@@ -36,6 +36,7 @@ public class RecvMsgSimIntegrationTest {
 		rob1 = new Robot("1", "0");
 		sim.addAgent(bld);
 		sim.addAgent(rob1);
+		testNotifications.deleteAll();
 	}
 	
 	@BeforeClass
