@@ -63,20 +63,33 @@ public class RobotAgentTest {
 	@Test(timeout=1000)
 	public void randomMovement(){
 		String rID ="1";
-		Robot rob = new Robot(rID,bID,2,5);
+		Robot rob = new Robot(rID,bID,1,2);
 		sim.addAgent(rob);
 		double initial_x= rob.getX();
 		double initial_y= rob.getY();
 		rob.randomMovement(sim);
-		assertFalse((rob.getX()==initial_x)&&(rob.getY()==initial_y));
-			
+		assertFalse((rob.getX()==initial_x)&&(rob.getY()==initial_y));	
+	}
+	
+	@Test(timeout=1000)
+	public void continuousRandomMovement(){
+		String rID ="1";
+		Robot rob = new Robot(rID,bID,2,2);
+		sim.addAgent(rob);
+		int steps=150;
+		while(steps!=0){
+			rob.randomMovement(sim);
+			bld.checkStep(rob.getX(), rob.getY());
+			steps--;
+		}
+		assertTrue(bld.checkStep(rob.getX(), rob.getY()));			
 		
 	}
 	
 	@Test(timeout=1000)
 	public void respondtoNoEvent(){
 		String rID ="1";
-		Robot rob = new Robot(rID,bID,2,5);
+		Robot rob = new Robot(rID,bID,2,2);
 		sim.addAgent(rob);
 		rob.step(sim);
 		assertFalse(rob.isBusy());

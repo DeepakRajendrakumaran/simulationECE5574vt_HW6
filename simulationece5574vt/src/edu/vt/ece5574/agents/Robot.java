@@ -100,24 +100,34 @@ public class Robot extends Agent {
 					continue;
 				int x = dx+x_pos;
 				int y = dy+y_pos;
+				
 				if(bld.checkStep(x,y)==true){
 					int weight = checkIfRecentlyVisited(x,y);
-					if(weight ==0)
+					if(weight ==0){
+						
 						validGridList.add(new MutableInt2D(x,y));	
-					else
-						set.add(Integer.valueOf(weight));						
+					}
+					else{
+						
+						set.add(Integer.valueOf(weight));	
+					}
 						
 				}
 			}
 		}
-		if(validGridList.isEmpty()){
-			new_loc = lastVisitedLocs.elementAt(set.last()-1);
-		}
-		else{
+		
+		if(!validGridList.isEmpty()){
 			int nextLocIndex = state.random.nextInt(validGridList.size());
 			new_loc = validGridList.get(nextLocIndex);
 			
 		}
+		else if(set.size()!=0){
+			new_loc = lastVisitedLocs.elementAt(set.last()-1);			
+		}
+		else{
+			new_loc=robot_loc;
+		}
+		
 		updateVisitedLocs(new_loc);
 		robot_loc.x = new_loc.x;
 		robot_loc.y = new_loc.y;
@@ -216,16 +226,14 @@ public class Robot extends Agent {
 				currEvent.getY_pos());
 		route = bld.getRoute(curr_coord, dest_coord);
 		if(route.size()==0){
-			System.out.println("nextPoint: Not present\n");
+			
 			nextPoint = new Coordinate(currEvent.getX_pos(),
 					currEvent.getY_pos());
-			System.out.println("nextPoint, X="+ nextPoint.x+",Y="+nextPoint.y+"\n");
 		}
 		else{
 			
-			
 			nextPoint = route.remove(0);
-			System.out.println("nextPoint, X="+ nextPoint.x+",Y="+nextPoint.y+"\n");
+			
 		}
 		moveToEventSrc(state);
 		
