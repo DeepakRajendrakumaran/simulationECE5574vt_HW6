@@ -27,11 +27,11 @@ import org.junit.Test;
 public class TestReceiveNotifications {
 
 	static ReadNotifications testNotifications = new ReadNotifications();
-	
+	static Simulation sim= new Simulation(10);
 	@BeforeClass
 	  public static void testSetup() {
 	    
-	    String receiverPassword=new String("password");
+	    String receiverPassword=new String("Cae@5574");
 	    
         String receiverUserName=new String("simulation.ece5574");
         testNotifications.setAccountDetails(receiverUserName, receiverPassword);
@@ -42,6 +42,18 @@ public class TestReceiveNotifications {
 //Please ensure the inbox does not contain prior messages with subject Simulation_ECE5574 is empty before running tests
 	
 	@Test
+	public void testdeleteAll(){
+		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com","test 1"," ");
+		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com","test 2"," ");
+		testNotifications.deleteAll();
+		
+		String[] result= testNotifications.readGmail(sim);
+		assertEquals(result.length,0);
+		
+	}
+	
+	
+	@Test
 	public void testReadGmail() {
 		
 		//send mail
@@ -49,9 +61,9 @@ public class TestReceiveNotifications {
 		String text = "userID1";
 		String result[]= new String [1];
 		String expected[] = new String [1];
-		Simulation sim= new Simulation(10);
 		expected[0]=text;
 		
+		testNotifications.deleteAll();
 		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com",subject+":"+text,text);
 		result= testNotifications.readGmail(sim);
         assertEquals(expected[0].toString(), result[0].toString());
@@ -67,10 +79,10 @@ public class TestReceiveNotifications {
 		String text2 = "userID2";
 		String result[]= new String [2];
 		String expected[] = new String [2];
-		Simulation sim= new Simulation(10);
 		expected[0]=text1;
 		expected[1] =text2;
 		
+		testNotifications.deleteAll();
 		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com",subject+":"+text1," ");
 		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com",subject+":"+text2," ");
 		result= testNotifications.readGmail(sim);
@@ -82,6 +94,8 @@ public class TestReceiveNotifications {
 	}
 	
 	
+	
+	
 	public void sendGmail(String from, String to, String subject, String text){
 		 
         // This will send mail from -->sender@gmail.com to -->receiver@gmail.com
@@ -91,7 +105,7 @@ public class TestReceiveNotifications {
        String sendingHost="smtp.gmail.com";
        int sendingPort=465;
        String username= "test.ece5574@gmail.com";
-       String password= "password";
+       String password= "Caetest5574";
 
        Properties props = new Properties();
 

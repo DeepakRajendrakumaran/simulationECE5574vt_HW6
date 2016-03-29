@@ -22,6 +22,8 @@ package edu.vt.ece5574.sim;
 import java.util.*;
 import javax.mail.Folder;
 import javax.mail.Message;
+import javax.mail.Multipart;
+import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
 
@@ -47,7 +49,55 @@ public class ReadNotifications implements Steppable{
  
     }
 	
-   
+   public void deleteAll(){
+	   
+	   this.receivingHost="imap.gmail.com";
+       Properties props2=System.getProperties();
+       props2.setProperty("mail.store.protocol", "imaps");
+      
+       Session session2=Session.getDefaultInstance(props2, null);
+
+           try {
+
+                   Store store=session2.getStore("imaps");
+
+                   store.connect(this.receivingHost,this.userName, this.password);
+
+                   Folder folder=store.getFolder("INBOX");//get inbox
+
+                   folder.open(Folder.READ_WRITE);//open folder
+
+                   Message message[]=folder.getMessages();
+                   String result[] =  new String[message.length];
+                   for(int i=0;i<message.length;i++){
+
+                       //go through all mails
+                	   message[i].setFlag(Flags.Flag.DELETED, true);   //delete messages
+                   	
+                   }	//some messages maybe multipart
+                   		
+                   /*	
+                   		
+                   		*/
+                   	
+                       
+
+                   //close connections
+
+                   folder.close(true);
+
+                   store.close();
+                  
+           } catch (Exception e) {
+
+                   System.out.println(e.toString());
+
+           }
+           //return null if no results
+			
+
+	   
+   }
     
     
     
@@ -86,7 +136,7 @@ public class ReadNotifications implements Steppable{
                         		System.out.println(message[i].getSubject());
 
                           	  	if(subject[1]!=null){
-                          	  	   //message[i].setFlag(Flags.Flag.DELETED, true);   //delete message
+                          	  	   message[i].setFlag(Flags.Flag.DELETED, true);   //delete message
                                 	if(sim.agentPushReceived(subject[1])){
                                 		message[i].setFlag(Flags.Flag.DELETED, true);   //delete message
                                 	}
