@@ -101,7 +101,11 @@ public class Robot extends Agent {
 				int x = dx+x_pos;
 				int y = dy+y_pos;
 				
-				if(bld.checkStep(x,y)==true){
+				//temp hack
+				if((x>9) || (y>9))continue;
+				//Hack end
+				if(bld.checkStep(x,y)){
+				//	System.out.println("Check Pass");
 					int weight = checkIfRecentlyVisited(x,y);
 					if(weight ==0){
 						
@@ -113,6 +117,9 @@ public class Robot extends Agent {
 					}
 						
 				}
+				/*else{
+					System.out.println("Check Fail");
+				}*/
 			}
 		}
 		

@@ -35,10 +35,10 @@ public class RobotAgentTest {
 	@Test(timeout=1000)
 	public void addRobot(){
 		Robot rob = new Robot("2",bID,5,100);
-		assertTrue(sim.addAgent(rob));
-			
+		assertTrue(sim.addAgent(rob));			
 		
 	}
+	
 	
 	@Test(timeout=1000)
 	public void chckRobotID(){
@@ -63,7 +63,7 @@ public class RobotAgentTest {
 	@Test(timeout=1000)
 	public void randomMovement(){
 		String rID ="1";
-		Robot rob = new Robot(rID,bID,1,2);
+		Robot rob = new Robot(rID,bID,1,1);
 		sim.addAgent(rob);
 		double initial_x= rob.getX();
 		double initial_y= rob.getY();
@@ -74,9 +74,10 @@ public class RobotAgentTest {
 	@Test(timeout=1000)
 	public void continuousRandomMovement(){
 		String rID ="1";
-		Robot rob = new Robot(rID,bID,2,2);
+		Robot rob = new Robot(rID,bID,3,2);
 		sim.addAgent(rob);
-		int steps=150;
+		assertTrue(bld.checkStep(9, 9));	
+		int steps=100;
 		while(steps!=0){
 			rob.randomMovement(sim);
 			bld.checkStep(rob.getX(), rob.getY());
