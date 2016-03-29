@@ -1,11 +1,8 @@
 package edu.vt.ece5574.sim;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-
 import edu.vt.ece5574.agents.Agent;
 import edu.vt.ece5574.agents.Building;
-import edu.vt.ece5574.events.Event;
 import sim.engine.*;
 
 /**
@@ -58,7 +55,7 @@ public class Simulation extends SimState {
 	}
 	
 	public void end(){
-		//empty for now
+		this.finish();
 	}
 
 
