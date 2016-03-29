@@ -3,6 +3,11 @@ import java.util.Properties;
 import java.io.InputStream;
 import java.io.FileNotFoundException;
 
+
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreInputStream;
+import edu.vt.ece5574.gae.log;
+
 //Maybe we shouldn't do json or XML?  There's a java properties file format
 //that might be of interest: 
 //http://cs.gmu.edu/~eclab/projects/mason/extensions/webtutorial1/#param-file
@@ -22,26 +27,61 @@ import java.io.FileNotFoundException;
  */
 public class Configuration {
 	
-	/**
-	 * 
-	 */
+	private static Configuration instance = null;
 	InputStream inputStream;
+	BlobstoreInputStream in;
 	Properties allProp;
 
 	public Configuration(){
-		String filename = "config.properties";
-		if(!load(filename)) {
-			System.err.println("Failed to load configuration file named " + filename);
-			System.exit(-1);
-		}
+//		String filename = "config.properties";
+//		if(!load(filename)) {
+//			System.err.println("Failed to load configuration file named " + filename);
+//			System.exit(-1);
+//		}
 	}
 	
 	public Configuration(String filename){
 
-		if(!load(filename)) {
-			System.err.println("Failed to load configuration file named " + filename);
-			System.exit(-1);
+//		if(!load(filename)) {
+//			System.err.println("Failed to load configuration file named " + filename);
+//			System.exit(-1);
+//		}
+	}
+	public static Configuration getInstance() {
+		if(instance == null) {
+			instance = new Configuration();
+	    }
+	    return instance;
+	}
+	
+	public boolean load(BlobKey blobKey) {
+		
+		//for debugging purpose
+		//log.updateEvent("user", "1", 15, 20);
+		
+		try {
+			allProp = new Properties();
+			in = new BlobstoreInputStream(blobKey);
+ 
+			if (in != null) {
+				allProp.load(in);
+			} else {
+				throw new FileNotFoundException("config blob is empty");
+			}
+ 
+		} catch (Exception e) {
+			System.out.println("Exception: " + e);
+			return false;
+		} finally {
+			try {
+			    if (in != null) {
+			    	in.close();
+			    }
+			  } catch( Exception ex ) {
+				  System.out.println( "Exception during Resource.close()"+ ex);
+			  }
 		}
+		return true;
 	}
 	
 	public boolean load(String filename) {

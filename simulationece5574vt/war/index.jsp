@@ -5,7 +5,6 @@
 <!-- "Quirks Mode". Replacing this declaration     -->
 <!-- with a "Standards Mode" doctype is supported, -->
 <!-- but may lead to some differences in layout.   -->
-<!-- autor: Bishwajit Dutta, bdutta@vt.edu         -->
 
 <html>
 <head>
@@ -19,13 +18,15 @@
 component web interface! </h1>
 <h2 style="color: green;">
 <br>
-<form action="simulationece5574vt" method="post">
+<h4> To upload config file <a href="upload.jsp">click here</a></h4>
+
+<!-- form action="simulationece5574vt" method="post">
 Upload the Config File:<br>
   <input name="FploadFile" value="submitcfgfile="
  type="file"> 
   <input name="FileSave" value="Upload" type="submit">
 </form>
-<br>
+<br> -->
 <form action="simulationece5574vt" method="get">
 Start the Simulation: <br>
   <input name="StartSim" value="Start" type="submit">
@@ -36,7 +37,7 @@ Stop the simulation:<br>
   <input name="StopSim" value="Stop" type="submit">
 </form>
 <br>
-<form action="simulationece5574vt" method="get">
+<form action="log.jsp" method="get">
 View the simulation logs:<br>
   <input name="ViewLogs" value="View" type="submit">
 </form>
