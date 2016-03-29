@@ -6,8 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.vt.ece5574.agents.Building;
-import edu.vt.ece5574.agents.Coordinate;
-import edu.vt.ece5574.agents.Robot;
 import edu.vt.ece5574.agents.User;
 import edu.vt.ece5574.events.FireEvent;
 import edu.vt.ece5574.events.IntruderEvent;
@@ -32,7 +30,7 @@ public class UserTest {
 	public void checkBuildingId() {
 		User user = new User("1", "0");
 		user.setBuildingID("5000");
-		assertEquals(user.getBuildingID(),5000);		
+		assertEquals(user.getBuildingID(),"5000");		
 	}
 	
 	@Test
@@ -118,61 +116,68 @@ public class UserTest {
 		bld = new Building(bID);
 		sim.addAgent(bld);		
 		//To-Do:Figure out how to add agents
-		usr = new User(uID,bID,true);
+		usr = new User(uID,bID,true,5,100);
 		assertTrue(sim.addAgent(usr));
 	}
 	
 	@Test(timeout=1000)
 	public void respondtoFireEventUserWithApp(){		
-		FireEvent event = new FireEvent();
+		usr.setAppUser(true);		
+		FireEvent event = new FireEvent();		
 		event.init(fireEventDetails);
-		usr.addEvent(event);		
-		usr.setAppUser(true);
-		assertEquals(usr.getFireNotification(),true);	
+		usr.addEvent(event);			
+		usr.step(sim);
+		assertTrue(usr.getFireNotification());
 	}
 	
 	@Test(timeout=1000)
 	public void respondtoFireEventUserWithoutApp(){		
+		usr.setAppUser(false);
 		FireEvent event = new FireEvent();
 		event.init(fireEventDetails);
-		usr.addEvent(event);		
-		usr.setAppUser(false);
+		usr.addEvent(event);			
+		usr.step(sim);
 		assertEquals(usr.getFireNotification(),false);	
 	}
 	
 	@Test(timeout=1000)
 	public void respondtoWaterLeakEventUserWithApp(){		
-		WaterLeakEvent event = new WaterLeakEvent();
-		event.init(waterLeakEventDetails);
-		usr.addEvent(event);		
 		usr.setAppUser(true);
-		assertEquals(usr.getWaterLeakNotification(),true);	
+		WaterLeakEvent event = new WaterLeakEvent();		
+		event.init(waterLeakEventDetails);
+		usr.addEvent(event);	
+		usr.step(sim);
+		assertEquals(true,usr.getWaterLeakNotification());	
 	}
 	
 	@Test(timeout=1000)
 	public void respondtoWaterLeakEventUserWithoutApp(){		
+		usr.setAppUser(false);
 		WaterLeakEvent event = new WaterLeakEvent();
 		event.init(waterLeakEventDetails);
-		usr.addEvent(event);		
-		usr.setAppUser(false);
+		usr.addEvent(event);	
+		usr.step(sim);
 		assertEquals(usr.getWaterLeakNotification(),false);	
 	}
 	
-	@Test(timeout=1000)
+	@Test
 	public void respondtoIntruderEventUserWithApp(){		
+		usr.setAppUser(true);
 		IntruderEvent event = new IntruderEvent();
 		event.init(intruderEventDetails);
 		usr.addEvent(event);		
-		usr.setAppUser(true);
+		usr.step(sim);
 		assertEquals(usr.getIntruderNotification(),true);	
 	}
 	
 	@Test(timeout=1000)
-	public void respondtoIntruderEventUserWithoutApp(){		
+	public void respondtoIntruderEventUserWithoutApp(){
+		usr.setAppUser(false);
 		IntruderEvent event = new IntruderEvent();
 		event.init(intruderEventDetails);
-		usr.addEvent(event);		
-		usr.setAppUser(false);
+		usr.addEvent(event);			
+		usr.step(sim);
 		assertEquals(usr.getIntruderNotification(),false);	
 	}
+	
 }
