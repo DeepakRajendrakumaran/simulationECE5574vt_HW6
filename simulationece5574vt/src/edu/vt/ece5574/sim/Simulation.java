@@ -21,6 +21,8 @@ public class Simulation extends SimState {
     public HashMap<String, Agent> agents; //map the agent id to the agent itself
     
     public StorageAPI storage;
+    public APICaller pushOutgoing;
+    public ReadNotifications pushIncoming;
     
     public Simulation(long seed){
     	super(seed); //needs to be first line, can't just set seed here
@@ -59,6 +61,8 @@ public class Simulation extends SimState {
         
         agents = new HashMap<String, Agent>();
         storage = new StorageAPI();
+        pushOutgoing = new APICaller();
+        pushIncoming = new ReadNotifications();
     }
     
 	public void run(String[] args) {
@@ -82,6 +86,8 @@ public class Simulation extends SimState {
         for(int i = 0; i < numBuildings; i++){
         	agents.put(new Integer(i).toString(), new Building(new Integer(i).toString()));
         }*/
+        schedule.scheduleRepeating(pushOutgoing);
+        schedule.scheduleRepeating(pushIncoming);
     }
     
     

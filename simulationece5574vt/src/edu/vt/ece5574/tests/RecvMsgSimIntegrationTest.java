@@ -58,6 +58,12 @@ public class RecvMsgSimIntegrationTest {
 		expected[0]=text;
 		
 		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com",subject+":"+text,text);
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		result= testNotifications.readGmail(sim);
         assertEquals(expected[0].toString(), result[0].toString());
         

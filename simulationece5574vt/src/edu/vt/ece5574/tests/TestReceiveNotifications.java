@@ -10,7 +10,9 @@ package edu.vt.ece5574.tests;
 import edu.vt.ece5574.sim.Simulation;
 import edu.vt.ece5574.sim.ReadNotifications;
 import static org.junit.Assert.*;
+
 import java.util.Properties;
+
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
@@ -52,6 +54,12 @@ public class TestReceiveNotifications {
 	public void testdeleteAll(){
 		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com","test 1"," ");
 		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com","test 2"," ");
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		testNotifications.deleteAll();
 
 		String[] result= testNotifications.readGmail(sim);
@@ -71,6 +79,12 @@ public class TestReceiveNotifications {
 		expected[0]=text;
 
 		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com",subject+":"+text,text);
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		result= testNotifications.readGmail(sim);
         assertEquals(expected[0].toString(), result[0].toString());
 
@@ -90,6 +104,12 @@ public class TestReceiveNotifications {
 
 		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com",subject+":"+text1," ");
 		sendGmail("test.ece5574@gmail.com","simulation.ece5574@gmail.com",subject+":"+text2," ");
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		result= testNotifications.readGmail(sim);
 
 
