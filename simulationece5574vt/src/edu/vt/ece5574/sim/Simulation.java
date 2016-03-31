@@ -86,6 +86,7 @@ public class Simulation extends SimState {
         for(int i = 0; i < numBuildings; i++){
         	agents.put(new Integer(i).toString(), new Building(new Integer(i).toString()));
         }*/
+        pushIncoming.setAccountDetails("simulation.ece5574", "password");
         schedule.scheduleRepeating(pushIncoming);
     }
     
