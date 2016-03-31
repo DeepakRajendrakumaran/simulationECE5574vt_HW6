@@ -2,6 +2,7 @@ package edu.vt.ece5574.tests;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
@@ -114,6 +115,15 @@ public class PushAPITest {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+		 finally {
+		        try {
+		        	
+					httpclient.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		        
+		    }
 	}
 
 	// Check if the message is getting deleted after reading
@@ -134,6 +144,15 @@ public class PushAPITest {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+		 finally {
+		        try {
+		        	
+					httpclient.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		        
+		    }
 	}
 
 }
