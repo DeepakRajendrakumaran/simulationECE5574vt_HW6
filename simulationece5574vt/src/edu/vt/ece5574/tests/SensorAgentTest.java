@@ -8,8 +8,6 @@ import org.junit.Test;
 import edu.vt.ece5574.agents.Building;
 import edu.vt.ece5574.agents.Robot;
 import edu.vt.ece5574.events.FireEvent;
-import edu.vt.ece5574.events.IntruderEvent;
-import edu.vt.ece5574.events.MoveRobotEvent;
 import edu.vt.ece5574.events.WaterLeakEvent;
 import edu.vt.ece5574.sim.Simulation;
 

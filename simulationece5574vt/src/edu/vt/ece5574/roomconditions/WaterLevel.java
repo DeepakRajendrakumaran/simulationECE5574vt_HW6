@@ -12,9 +12,6 @@ The other agents can accordingly update the WaterLevel variables in each step as
 
 public class WaterLevel  {
 
-	private static final long serialVersionUID = 1;
-	
-
 	protected String buildingID = "0"; //a building will have the same ID as building ID
 	protected String roomID;
 

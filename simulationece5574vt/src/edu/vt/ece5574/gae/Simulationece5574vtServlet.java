@@ -1,7 +1,6 @@
 package edu.vt.ece5574.gae;
 import java.io.IOException;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 

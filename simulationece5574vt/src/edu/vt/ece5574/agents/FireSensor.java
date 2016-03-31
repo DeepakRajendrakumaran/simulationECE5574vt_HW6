@@ -3,7 +3,6 @@ package edu.vt.ece5574.agents;
 
 import edu.vt.ece5574.events.Event;
 import edu.vt.ece5574.events.FireEvent;
-import edu.vt.ece5574.sim.Simulation;
 import sim.engine.SimState;
 
 //Class for sensors. - Author - Ameya Khandekar

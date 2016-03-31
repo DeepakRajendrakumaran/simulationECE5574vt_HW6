@@ -30,152 +30,96 @@ import sim.engine.Steppable;
 
 import javax.mail.Flags;
 
-
-
-
-public class ReadNotifications implements Steppable{
+public class ReadNotifications implements Steppable {
 
 	private static final long serialVersionUID = 1;
 	private String userName;
-    private String password;
-    private String receivingHost;
+	private String password;
+	private String receivingHost;
 
-    public void setAccountDetails(String userName,String password){
+	public void setAccountDetails(String userName, String password) {
+		this.userName = userName;
+		this.password = password;
+	}
 
-        this.userName=userName;
-        this.password=password;
+	public void deleteAll() {
 
-    }
+		this.receivingHost = "imap.gmail.com";
+		Properties props2 = System.getProperties();
+		props2.setProperty("mail.store.protocol", "imaps");
 
-   public void deleteAll(){
+		Session session2 = Session.getDefaultInstance(props2, null);
 
-	   this.receivingHost="imap.gmail.com";
-       Properties props2=System.getProperties();
-       props2.setProperty("mail.store.protocol", "imaps");
+		try {
+			Store store = session2.getStore("imaps");
+			store.connect(this.receivingHost, this.userName, this.password);
 
-       Session session2=Session.getDefaultInstance(props2, null);
+			Folder folder = store.getFolder("INBOX");// get inbox
+			folder.open(Folder.READ_WRITE);// open folder
 
-           try {
+			Message message[] = folder.getMessages();
+			for (int i = 0; i < message.length; i++) {
+				// go through all mails
+				message[i].setFlag(Flags.Flag.DELETED, true); // delete messages
+			}
+			folder.close(true);
 
-                   Store store=session2.getStore("imaps");
+			store.close();
 
-                   store.connect(this.receivingHost,this.userName, this.password);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
 
-                   Folder folder=store.getFolder("INBOX");//get inbox
+	public String[] readGmail(Simulation sim) {
+		this.receivingHost = "imap.gmail.com";
+		Properties props2 = System.getProperties();
+		props2.setProperty("mail.store.protocol", "imaps");
 
-                   folder.open(Folder.READ_WRITE);//open folder
+		Session session2 = Session.getDefaultInstance(props2, null);
 
-                   Message message[]=folder.getMessages();
-                   for(int i=0;i<message.length;i++){
+		try {
+			Store store = session2.getStore("imaps");
+			store.connect(this.receivingHost, this.userName, this.password);
 
-                       //go through all mails
-                	   message[i].setFlag(Flags.Flag.DELETED, true);   //delete messages
+			Folder folder = store.getFolder("INBOX");// get inbox
+			folder.open(Folder.READ_WRITE);// open folder
 
-                   }	//some messages maybe multipart
+			Message message[] = folder.getMessages();
+			String result[] = new String[message.length];
+			for (int i = 0; i < message.length; i++) {
 
-                   /*
+				// go through all mails
 
-                   		*/
+				String[] subject = message[i].getSubject().split(":");
+				if (subject.length == 2) {
+					if (subject[0].equals("Simulation_ECE5574")) {
 
+						if (subject[1] != null) {
+							// //delete message
+							if (sim.agentPushReceived(subject[1])) {
+								message[i].setFlag(Flags.Flag.DELETED, true); // delete message
+							}
+						}
+					}
+					result[i] = subject[1];
+				}
+			}
+			folder.close(true);
 
+			store.close();
+			return result;
 
-                   //close connections
-
-                   folder.close(true);
-
-                   store.close();
-
-           } catch (Exception e) {
-
-                   System.out.println(e.toString());
-
-           }
-           //return null if no results
-
-
-
-   }
-
-
-
-    public String[] readGmail(Simulation sim){
-
-
-
-        this.receivingHost="imap.gmail.com";
-        Properties props2=System.getProperties();
-        props2.setProperty("mail.store.protocol", "imaps");
-
-        Session session2=Session.getDefaultInstance(props2, null);
-
-            try {
-
-                    Store store=session2.getStore("imaps");
-
-                    store.connect(this.receivingHost,this.userName, this.password);
-
-                    Folder folder=store.getFolder("INBOX");//get inbox
-
-                    folder.open(Folder.READ_WRITE);//open folder
-
-                    Message message[]=folder.getMessages();
-                    String result[] =  new String[message.length];
-                    for(int i=0;i<message.length;i++){
-
-                        //go through all mails
-
-
-                    	String[] subject= message[i].getSubject().split(":");
-                    	if(subject.length==2){
-                    		System.out.println(subject[0]);
-                        	if(subject[0].equals("Simulation_ECE5574")){
-
-                        		System.out.println(message[i].getSubject());
-
-                          	  	if(subject[1]!=null){
-                          	  	  // message[i].setFlag(Flags.Flag.DELETED, true);   //delete message
-                                	if(sim.agentPushReceived(subject[1])){
-                                		message[i].setFlag(Flags.Flag.DELETED, true);   //delete message
-                                	}
-                                }
-                        	}
-                        		//System.out.println(message[i].getContent());
-                        	result[i]= subject[1];
-                        	System.out.println(result[i]);
-                    	}
-
-                    }	//some messages maybe multipart
-
-                    /*
-
-                    		*/
-
-
-
-                    //close connections
-
-                    folder.close(true);
-
-                    store.close();
-                    return result;
-
-            } catch (Exception e) {
-
-                    System.out.println(e.toString());
-
-            }
-            //return null if no results
-			return null;
-
-    }
-
-
-
-
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		// return null if no results
+		return null;
+	}
 
 	@Override
 	public void step(SimState state) {
-		readGmail((Simulation)state);
+		readGmail((Simulation) state);
 	}
 
 }

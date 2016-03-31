@@ -1,6 +1,5 @@
 package edu.vt.ece5574.agents;
 
-import java.util.LinkedList;
 import edu.vt.ece5574.events.Event;
 import edu.vt.ece5574.events.FireEvent;
 import edu.vt.ece5574.events.IntruderEvent;
@@ -20,7 +19,7 @@ public class User extends Agent{
 	private boolean isAppUser;
 	private Coordinate location;
 	private double randomStepFactor = 0.1;
-	private double centerStepFactor = 0.2;
+	//private double centerStepFactor = 0.2;
 	private boolean fireNotification = false;
 	private boolean waterLeakNotification = false;
 	private boolean intruderNotification = false;
@@ -190,7 +189,7 @@ public class User extends Agent{
 	public void step(SimState state) {
 		super.step(state);
 		//System.out.println("User Step entered");
-		Simulation simState = (Simulation)state;		
+		//Simulation simState = (Simulation)state;		
 		if(events.isEmpty()){
 			//if no event, create event for the robots to handle
 			createRandomMovement(state);

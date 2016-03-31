@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreInputStream;
-import edu.vt.ece5574.gae.log;
 
 //Maybe we shouldn't do json or XML?  There's a java properties file format
 //that might be of interest: 
