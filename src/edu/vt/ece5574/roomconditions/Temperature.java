@@ -38,7 +38,11 @@ public class Temperature  {
 		//default Temperature change
 		int val = temp.get();
 
-		val = (((state.random.nextInt()%10) + 100)* val)/100  ; 
+		int prev = val;
+		val = (((state.random.nextInt()%10) + 100)* val)/100  ;
+		if(val < 75 || val > 10000){
+			val = prev;
+		} 
 		temp.set(val);
 
 	}	
@@ -47,7 +51,9 @@ public class Temperature  {
 
 		int val = temp.get();
 
-		val = val + severity*100;
+		if(val < 10000){
+			val = val + severity*100;
+		}
 		temp.set(val);
 
 	}
@@ -55,7 +61,9 @@ public class Temperature  {
 	public void robotTempChange(int rate){
 
 		int val = temp.get();
-		val = val - rate*1000;
+		if((val - rate*1000) > 75){
+			val = val - rate*1000;
+		}
 		temp.set(val);
 	}
 

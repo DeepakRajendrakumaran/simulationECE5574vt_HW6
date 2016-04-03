@@ -38,7 +38,13 @@ public class WaterLevel  {
 		//default WaterLevel change
 		int val = waterLvl.get();
 
+		int prev = val; 
+		
 		val = (((state.random.nextInt()%2) + 100)* val)/100  ; 
+
+		if(val > 100 || val < 0 ){
+			val = prev;
+		}
 		waterLvl.set(val);
 
 	}	
@@ -46,8 +52,13 @@ public class WaterLevel  {
 	public void leakWaterLevelChange(int severity){
 
 		int val = waterLvl.get();
+		int prev ;
+		prev = val ;
 
 		val = val + severity*10;
+		if(val > 100 || val < 0 ){
+			val = prev;
+		}
 		waterLvl.set(val);
 
 	}
@@ -55,7 +66,13 @@ public class WaterLevel  {
 	public void robotWaterLevelChange(int rate){
 
 		int val = waterLvl.get();
+		int prev ;
+		prev = val;
+
 		val = val - rate*100;
+		if(val > 100 || val < 0 ){
+			val = prev;
+		}
 		waterLvl.set(val);
 	}
 
