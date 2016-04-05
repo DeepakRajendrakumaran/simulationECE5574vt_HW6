@@ -67,7 +67,7 @@ public class Room {
 		if (  x < this.width  ||  x > 0  ) {
             return false;
         }
-		else if (  y < this.height  ||  y >= 0  ) {
+		else if (  y < this.height  ||  y > 0  ) {
             return false;
         }
 		else if(matrix.data[x][y] > 0){
