@@ -49,6 +49,8 @@ public abstract class Agent extends OvalPortrayal2D implements Steppable {
 		init(id_, buildingID_);
 	}
 	
+//	Color causing issues with the app engine sdk- not supported
+/*	
 	public Agent(Color c, String id_, String buildingID_){
 		super(c);
 		init(id_, buildingID_);
@@ -68,7 +70,7 @@ public abstract class Agent extends OvalPortrayal2D implements Steppable {
 		super(c, scale, filled);
 		init(id_, buildingID_);
 	}
-
+*/
 	public void addEvent(Event event) {
 		if(event != null){
 			events.add(event);

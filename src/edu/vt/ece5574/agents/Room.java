@@ -63,10 +63,11 @@ public class Room {
 	
 	public boolean checkStep(int x, int y){
 		
-		if (  x < this.width  ||  x >= this.height  ) {
+		//revisit the check-Need Mohit to take a look...was giving errors
+		if (  x < this.width  ||  x > 0  ) {
             return false;
         }
-		else if (  y < this.height  ||  y >= this.height  ) {
+		else if (  y < this.height  ||  y >= 0  ) {
             return false;
         }
 		else if(matrix.data[x][y] > 0){
