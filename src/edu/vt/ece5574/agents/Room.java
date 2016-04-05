@@ -33,8 +33,10 @@ public class Room {
         catch ( Exception error ) {
           
         }
-	
-	 this.matrix = new Matrix(width,height);
+		//Temp: Check with mohit later
+	this.width = width;
+	this.height = height;
+	this.matrix = new Matrix(width,height);
 	}
 	
 	public void insertObstacle(int x, int y, int width, int height, Item item){
@@ -64,10 +66,11 @@ public class Room {
 	public boolean checkStep(int x, int y){
 		
 		//revisit the check-Need Mohit to take a look...was giving errors
-		if (  x < this.width  ||  x > 0  ) {
+		//System.out.println("X_Pos ="+x +"Y_Pos ="+y+"\n");
+		if (  x >= this.width  ||  x < 0  ) {
             return false;
         }
-		else if (  y < this.height  ||  y > 0  ) {
+		else if (  y >= this.height  ||  y < 0  ) {
             return false;
         }
 		else if(matrix.data[x][y] > 0){
