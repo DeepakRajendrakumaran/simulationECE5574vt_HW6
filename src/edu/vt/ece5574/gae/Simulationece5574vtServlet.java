@@ -34,12 +34,8 @@ public class Simulationece5574vtServlet extends HttpServlet {
 	public void init() throws ServletException {
 		super.init();
 		System.out.println("Initializing the simulator");
-
 		runner = new simRunnable();       
-		simthread = new Thread(runner);
-
 		sim = new Simulation(0);
-
 	}
 
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -53,6 +49,8 @@ public class Simulationece5574vtServlet extends HttpServlet {
 				resp.getWriter().println("Simulator is already running");
 			}else
 			{
+				java.util.concurrent.ThreadFactory threadFactory = com.google.appengine.api.ThreadManager.currentRequestThreadFactory();
+				simthread = threadFactory.newThread(runner);
 				simthread.start();
 				isSimulatorRunning=1;
 				System.out.println("Simulation Started");
