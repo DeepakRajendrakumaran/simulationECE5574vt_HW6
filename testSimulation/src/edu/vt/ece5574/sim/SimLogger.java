@@ -1,3 +1,5 @@
+package edu.vt.ece5574.sim;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;

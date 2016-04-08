@@ -1,80 +1,97 @@
 package edu.vt.ece5574.agents;
-
 import java.util.List;
+import java.util.LinkedList;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ListIterator;
+
 
 import sim.engine.SimState;
-
-
 public class Building extends Agent{
 	
 	//private int minRooms = 1;
 	//private int maxRooms = 10;
 
 	private static final long serialVersionUID = 1;
-	private Room building;
-	
-	
-	public Building(String id) {
-		super(id, id);
-		
-		Map<String, Room> rooms = new HashMap<String,Room>(50);
+	protected int width;
+	protected int height; 
+	protected LinkedList<Room> rooms;
 
-		
-		building = new Room(id,10,10);
-		
-		Room a = new Room(id,5,10);
-		Room b = new Room(id,4,10);
-		
-		this.addWall();
-		this.addDoor();
-		
-		rooms.put("1",a);
-		rooms.put("2",b);
-		
-		building.showRoom();
+	protected int[][] tilemap;
+
+	public Building(String id){
+		super(id, id);
+		//Dummy - needs to be changed.
+	}
+	
+	//constructor 
+	public Building(String id, int width_, int height_){
+				super(id, id);
+				width = width_;
+				height = height_;
+				tilemap = new int[width][height]; //creates a building with a tilemap full of 0s. Thus empty building with plain floor.
+
+			for(int i = 0 ; i < width ; i++){
+				tilemap[i][0] = 1; //1 indicates wall
+				tilemap[i][height - 1] = 1;
+			}
+
+			for(int j = 0 ; j < height ; j++){
+				tilemap[0][j] = 1; //1 indicates wall
+				tilemap[width - 1][j] = 1;
+			}
+	}
+	
+	public boolean addRoom(int x, int y, int w, int h){
+
+		Room tempRoom = new Room(x,y,w,h);
+
+		//check if it crosses another room :- 
+		for(int idx = 0; idx < rooms.size(); idx++)
+      	{
+      		if(tempRoom.crossesRoom(rooms.get(idx)))
+      		{
+      			return false;
+      		}
+      	}
+
+
+		//check if fits main building :-
+		if(( x > 0) && ((x < width - 1)) && ( (x + w - 1) > 0) && ((x + w - 1) < (width - 1) ) &&
+			( y > 0) && (y < (height - 1)) && ( (y + h - 1) > 0) && ((y + h - 1) < (height - 1 )) ){
+
+			rooms.add(tempRoom);
+			//update tilemap
+			for(int i = x ; i < x + width ; i++){
+				tilemap[i][y] = 1; //1 indicates wall
+				tilemap[i][y + height - 1] = 1;
+			}
+
+			for(int j = y ; j < y + height ; j++){
+				tilemap[x][j] = 1; //1 indicates wall
+				tilemap[x + width - 1][j] = 1;
+			}
+			return true;
+		}
+		else{
+			return false;
+		}
+
 	}
 	
 	public boolean checkStep(int x, int y){
-		return building.checkStep(x, y);
-	}
-	
-	private void addWall(){
-		for(int i =0;i<10;i++){
-			Item wall = new Item(super.id ,Item.Obstacle.wall);
- 			
-			if(i != 5){
-				building.insertObstacle(5, i, 1, 1, wall);
-			}
-		}
-	}
-	
-	private void addDoor(){
-		Item door = new Item(super.id,Item.Obstacle.door);
+		return true;
+		//Dummy - needs to be changed.
 
-		building.insertObstacle(5, 5, 1, 1, door);
 	}
 	
-	public void addEmergency(String id, int x, int y, Item.Obstacle type){
-		Item fire = new Item(id,type);
-		
-		building.insertObstacle(x, y, 1, 1, fire);
-	}
 	
 	public List<Coordinate> getRoute(Coordinate current,Coordinate destination){
-		Coordinate mid = new Coordinate(5,5);
-		
 		List<Coordinate> myList = new ArrayList<Coordinate>();
-		
-		if(current.y>5 && destination.y<5 ||current.y<5 && destination.y>5 ){
-			myList.add(mid);
-		}
-			
 		return myList;
-	}
+		//Dummy - needs to be changed.
 
+	} 
+	
 	@Override
 	public void step(SimState arg0) {
 		// TODO Auto-generated method stub
@@ -82,19 +99,5 @@ public class Building extends Agent{
 		
 	}
 
-	
-	public int getFloorHeight() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
-	public int getFloorWidth() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public int getNumRooms() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 }
