@@ -40,7 +40,31 @@ public class Building extends Agent{
 				tilemap[width - 1][j] = 1;
 			}
 	}
-	
+
+	public int getRoomId(int x, int y){
+		
+		if( ( x >= 0 ) && (x <= (width - 1)) && ( y >= 0 ) && (y <= (height - 1)) ){
+
+			for(int idx = 0; idx < rooms.size(); idx++)
+      		{
+      			if((rooms.get(idx)).inRoom(x,y))
+      			{
+      				return idx; // id of room ranges from 0 to totalRooms - 1.
+      			}
+      		}
+
+      		return -1; // -1 indicates hall area
+		}
+		else{
+			return -2; // - 2 indicates x,y doesn't belong to the building 
+		}
+
+	}
+
+	public int[][] getTileMap(){
+
+		return tilemap;
+	}
 	public boolean addRoom(int x, int y, int w, int h){
 
 		Room tempRoom = new Room(x,y,w,h);

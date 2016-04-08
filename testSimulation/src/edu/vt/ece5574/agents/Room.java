@@ -21,6 +21,14 @@ public class Room {
 			width = width_;
 			height = height_;
 	}
+
+	public boolean inRoom(int x1, int y1){
+		if( ( x1 >= x ) && (x1 <= (x + width - 1)) && ( y1 >= y ) && (y1 <= (y + height - 1)) ){
+			return true;
+		}
+		return false;
+	}
+
 	public boolean crossesRoom(Room b){
 
 		//check for each corners :-
