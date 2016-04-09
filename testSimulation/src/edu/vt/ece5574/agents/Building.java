@@ -4,7 +4,8 @@ import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
-
+import edu.vt.ece5574.roomconditions.Temperature;
+import edu.vt.ece5574.sim.Simulation;
 import sim.engine.SimState;
 public class Building extends Agent{
 	
@@ -18,14 +19,29 @@ public class Building extends Agent{
 
 	protected int[][] tilemap;
 
+	protected Simulation state;
+	protected Temperature hallTemperature; 
+
 	public Building(String id){
 		super(id, id);
+		
+
+		//Dummy - needs to be removed later.
+	}
+	
+
+	public Building(String id,SimState state_){
+		super(id, id);
+		state = (Simulation)state_;
+
 		//Dummy - needs to be changed.
 	}
 	
 	//constructor 
-	public Building(String id, int width_, int height_){
+	public Building(String id, int width_, int height_, SimState state_){
 				super(id, id);
+				state = (Simulation)state_;
+
 				width = width_;
 				height = height_;
 				tilemap = new int[width][height]; //creates a building with a tilemap full of 0s. Thus empty building with plain floor.
@@ -39,6 +55,7 @@ public class Building extends Agent{
 				tilemap[0][j] = 1; //1 indicates wall
 				tilemap[width - 1][j] = 1;
 			}
+			hallTemperature = new Temperature(state);
 	}
 
 	public int getRoomId(int x, int y){
@@ -61,13 +78,23 @@ public class Building extends Agent{
 
 	}
 
+	public Temperature getRoomTempById(int idx){
+
+		if(idx == -1){
+			return hallTemperature;
+		}
+		else
+			return (rooms.get(idx)).roomTemperature ;
+
+	}
+
 	public int[][] getTileMap(){
 
 		return tilemap;
 	}
 	public boolean addRoom(int x, int y, int w, int h){
 
-		Room tempRoom = new Room(x,y,w,h);
+		Room tempRoom = new Room(x,y,w,h,state);
 
 		//check if it crosses another room :- 
 		for(int idx = 0; idx < rooms.size(); idx++)

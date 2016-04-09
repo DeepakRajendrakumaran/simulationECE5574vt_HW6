@@ -3,7 +3,8 @@ package edu.vt.ece5574.agents;
 import java.util.LinkedList;
 import java.util.ArrayList;
 import sim.engine.SimState;
-
+import edu.vt.ece5574.roomconditions.Temperature;
+import edu.vt.ece5574.sim.Simulation;
 public class Room {
 	
 
@@ -13,13 +14,18 @@ public class Room {
 	public int y;	
 	public int width;
 	public int height;
+	public Temperature roomTemperature;
+	protected Simulation state;
+
 
 	//constructor 
-	public Room(int x_, int y_, int width_, int height_){
+	public Room(int x_, int y_, int width_, int height_,SimState state_){
 			x = x_;
 			y = y_;
 			width = width_;
 			height = height_;
+			state = (Simulation)state_;
+			roomTemperature = new Temperature(state);
 	}
 
 	public boolean inRoom(int x1, int y1){
