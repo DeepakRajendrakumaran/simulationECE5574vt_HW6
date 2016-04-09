@@ -20,7 +20,7 @@ public class Simulation extends SimState {
 	private static final long serialVersionUID = 1;
     public int numRobots;
     
-    private static final String password = "Cae@5574";
+    private static final String password = "fill_in_password";
  
     public HashMap<String, Agent> agents; //map the agent id to the agent itself
     
