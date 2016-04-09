@@ -34,7 +34,8 @@ public class Simulation extends SimState {
 
     	config = new Configuration();
     	try {
-			config.load(System.getProperty("user.dir") + "/configuration.xml");
+			config.load(System.getProperty("user.dir") + System.getProperty("File.separator")+
+						"configuration.xml");
 		} catch (InvalidPropertiesFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
