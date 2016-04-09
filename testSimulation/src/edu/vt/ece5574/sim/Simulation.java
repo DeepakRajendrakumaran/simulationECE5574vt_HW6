@@ -36,7 +36,7 @@ public class Simulation extends SimState {
     	//System.out.println(System.getProperty("user.dir"));
     	try {
 			//config.load(System.getProperty("user.dir") + "\\config.properties");
-    		config.load("C:\\Users\\Saket\\workspace\\testSimulation\\configuration.xml");
+    		config.load("/home/ask/localSimEce5574/testSimulation/configuration.xml");
 		} catch (InvalidPropertiesFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

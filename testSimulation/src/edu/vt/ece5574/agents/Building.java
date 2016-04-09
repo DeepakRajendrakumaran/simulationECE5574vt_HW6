@@ -24,7 +24,7 @@ public class Building extends Agent{
 
 	public Building(String id){
 		super(id, id);
-		
+		rooms = new LinkedList<Room>();
 
 		//Dummy - needs to be removed later.
 	}
@@ -33,7 +33,7 @@ public class Building extends Agent{
 	public Building(String id,SimState state_){
 		super(id, id);
 		state = (Simulation)state_;
-
+		rooms = new LinkedList<Room>();
 		//Dummy - needs to be changed.
 	}
 	
@@ -56,6 +56,7 @@ public class Building extends Agent{
 				tilemap[width - 1][j] = 1;
 			}
 			hallTemperature = new Temperature(state);
+			rooms = new LinkedList<Room>();
 	}
 
 	public int getRoomId(int x, int y){
@@ -78,6 +79,17 @@ public class Building extends Agent{
 
 	}
 
+	public void displayLayout(){
+		System.out.println("Current Layout");
+		for(int i = 0; i < width; i++){
+			for(int j = 0 ; j < height; j++){
+				System.out.print(tilemap[i][j]);
+				System.out.print(" ");
+			}
+			System.out.println(" ");
+		}
+	}
+
 	public Temperature getRoomTempById(int idx){
 
 		if(idx == -1){
@@ -96,11 +108,12 @@ public class Building extends Agent{
 
 		Room tempRoom = new Room(x,y,w,h,state);
 
-		//check if it crosses another room :- 
+	//check if it crosses another room :- 
 		for(int idx = 0; idx < rooms.size(); idx++)
       	{
       		if(tempRoom.crossesRoom(rooms.get(idx)))
       		{
+      			System.out.println(" can't add room ");
       			return false;
       		}
       	}
@@ -112,21 +125,21 @@ public class Building extends Agent{
 
 			rooms.add(tempRoom);
 			//update tilemap
-			for(int i = x ; i < x + width ; i++){
+			for(int i = x ; i < x + w ; i++){
 				tilemap[i][y] = 1; //1 indicates wall
-				tilemap[i][y + height - 1] = 1;
+				tilemap[i][y + h - 1] = 1;
 			}
 
-			for(int j = y ; j < y + height ; j++){
+			for(int j = y ; j < y + h ; j++){
 				tilemap[x][j] = 1; //1 indicates wall
-				tilemap[x + width - 1][j] = 1;
+				tilemap[x + w - 1][j] = 1;
 			}
 			return true;
 		}
 		else{
 			return false;
 		}
-
+		//return true;
 	}
 	
 	public boolean checkStep(int x, int y){
