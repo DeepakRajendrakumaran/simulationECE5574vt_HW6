@@ -33,10 +33,8 @@ public class Simulation extends SimState {
     	boolean debug ;
 
     	config = new Configuration();
-    	//System.out.println(System.getProperty("user.dir"));
     	try {
-			//config.load(System.getProperty("user.dir") + "\\config.properties");
-    		config.load("/home/ask/localSimEce5574/testSimulation/configuration.xml");
+			config.load(System.getProperty("user.dir") + "/configuration.xml");
 		} catch (InvalidPropertiesFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
