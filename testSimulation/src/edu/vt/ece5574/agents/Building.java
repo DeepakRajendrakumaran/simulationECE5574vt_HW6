@@ -104,7 +104,7 @@ public class Building extends Agent{
 		obstacles.field[0][17] = 2;
 		//Deepak: Take this out..there for initial testing only
 		createRobot();
-	
+
 		//state.addAgent(new Robot(id,"2",4,4));
 	}
 	
@@ -271,6 +271,7 @@ public class Building extends Agent{
 		//Ameya: provided a random initial position
 		Int2D pos = genStartPos();
 		Robot robot = new Robot(id, String.valueOf(agentsInBld.size()),pos.getX(),pos.getY());
+		agents.setObjectLocation(robot,pos.getX(),pos.getY());
 		agentsInBld.add(robot);
 		state.addAgent(robot);
 		return true;
@@ -283,6 +284,9 @@ public class Building extends Agent{
 		while(true){
 			x = state.random.nextInt()%width;
 			y = state.random.nextInt()%height;
+			if(x < 0 || y < 0){
+				continue;
+			}
 			boolean flag = false;
 			for(int i = 0 ; i < agentsInBld.size(); i++){
 				Int2D pos = agents.getObjectLocation(agentsInBld.get(i));

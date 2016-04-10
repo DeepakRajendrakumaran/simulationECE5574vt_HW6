@@ -1,5 +1,6 @@
 package edu.vt.ece5574.main;
 
+import sim.util.Int2D;
 
 import edu.vt.ece5574.sim.Simulation;
 import edu.vt.ece5574.agents.Building;
@@ -24,8 +25,12 @@ public class Brain {
 		//String[] temp = new String[0];
 		//this.isSimulatorRunning=1;
 		//sim.run(temp);
-		System.out.println("Testing building consturction");
+		System.out.println("Testing building construction");
 		building.displayLayout();
+		Int2D position = building.genStartPos();
+		System.out.println("Starting position generated is ");
+		System.out.println("X = "+position.getX()+", Y = "+position.getY());
+		
 	}
 	
 	public void stop(){
