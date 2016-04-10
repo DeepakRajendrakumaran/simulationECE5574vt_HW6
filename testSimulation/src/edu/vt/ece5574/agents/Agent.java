@@ -1,5 +1,6 @@
 package edu.vt.ece5574.agents;
 
+import java.awt.Color;
 //import java.awt.Color;
 //import java.awt.Color;
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public abstract class Agent extends OvalPortrayal2D implements Steppable {
 		super(scale, filled);
 		init(id_, buildingID_);
 	}
-	/*
+	
 	public Agent(Color c, String id_, String buildingID_){
 		super(c);
 		init(id_, buildingID_);
@@ -69,7 +70,7 @@ public abstract class Agent extends OvalPortrayal2D implements Steppable {
 		super(c, scale, filled);
 		init(id_, buildingID_);
 	}
-*/
+
 	public void addEvent(Event event) {
 		if(event != null){
 			events.add(event);

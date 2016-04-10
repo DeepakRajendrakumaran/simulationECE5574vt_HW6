@@ -1,5 +1,6 @@
 package edu.vt.ece5574.agents;
 
+import java.awt.Color;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,7 +46,7 @@ public class Robot extends Agent {
 	 * @param y_loc : y coordinate position of the robot
 	 */
 	public Robot(String rID, String bID, int x_loc, int y_loc){
-		super(rID, bID);
+		super(Color.blue,true,rID, bID);
 		robot_loc = new MutableInt2D(x_loc,y_loc);
 		lastVisitedLocs = new Vector<MutableInt2D>();
 		toBeSavedLocs = 8;
@@ -61,7 +62,7 @@ public class Robot extends Agent {
 	 * @param bID
 	 */
 	public Robot(String rID, String bID){
-		super(rID, bID);
+		super(Color.blue,true,rID, bID);
 		robot_loc = new MutableInt2D(2,2);
 	}
 	
@@ -102,7 +103,7 @@ public class Robot extends Agent {
 				int y = dy+y_pos;
 				
 				//temp hack
-				if((x>9) || (y>9))continue;
+			//	if((x>9) || (y>9))continue;
 				//Hack end
 				if(bld.checkStep(x,y)){
 				//	System.out.println("Check Pass");
@@ -138,8 +139,8 @@ public class Robot extends Agent {
 		updateVisitedLocs(new_loc);
 		robot_loc.x = new_loc.x;
 		robot_loc.y = new_loc.y;
-		
-		simState.storage.updRobotPos(super.getID(), robot_loc.x, robot_loc.y);
+		bld.updateAgentPos(this,robot_loc.x, robot_loc.y);
+		//simState.storage.updRobotPos(super.getID(), robot_loc.x, robot_loc.y);
 				
 	}
 	
@@ -202,7 +203,9 @@ public class Robot extends Agent {
 	 * @param state 
 	 */
 	public void moveToEventSrc(SimState state){
+	
 		Simulation simState = (Simulation)state;
+		Building bld = (Building)simState.getAgentByID(buildingID);
 		int x_inc,y_inc;
 		x_inc =  nextPoint.x - robot_loc.x;
 		y_inc =  nextPoint.y - robot_loc.y;
@@ -214,7 +217,8 @@ public class Robot extends Agent {
 		updateVisitedLocs(new_loc);
 		robot_loc.x = new_loc.x;
 		robot_loc.y = new_loc.y;
-		simState.storage.updRobotPos(super.getID(), robot_loc.x, robot_loc.y);
+		bld.updateAgentPos(this,robot_loc.x, robot_loc.y);
+		//simState.storage.updRobotPos(super.getID(), robot_loc.x, robot_loc.y);
 			
 	}
 	

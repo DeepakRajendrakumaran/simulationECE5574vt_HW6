@@ -2,12 +2,17 @@ package edu.vt.ece5574.agents;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.ListIterator;
+import java.util.Map;
 
 import edu.vt.ece5574.roomconditions.Temperature;
 import edu.vt.ece5574.sim.Simulation;
 import sim.engine.SimState;
+import sim.field.continuous.Continuous2D;
 import sim.field.grid.IntGrid2D;
+import sim.field.grid.SparseGrid2D;
+
 
 //Author - Ameya Khandekar
 /*
@@ -29,10 +34,13 @@ public class Building extends Agent{
 	protected int width;
 	protected int height; 
 	protected LinkedList<Room> rooms;
+	protected LinkedList<Agent> agentsInBld;
 
 	//protected int[][] tilemap;
 	protected IntGrid2D tile_map;
+	//protected Continuous2D tilemap;
 	protected IntGrid2D obstacles;
+	protected SparseGrid2D agents;
 
 	protected Simulation state;
 	protected Temperature hallTemperature; 
@@ -40,7 +48,12 @@ public class Building extends Agent{
 	public Building(String id){
 		super(id, id);
 		rooms = new LinkedList<Room>();
+		agentsInBld = new LinkedList<Agent>();
 
+		
+		//Deepak: Take this out..there for initial testing only
+		createRobot();
+		
 		//Dummy - needs to be removed later.
 	}
 	
@@ -49,12 +62,14 @@ public class Building extends Agent{
 		super(id, id);
 		state = (Simulation)state_;
 		rooms = new LinkedList<Room>();
+		agentsInBld = new LinkedList<Agent>();
 		
 		width = 30;
 		height = 30;
 
 		tile_map = new IntGrid2D(width,height,0); //creates a building with a tilemap full of 0s. Thus empty building with plain floor.
 		obstacles = new IntGrid2D(width,height,0);
+		agents = new SparseGrid2D(width,height);
 		//doors = new IntGrid2D(width,height,0);
 		//windows = new IntGrid2D(width,height,0);
 		for(int i = 0 ; i < width ; i++){
@@ -86,7 +101,10 @@ public class Building extends Agent{
 		obstacles.field[0][15] = 2;
 		obstacles.field[0][16] = 2;
 		obstacles.field[0][17] = 2;
-		state.addAgent(new Robot(id,"2",4,4));
+		//Deepak: Take this out..there for initial testing only
+		createRobot();
+	
+		//state.addAgent(new Robot(id,"2",4,4));
 	}
 	
 	//constructor 
@@ -99,6 +117,8 @@ public class Building extends Agent{
 				//tilemap = new int[width][height]; //creates a building with a tilemap full of 0s. Thus empty building with plain floor.
 				tile_map = new IntGrid2D(width, height,0);
 				obstacles = new IntGrid2D(width, height,0);
+				agents = new SparseGrid2D(width,height);
+				
 				
 			for(int i = 0 ; i < width ; i++){
 				//tilemap[i][0] = 1; //1 indicates wall
@@ -115,6 +135,13 @@ public class Building extends Agent{
 			}
 			hallTemperature = new Temperature(state);
 			rooms = new LinkedList<Room>();
+			agentsInBld = new LinkedList<Agent>();
+			
+			
+			//Deepak: Take this out..there for initial testing only
+			
+				createRobot();
+			
 	}
 
 	public int getRoomId(int x, int y){
@@ -167,6 +194,12 @@ public class Building extends Agent{
 
 		return obstacles;
 	}
+	
+	public SparseGrid2D getAgents(){
+
+		return agents;
+	}
+	
 /*	public IntGrid2D getDoors(){
 
 		return doors;
@@ -215,10 +248,37 @@ public class Building extends Agent{
 		//return true;
 	}
 	
+	//need to be changed when adding more functionality
 	public boolean checkStep(int x, int y){
+		if((x>=0) && (y>=0) && (x < width) && (y < height)){
+			if(obstacles.field[x][y]==0){
+				return true;
+			}
+			else if(obstacles.field[x][y]==2){
+				return true;
+			}
+		}
+		return false;
+		
+	}
+	
+	//Revisit
+	public boolean createRobot(){
+		agentsInBld = new LinkedList<Agent>();
+		agentsInBld.size();
+		//Deepak: need more dynamic way of deciding initial pos
+		Robot robot = new Robot(id, String.valueOf(agentsInBld.size()),width-2,height-2);
+		agentsInBld.add(robot);
+		state.addAgent(robot);
 		return true;
-		//Dummy - needs to be changed.
-
+		
+	}
+	
+	public void updateAgentPos(Robot agnt,int x_loc,int y_loc){
+		//agents.setObjectPosition(agnt,x_loc, y_loc);
+		agents.setObjectLocation(agnt,x_loc, y_loc);
+		//state.storage.updRobotPos(agnt.getID(), x_loc, y_loc));
+		
 	}
 	
 	
@@ -233,6 +293,10 @@ public class Building extends Agent{
 	public void step(SimState arg0) {
 		// TODO Auto-generated method stub
 		super.step(arg0);
+		 ListIterator<Agent> listIterator = agentsInBld.listIterator();
+	        while (listIterator.hasNext()) {
+	        	arg0.schedule.scheduleRepeating(listIterator.next());
+	        }
 		
 	}
 

@@ -19,11 +19,11 @@ public class SimulationWithUI extends GUIState
 	 public JFrame displayFrame;
 	 FastValueGridPortrayal2D buildingPortrayal = new FastValueGridPortrayal2D("building", true); 
 	 FastValueGridPortrayal2D obstaclePortrayal = new FastValueGridPortrayal2D("Obstacles", true); 
-	/* FastValueGridPortrayal2D wallPortrayal = new FastValueGridPortrayal2D("Walls", true); 
-	 FastValueGridPortrayal2D doorPortrayal = new FastValueGridPortrayal2D("Doors", true); 
+	 //FastValueGridPortrayal2D wallPortrayal = new FastValueGridPortrayal2D("Walls", true); 
+	 //FastValueGridPortrayal2D doorPortrayal = new FastValueGridPortrayal2D("Doors", true); 
 	 SparseGridPortrayal2D robotPortrayal = new SparseGridPortrayal2D();
-	 SparseGridPortrayal2D userPortrayal = new SparseGridPortrayal2D();
-	 SparseGridPortrayal2D sensorPortrayal = new SparseGridPortrayal2D();*/
+	 //SparseGridPortrayal2D userPortrayal = new SparseGridPortrayal2D();
+	 //SparseGridPortrayal2D sensorPortrayal = new SparseGridPortrayal2D();*/
 	
 	public SimulationWithUI()
 	{
@@ -71,7 +71,7 @@ public class SimulationWithUI extends GUIState
 	                new Color(0,0,0,0),
 	                new Color(128,64,64,255) ));
 		 
-		 
+		 robotPortrayal.setField(building.getAgents());
 		 
 		/* doorPortrayal.setField(building.getDoors());
 		 doorPortrayal.setMap(new sim.util.gui.SimpleColorMap(
@@ -118,7 +118,7 @@ public class SimulationWithUI extends GUIState
    
     display.attach(obstaclePortrayal,"Obstacles");
     display.attach(buildingPortrayal,"Building");
-   // display.attach(doorPortrayal,"Door");
+    display.attach(robotPortrayal,"Robot");
   //  display.attach(sensorPortrayal,"Sensors");
     
     // specify the backdrop color  -- what gets painted behind the displays
