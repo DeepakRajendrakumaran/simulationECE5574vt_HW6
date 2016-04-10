@@ -103,7 +103,7 @@ public class Building extends Agent{
 		obstacles.field[0][16] = 2;
 		obstacles.field[0][17] = 2;
 		//Deepak: Take this out..there for initial testing only
-		createRobot();
+		//createRobot();
 
 		//state.addAgent(new Robot(id,"2",4,4));
 	}
@@ -141,7 +141,7 @@ public class Building extends Agent{
 			
 			//Deepak: Take this out..there for initial testing only
 			
-				createRobot();
+				//createRobot();
 			
 	}
 
@@ -264,17 +264,20 @@ public class Building extends Agent{
 	}
 	
 	//Revisit
-	public boolean createRobot(){
-		agentsInBld = new LinkedList<Agent>();
-		agentsInBld.size();
+	public Robot createRobot(){
+
 		//Deepak: need more dynamic way of deciding initial pos
 		//Ameya: provided a random initial position
 		Int2D pos = genStartPos();
 		Robot robot = new Robot(id, String.valueOf(agentsInBld.size()),pos.getX(),pos.getY());
+		
 		agents.setObjectLocation(robot,pos.getX(),pos.getY());
 		agentsInBld.add(robot);
+
 		state.addAgent(robot);
-		return true;
+		return robot;
+
+		//deal with no space for Robot in building later.
 		
 	}
 	

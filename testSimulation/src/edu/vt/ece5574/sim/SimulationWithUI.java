@@ -5,6 +5,7 @@ import java.awt.Color;
 import javax.swing.JFrame;
 
 import edu.vt.ece5574.agents.Building;
+import edu.vt.ece5574.agents.Robot;
 import sim.display.Controller;
 import sim.display.Display2D;
 import sim.display.GUIState;
@@ -54,8 +55,10 @@ public class SimulationWithUI extends GUIState
      {
 		 Simulation sim = (Simulation)state;
 		 Building building = (Building)sim.getAgentByID("0");
+		 Robot robot0 = building.createRobot(); //robot0 is not being used here. but we may find use for it.
+		// Robot robot1 = building.createRobot();
+		//movement gives errors when 2 robots are added.
 
-		
      // tell the portrayals what to portray and how to portray them
 		 buildingPortrayal.setField(building.getTileMap());
 		 buildingPortrayal.setMap(new sim.util.gui.SimpleColorMap(
