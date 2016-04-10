@@ -12,7 +12,7 @@ import edu.vt.ece5574.events.WaterLeakEvent;
 import edu.vt.ece5574.sim.Simulation;
 
 import edu.vt.ece5574.agents.Sensor;
-import edu.vt.ece5574.agents.FireSensor;
+//import edu.vt.ece5574.agents.FireSensor;
 import edu.vt.ece5574.agents.WaterLeakSensor;
 
 
@@ -33,15 +33,15 @@ public class SensorAgentTest {
 	}
 	
 
-	@Test
-	public void checkFireSensor() {
+//	@Test
+/*	public void checkFireSensor() {
 	
 
 		Sensor firesensor = new FireSensor("1","0");
 		assertEquals(firesensor.getSensorType(),"fire");	
 		
 	}
-	
+	*/
 	@Test
 	public void checkWaterLeakSensor() {
 	
@@ -62,8 +62,8 @@ public class SensorAgentTest {
 	
 */
 
-	@Test(timeout=1000)
-	public void burningFire(){
+//	@Test(timeout=1000)
+/*	public void burningFire(){
 
 		FireSensor firesensor = new FireSensor("1","0");
 
@@ -131,7 +131,7 @@ public class SensorAgentTest {
 		assertFalse(firesensor.getFireStatus());
 		
 	}
-
+*/
 @Test(timeout=1000)
 	public void leakingWater(){
 		WaterLeakSensor waterleaksensor = new WaterLeakSensor("1","0");
