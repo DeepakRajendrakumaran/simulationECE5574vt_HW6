@@ -18,10 +18,12 @@ public class SimulationWithUI extends GUIState
 	 public Display2D display;
 	 public JFrame displayFrame;
 	 FastValueGridPortrayal2D buildingPortrayal = new FastValueGridPortrayal2D("building", true); 
-	 FastValueGridPortrayal2D wallPortrayal = new FastValueGridPortrayal2D("Walls", true); 
+	 FastValueGridPortrayal2D obstaclePortrayal = new FastValueGridPortrayal2D("Obstacles", true); 
+	/* FastValueGridPortrayal2D wallPortrayal = new FastValueGridPortrayal2D("Walls", true); 
+	 FastValueGridPortrayal2D doorPortrayal = new FastValueGridPortrayal2D("Doors", true); 
 	 SparseGridPortrayal2D robotPortrayal = new SparseGridPortrayal2D();
 	 SparseGridPortrayal2D userPortrayal = new SparseGridPortrayal2D();
-	 SparseGridPortrayal2D sensorPortrayal = new SparseGridPortrayal2D();
+	 SparseGridPortrayal2D sensorPortrayal = new SparseGridPortrayal2D();*/
 	
 	public SimulationWithUI()
 	{
@@ -53,21 +55,33 @@ public class SimulationWithUI extends GUIState
 		 Simulation sim = (Simulation)state;
 		 Building building = (Building)sim.getAgentByID("0");
 
-		 IntGrid2D build = building.getTileMap();
+		
      // tell the portrayals what to portray and how to portray them
-		 buildingPortrayal.setField(build);
+		 buildingPortrayal.setField(building.getTileMap());
 		 buildingPortrayal.setMap(new sim.util.gui.SimpleColorMap(
 	             0,
 	             1,
 	             new Color(0,0,0,0),
 	             new Color(255,0,0,255) ));
 		 
-		 wallPortrayal.setField(building.getwalls());
-		 wallPortrayal.setMap(new sim.util.gui.SimpleColorMap(
+		 obstaclePortrayal.setField(building.getObstacles());
+		 obstaclePortrayal.setMap(new sim.util.gui.SimpleColorMap(
 				  0,
-	                1,
+	                5,
 	                new Color(0,0,0,0),
 	                new Color(128,64,64,255) ));
+		 
+		 
+		 
+		/* doorPortrayal.setField(building.getDoors());
+		 doorPortrayal.setMap(new sim.util.gui.SimpleColorMap(
+	                0,
+	                20,
+	                // home pheromones are beneath all, just make them opaque
+	                //Color.white, 
+	                new Color(0,0,0,0),
+	                new Color(128,64,64,255) ) ); */
+		 
          
      // reschedule the displayer
      display.reset();
@@ -102,9 +116,9 @@ public class SimulationWithUI extends GUIState
 
     // attach the portrayals from bottom to top
    
-    display.attach(wallPortrayal,"Walls");
+    display.attach(obstaclePortrayal,"Obstacles");
     display.attach(buildingPortrayal,"Building");
-   // display.attach(userPortrayal,"Users");
+   // display.attach(doorPortrayal,"Door");
   //  display.attach(sensorPortrayal,"Sensors");
     
     // specify the backdrop color  -- what gets painted behind the displays

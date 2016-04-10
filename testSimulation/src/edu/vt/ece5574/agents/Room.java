@@ -60,7 +60,7 @@ public class Room {
 		return false;
 	}
 
-	public void addDoor(IntGrid2D doors, IntGrid2D walls,String side){
+	public void addDoor(IntGrid2D doors, String side){
 
 		if(width < 5 || height < 5){
 			return;
@@ -69,14 +69,11 @@ public class Room {
 		//adds closed door
 		if(side == "bottom"){
 			position = y + height/2 ;
-			doors.field[x + width-1][position] = 2 ; 
+			doors.field[x + width-1][position] = 2; 
 			doors.field[x + width-1][position + 1] = 2 ; 
-			doors.field[x + width-1][position + 2] = 2 ; 
+			doors.field[x + width-1][position + 2] = 2; 
 			
-			walls.field[x + width-1][position] = 0 ; 
-			walls.field[x + width-1][position + 1] = 0 ; 
-			walls.field[x + width-1][position + 2] = 0 ; 
-
+		
 		}
 		else if(side == "left"){
 			position = x + width/2 ;
@@ -84,10 +81,7 @@ public class Room {
 			doors.field[position + 1][y] = 2 ; 
 			doors.field[position + 2][y] = 2 ; 
 			
-			walls.field[position][y] = 0 ; 
-			walls.field[position + 1][y] = 0 ; 
-			walls.field[position + 2][y] = 0 ; 
-
+			
 		}
 		else if(side == "right"){
 			position = x + width/2 ;
@@ -95,9 +89,7 @@ public class Room {
 			doors.field[position + 1][y + height - 1] = 2 ; 
 			doors.field[position + 2][y + height - 1] = 2 ; 
 			
-			walls.field[position][y + height - 1] = 0 ; 
-			walls.field[position + 1][y + height - 1] = 0 ; 
-			walls.field[position + 2][y + height - 1] = 0 ; 
+			
 		}
 		else if(side == "top"){
 			position = y + height/2 ;
@@ -105,10 +97,7 @@ public class Room {
 			doors.field[x ][position + 1] = 2 ; 
 			doors.field[x ][position + 2] = 2 ; 
 			
-			walls.field[x ][position] = 0 ; 
-			walls.field[x ][position + 1] = 0 ; 
-			walls.field[x ][position + 2] = 0 ; 
-
+		
 		}
 	}
 

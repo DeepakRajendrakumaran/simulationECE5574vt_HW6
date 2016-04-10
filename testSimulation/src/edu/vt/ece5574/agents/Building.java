@@ -32,9 +32,7 @@ public class Building extends Agent{
 
 	//protected int[][] tilemap;
 	protected IntGrid2D tile_map;
-	protected IntGrid2D walls;
-	protected IntGrid2D doors;
-	protected IntGrid2D windows;
+	protected IntGrid2D obstacles;
 
 	protected Simulation state;
 	protected Temperature hallTemperature; 
@@ -56,38 +54,39 @@ public class Building extends Agent{
 		height = 30;
 
 		tile_map = new IntGrid2D(width,height,0); //creates a building with a tilemap full of 0s. Thus empty building with plain floor.
-		walls = new IntGrid2D(width,height,0);
-		doors = new IntGrid2D(width,height,0);
-		windows = new IntGrid2D(width,height,0);
+		obstacles = new IntGrid2D(width,height,0);
+		//doors = new IntGrid2D(width,height,0);
+		//windows = new IntGrid2D(width,height,0);
 		for(int i = 0 ; i < width ; i++){
 				//tilemap[i][0] = 1; //1 indicates wall
 				//tilemap[i][height - 1] = 1;
-				walls.field [i][0] = wall;
-				walls.field [i][height - 1]= wall;
+			obstacles.field [i][0] = wall;
+			obstacles.field [i][height - 1]= wall;
 		}
 
 		for(int j = 0 ; j < height ; j++){
 				//tilemap[0][j] = 1; //1 indicates wall
 				//tilemap[width - 1][j] = 1;
-				walls.field [0][j]= wall;
-				walls.field [width - 1][j]= wall;
+			obstacles.field [0][j]= wall;
+			obstacles.field [width - 1][j]= wall;
 		}
 		hallTemperature = new Temperature(state);
 		addRoom(1, 1, 10, 10);
-		rooms.get(0).addDoor(doors,walls,"bottom");
+		rooms.get(0).addDoor(obstacles,"bottom");
 		addRoom(19,1,10,10);
-		rooms.get(1).addDoor(doors,walls,"right");
+		rooms.get(1).addDoor(obstacles,"right");
 		addRoom(1,19,10,10);
-		rooms.get(2).addDoor(doors,walls,"left");
+		rooms.get(2).addDoor(obstacles,"left");
 		addRoom(19,19,10,10);
-		rooms.get(3).addDoor(doors,walls,"top");
+		rooms.get(3).addDoor(obstacles,"top");
 
 
 		//add Door to Hallway from outside - 
-		doors.field[0][14] = 2;
-		doors.field[0][15] = 2;
-		doors.field[0][16] = 2;
-		doors.field[0][17] = 2;
+		obstacles.field[0][14] = 2;
+		obstacles.field[0][15] = 2;
+		obstacles.field[0][16] = 2;
+		obstacles.field[0][17] = 2;
+		state.addAgent(new Robot(id,"2",4,4));
 	}
 	
 	//constructor 
@@ -99,20 +98,20 @@ public class Building extends Agent{
 				height = height_;
 				//tilemap = new int[width][height]; //creates a building with a tilemap full of 0s. Thus empty building with plain floor.
 				tile_map = new IntGrid2D(width, height,0);
-				walls = new IntGrid2D(width, height,0);
+				obstacles = new IntGrid2D(width, height,0);
 				
 			for(int i = 0 ; i < width ; i++){
 				//tilemap[i][0] = 1; //1 indicates wall
 				//tilemap[i][height - 1] = 1;
-				walls.field[i][0] = wall;
-				walls.field[i][height - 1] = wall;
+				obstacles.field[i][0] = wall;
+				obstacles.field[i][height - 1] = wall;
 			}
 
 			for(int j = 0 ; j < height ; j++){
 				//tilemap[0][j] = 1; //1 indicates wall
 				//tilemap[width - 1][j] = 1;
-				walls.field[0][j] = wall;
-				walls.field[width - 1][j] = wall;
+				obstacles.field[0][j] = wall;
+				obstacles.field[width - 1][j] = wall;
 			}
 			hallTemperature = new Temperature(state);
 			rooms = new LinkedList<Room>();
@@ -142,7 +141,7 @@ public class Building extends Agent{
 		System.out.println("Current Layout");
 		for(int i = 0; i < width; i++){
 			for(int j = 0 ; j < height; j++){
-				System.out.print(walls.field[i][j]);
+				System.out.print(obstacles.field[i][j]);
 				System.out.print(" ");
 			}
 			System.out.println(" ");
@@ -164,10 +163,14 @@ public class Building extends Agent{
 		return tile_map;
 	}
 	
-	public IntGrid2D getwalls(){
+	public IntGrid2D getObstacles(){
 
-		return walls;
+		return obstacles;
 	}
+/*	public IntGrid2D getDoors(){
+
+		return doors;
+	}*/
 	public boolean addRoom(int x, int y, int w, int h){
 
 		Room tempRoom = new Room(x,y,w,h,state);
@@ -192,16 +195,16 @@ public class Building extends Agent{
 			for(int i = x ; i < x + w ; i++){
 				//tilemap[i][y] = 1; //1 indicates wall
 				//tilemap[i][y + h - 1] = 1;
-				walls.field [i][y] = wall;
-				walls.field [i][y + h - 1] = wall;
+				obstacles.field [i][y] = wall;
+				obstacles.field [i][y + h - 1] = wall;
 				
 			}
 
 			for(int j = y ; j < y + h ; j++){
 			//	tilemap[x][j] = 1; //1 indicates wall
 			//	tilemap[x + w - 1][j] = 1;
-				walls.field [x][j] = wall;
-				walls.field [x + w - 1][j] = wall;
+				obstacles.field [x][j] = wall;
+				obstacles.field [x + w - 1][j] = wall;
 				
 			}
 			return true;
