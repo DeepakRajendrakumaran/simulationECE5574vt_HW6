@@ -3,6 +3,7 @@ package edu.vt.ece5574.agents;
 import java.util.LinkedList;
 import java.util.ArrayList;
 import sim.engine.SimState;
+import sim.field.grid.IntGrid2D;
 import edu.vt.ece5574.roomconditions.Temperature;
 import edu.vt.ece5574.sim.Simulation;
 public class Room {
@@ -59,7 +60,7 @@ public class Room {
 		return false;
 	}
 
-	public void addDoor(int[][] tilemap, String side){
+	public void addDoor(IntGrid2D doors, IntGrid2D walls,String side){
 
 		if(width < 5 || height < 5){
 			return;
@@ -68,34 +69,45 @@ public class Room {
 		//adds closed door
 		if(side == "bottom"){
 			position = y + height/2 ;
-			tilemap[x + width-1][position] = 2 ; 
-			tilemap[x + width-1][position + 1] = 2 ; 
-			tilemap[x + width-1][position + 2] = 2 ; 
-
+			doors.field[x + width-1][position] = 2 ; 
+			doors.field[x + width-1][position + 1] = 2 ; 
+			doors.field[x + width-1][position + 2] = 2 ; 
+			
+			walls.field[x + width-1][position] = 0 ; 
+			walls.field[x + width-1][position + 1] = 0 ; 
+			walls.field[x + width-1][position + 2] = 0 ; 
 
 		}
 		else if(side == "left"){
 			position = x + width/2 ;
-			tilemap[position][y] = 2 ; 
-			tilemap[position + 1][y] = 2 ; 
-			tilemap[position + 2][y] = 2 ; 
-
+			doors.field[position][y] = 2 ; 
+			doors.field[position + 1][y] = 2 ; 
+			doors.field[position + 2][y] = 2 ; 
+			
+			walls.field[position][y] = 0 ; 
+			walls.field[position + 1][y] = 0 ; 
+			walls.field[position + 2][y] = 0 ; 
 
 		}
 		else if(side == "right"){
 			position = x + width/2 ;
-			tilemap[position][y + height - 1] = 2 ; 
-			tilemap[position + 1][y + height - 1] = 2 ; 
-			tilemap[position + 2][y + height - 1] = 2 ; 
-
-
+			doors.field[position][y + height - 1] = 2 ; 
+			doors.field[position + 1][y + height - 1] = 2 ; 
+			doors.field[position + 2][y + height - 1] = 2 ; 
+			
+			walls.field[position][y + height - 1] = 0 ; 
+			walls.field[position + 1][y + height - 1] = 0 ; 
+			walls.field[position + 2][y + height - 1] = 0 ; 
 		}
 		else if(side == "top"){
 			position = y + height/2 ;
-			tilemap[x ][position] = 2 ; 
-			tilemap[x ][position + 1] = 2 ; 
-			tilemap[x ][position + 2] = 2 ; 
-
+			doors.field[x ][position] = 2 ; 
+			doors.field[x ][position + 1] = 2 ; 
+			doors.field[x ][position + 2] = 2 ; 
+			
+			walls.field[x ][position] = 0 ; 
+			walls.field[x ][position + 1] = 0 ; 
+			walls.field[x ][position + 2] = 0 ; 
 
 		}
 	}

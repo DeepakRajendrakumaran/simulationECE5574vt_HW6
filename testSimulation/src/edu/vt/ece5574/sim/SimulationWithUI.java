@@ -9,6 +9,7 @@ import sim.display.Controller;
 import sim.display.Display2D;
 import sim.display.GUIState;
 import sim.engine.SimState;
+import sim.field.grid.IntGrid2D;
 import sim.portrayal.grid.FastValueGridPortrayal2D;
 import sim.portrayal.grid.SparseGridPortrayal2D;
 
@@ -52,8 +53,9 @@ public class SimulationWithUI extends GUIState
 		 Simulation sim = (Simulation)state;
 		 Building building = (Building)sim.getAgentByID("0");
 
+		 IntGrid2D build = building.getTileMap();
      // tell the portrayals what to portray and how to portray them
-		 buildingPortrayal.setField(building.getTileMap());
+		 buildingPortrayal.setField(build);
 		 buildingPortrayal.setMap(new sim.util.gui.SimpleColorMap(
 	             0,
 	             1,
@@ -101,7 +103,7 @@ public class SimulationWithUI extends GUIState
     // attach the portrayals from bottom to top
    
     display.attach(wallPortrayal,"Walls");
-    display.attach(robotPortrayal,"Robots");
+    display.attach(buildingPortrayal,"Building");
    // display.attach(userPortrayal,"Users");
   //  display.attach(sensorPortrayal,"Sensors");
     
