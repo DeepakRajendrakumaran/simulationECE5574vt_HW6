@@ -14,7 +14,7 @@ public class Brain {
 		
 
 		sim = new Simulation(0);
-		building = new Building("0",20,20,sim);
+		building = new Building("0",sim); // creates a building with default layout
 	}
 	
 	
@@ -25,8 +25,6 @@ public class Brain {
 		//this.isSimulatorRunning=1;
 		//sim.run(temp);
 		System.out.println("Testing building consturction");
-		building.addRoom(1, 1, 5, 5);
-		building.addRoom(10, 10, 5, 5);
 		building.displayLayout();
 	}
 	

@@ -59,4 +59,45 @@ public class Room {
 		return false;
 	}
 
+	public void addDoor(int[][] tilemap, String side){
+
+		if(width < 5 || height < 5){
+			return;
+		}
+		int position ;
+		//adds closed door
+		if(side == "bottom"){
+			position = y + height/2 ;
+			tilemap[x + width-1][position] = 2 ; 
+			tilemap[x + width-1][position + 1] = 2 ; 
+			tilemap[x + width-1][position + 2] = 2 ; 
+
+
+		}
+		else if(side == "left"){
+			position = x + width/2 ;
+			tilemap[position][y] = 2 ; 
+			tilemap[position + 1][y] = 2 ; 
+			tilemap[position + 2][y] = 2 ; 
+
+
+		}
+		else if(side == "right"){
+			position = x + width/2 ;
+			tilemap[position][y + height - 1] = 2 ; 
+			tilemap[position + 1][y + height - 1] = 2 ; 
+			tilemap[position + 2][y + height - 1] = 2 ; 
+
+
+		}
+		else if(side == "top"){
+			position = y + height/2 ;
+			tilemap[x ][position] = 2 ; 
+			tilemap[x ][position + 1] = 2 ; 
+			tilemap[x ][position + 2] = 2 ; 
+
+
+		}
+	}
+
 }
