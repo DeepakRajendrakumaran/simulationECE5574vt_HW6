@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
+import java.util.Iterator;
+import java.util.Map;
 
 import edu.vt.ece5574.agents.Agent;
 import edu.vt.ece5574.agents.Building;
@@ -108,7 +110,15 @@ public class Simulation extends SimState {
         	agents.put(new Integer(i).toString(), new Building(new Integer(i).toString()));
         }*/
         pushIncoming.setAccountDetails("simulation.ece5574", password);
-        schedule.scheduleRepeating(pushIncoming);
+  //      schedule.scheduleRepeating(pushIncoming);
+      //  public HashMap<String, Agent> agents;
+        Iterator it = agents.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            schedule.scheduleRepeating((Agent)pair.getValue());
+        }
+        
+       
     }
     
     
