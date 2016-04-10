@@ -71,6 +71,11 @@ public class Building extends Agent{
 		rooms.get(3).addDoor(tilemap,"top");
 
 
+		//add Door to Hallway from outside - 
+		tilemap[0][14] = 2;
+		tilemap[0][15] = 2;
+		tilemap[0][16] = 2;
+		tilemap[0][17] = 2;
 	}
 	
 	//constructor 
