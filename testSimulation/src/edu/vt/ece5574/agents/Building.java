@@ -12,6 +12,7 @@ import sim.engine.SimState;
 import sim.field.continuous.Continuous2D;
 import sim.field.grid.IntGrid2D;
 import sim.field.grid.SparseGrid2D;
+import sim.util.Int2D;
 
 
 //Author - Ameya Khandekar
@@ -267,13 +268,41 @@ public class Building extends Agent{
 		agentsInBld = new LinkedList<Agent>();
 		agentsInBld.size();
 		//Deepak: need more dynamic way of deciding initial pos
-		Robot robot = new Robot(id, String.valueOf(agentsInBld.size()),width-2,height-2);
+		//Ameya: provided a random initial position
+		Int2D pos = genStartPos();
+		Robot robot = new Robot(id, String.valueOf(agentsInBld.size()),pos.getX(),pos.getY());
 		agentsInBld.add(robot);
 		state.addAgent(robot);
 		return true;
 		
 	}
 	
+	//generates a unique random position unoccupied by any obstacle or other agent (this also includes sensors for now)
+	public Int2D genStartPos(){
+		int x , y ; 
+		while(true){
+			x = state.random.nextInt()%width;
+			y = state.random.nextInt()%height;
+			boolean flag = false;
+			for(int i = 0 ; i < agentsInBld.size(); i++){
+				Int2D pos = agents.getObjectLocation(agentsInBld.get(i));
+				if(pos.getX() == x && pos.getY() == y){
+					flag = true;
+					break;
+				}
+			}
+
+			if(flag == true)
+				continue;
+			if((obstacles.field[x][y]==0) && (tile_map.field[x][y]==0))
+				break;
+		}
+
+		Int2D position = new Int2D(x,y);
+		return position;
+
+	}
+
 	public void updateAgentPos(Robot agnt,int x_loc,int y_loc){
 		//agents.setObjectPosition(agnt,x_loc, y_loc);
 		agents.setObjectLocation(agnt,x_loc, y_loc);
