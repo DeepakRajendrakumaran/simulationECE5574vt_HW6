@@ -7,12 +7,21 @@ import java.util.ListIterator;
 import edu.vt.ece5574.roomconditions.Temperature;
 import edu.vt.ece5574.sim.Simulation;
 import sim.engine.SimState;
-import sim.field.grid.IntGrid2D;
+
+//Author - Ameya Khandekar
+/*
+tilemap key :- 
+0 - empty position
+1 - wall
+2 - closed door
+3 - open door
+*/
+
+
 public class Building extends Agent{
 	
 	//private int minRooms = 1;
 	//private int maxRooms = 10;
-	public int wall =1;
 
 	private static final long serialVersionUID = 1;
 	protected int width;
@@ -38,7 +47,37 @@ public class Building extends Agent{
 		super(id, id);
 		state = (Simulation)state_;
 		rooms = new LinkedList<Room>();
-		//Dummy - needs to be changed.
+		
+		width = 30;
+		height = 30;
+
+		tilemap = new int[width][height]; //creates a building with a tilemap full of 0s. Thus empty building with plain floor.
+
+		for(int i = 0 ; i < width ; i++){
+				tilemap[i][0] = 1; //1 indicates wall
+				tilemap[i][height - 1] = 1;
+		}
+
+		for(int j = 0 ; j < height ; j++){
+				tilemap[0][j] = 1; //1 indicates wall
+				tilemap[width - 1][j] = 1;
+		}
+		hallTemperature = new Temperature(state);
+		addRoom(1, 1, 10, 10);
+		rooms.get(0).addDoor(tilemap,"bottom");
+		addRoom(19,1,10,10);
+		rooms.get(1).addDoor(tilemap,"right");
+		addRoom(1,19,10,10);
+		rooms.get(2).addDoor(tilemap,"left");
+		addRoom(19,19,10,10);
+		rooms.get(3).addDoor(tilemap,"top");
+
+
+		//add Door to Hallway from outside - 
+		tilemap[0][14] = 2;
+		tilemap[0][15] = 2;
+		tilemap[0][16] = 2;
+		tilemap[0][17] = 2;
 	}
 	
 	//constructor 
