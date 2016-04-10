@@ -1,5 +1,6 @@
 package edu.vt.ece5574.sim;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
@@ -28,14 +29,16 @@ public class Simulation extends SimState {
     public PushAPICaller pushOutgoing;
     public ReadNotifications pushIncoming;
     
+    
+   
     public Simulation(long seed){
     	super(seed); //needs to be first line, can't just set seed here
     	boolean debug ;
 
     	config = new Configuration();
     	try {
-			config.load(System.getProperty("user.dir") + System.getProperty("File.separator")+
-						"configuration.xml");
+			config.load(System.getProperty("user.dir") + File.separator+"testSimulation"
+					+ File.separator+"configuration.xml");
 		} catch (InvalidPropertiesFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -48,7 +51,7 @@ public class Simulation extends SimState {
     		numRobots = Integer.parseInt(config.getProp("numRobots"));
     		debug = Boolean.parseBoolean(config.getProp("debug")); //will be read in from config.  If it's a debug, we'll set seed manually
     		seed = Long.parseLong(config.getProp("seedValue"));
-    		System.out.println("Seed="+ seed + " Number Robots:" + numRobots);
+    		System.out.println("Seed="+ seed + " Number Robots:" + numRobots + "numBuildings:"+ Integer.parseInt(config.getProp("numBuildings")));
     		
     	}
 
@@ -60,7 +63,7 @@ public class Simulation extends SimState {
     	
     	//
     	
-		
+    	setSeed(seed);
         
         if(debug){
         	if(seed == 0){
@@ -94,12 +97,15 @@ public class Simulation extends SimState {
         super.start();  // very important!  This resets and cleans out the Schedule.
         
         //clear the room of previous actors
-        /*room.clear();
+        //room.clear();
         int numBuildings = Integer.parseInt(config.getProp("numBuildings"));
       
         for(int i = 0; i < numBuildings; i++){
-        	agents.put(new Integer(i).toString(), new Building(new Integer(i).toString()));
-        }*/
+        	Building building = new Building("0",20,20,this);
+        	building.addRoom(1, 1, 5, 5);
+    		building.addRoom(10, 10, 5, 5);
+        	agents.put(new Integer(i).toString(), building);
+        }
         pushIncoming.setAccountDetails("simulation.ece5574", password);
         schedule.scheduleRepeating(pushIncoming);
     }

@@ -7,17 +7,21 @@ import java.util.ListIterator;
 import edu.vt.ece5574.roomconditions.Temperature;
 import edu.vt.ece5574.sim.Simulation;
 import sim.engine.SimState;
+import sim.field.grid.IntGrid2D;
 public class Building extends Agent{
 	
 	//private int minRooms = 1;
 	//private int maxRooms = 10;
+	public int wall =1;
 
 	private static final long serialVersionUID = 1;
 	protected int width;
 	protected int height; 
 	protected LinkedList<Room> rooms;
 
-	protected int[][] tilemap;
+	//protected int[][] tilemap;
+	protected IntGrid2D tilemap;
+	protected IntGrid2D walls;
 
 	protected Simulation state;
 	protected Temperature hallTemperature; 
@@ -44,16 +48,22 @@ public class Building extends Agent{
 
 				width = width_;
 				height = height_;
-				tilemap = new int[width][height]; //creates a building with a tilemap full of 0s. Thus empty building with plain floor.
-
+				//tilemap = new int[width][height]; //creates a building with a tilemap full of 0s. Thus empty building with plain floor.
+				tilemap = new IntGrid2D(width, height,0);
+				walls = new IntGrid2D(width, height,0);
+				
 			for(int i = 0 ; i < width ; i++){
-				tilemap[i][0] = 1; //1 indicates wall
-				tilemap[i][height - 1] = 1;
+				//tilemap[i][0] = 1; //1 indicates wall
+				//tilemap[i][height - 1] = 1;
+				walls.field[i][0] = wall;
+				walls.field[i][height - 1] = wall;
 			}
 
 			for(int j = 0 ; j < height ; j++){
-				tilemap[0][j] = 1; //1 indicates wall
-				tilemap[width - 1][j] = 1;
+				//tilemap[0][j] = 1; //1 indicates wall
+				//tilemap[width - 1][j] = 1;
+				walls.field[0][j] = wall;
+				walls.field[width - 1][j] = wall;
 			}
 			hallTemperature = new Temperature(state);
 			rooms = new LinkedList<Room>();
@@ -83,7 +93,7 @@ public class Building extends Agent{
 		System.out.println("Current Layout");
 		for(int i = 0; i < width; i++){
 			for(int j = 0 ; j < height; j++){
-				System.out.print(tilemap[i][j]);
+				System.out.print(walls.field[i][j]);
 				System.out.print(" ");
 			}
 			System.out.println(" ");
@@ -100,9 +110,14 @@ public class Building extends Agent{
 
 	}
 
-	public int[][] getTileMap(){
+	public IntGrid2D getTileMap(){
 
 		return tilemap;
+	}
+	
+	public IntGrid2D getwalls(){
+
+		return walls;
 	}
 	public boolean addRoom(int x, int y, int w, int h){
 
@@ -126,13 +141,19 @@ public class Building extends Agent{
 			rooms.add(tempRoom);
 			//update tilemap
 			for(int i = x ; i < x + w ; i++){
-				tilemap[i][y] = 1; //1 indicates wall
-				tilemap[i][y + h - 1] = 1;
+				//tilemap[i][y] = 1; //1 indicates wall
+				//tilemap[i][y + h - 1] = 1;
+				walls.field [i][y] = wall;
+				walls.field [i][y + h - 1] = wall;
+				
 			}
 
 			for(int j = y ; j < y + h ; j++){
-				tilemap[x][j] = 1; //1 indicates wall
-				tilemap[x + w - 1][j] = 1;
+			//	tilemap[x][j] = 1; //1 indicates wall
+			//	tilemap[x + w - 1][j] = 1;
+				walls.field [x][j] = wall;
+				walls.field [x + w - 1][j] = wall;
+				
 			}
 			return true;
 		}
