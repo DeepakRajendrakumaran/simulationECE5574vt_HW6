@@ -183,9 +183,17 @@ public class Robot extends Agent {
 	 */
 	public void addressEvent(){
 		
+		Building bld = (Building)simState.getAgentByID(buildingID);
+
 		if(currEvent instanceof FireEvent){
-			((FireEvent) currEvent).turn_fireOff();			
+
+			//Robot reducin temperature of room affected by fire. using default rate of 1.
+			(bld.getRoomTempById(bld. getRoomId(robot_loc.getX(),robot_loc.getY()))).robotTempChange(1);
+
+			// old Boolean Logic
+			//((FireEvent) currEvent).turn_fireOff();			
 		}
+		
 		else if(currEvent instanceof IntruderEvent){
 			((IntruderEvent) currEvent).dealWithIntruder();
 		}
