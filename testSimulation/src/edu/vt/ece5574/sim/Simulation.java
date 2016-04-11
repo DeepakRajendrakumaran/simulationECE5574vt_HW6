@@ -82,8 +82,16 @@ public class Simulation extends SimState {
         storage = new StorageAPI();
         pushOutgoing = new PushAPICaller();
         pushIncoming = new ReadNotifications();
+        // add robots and building statically
+        
         for(int i = 0; i < numBuildings; i++){
-        	agents.put(new Integer(i).toString(), new Building(new Integer(i).toString(),this));
+        	Building building= new Building(new Integer(i).toString(),this);
+        	agents.put(new Integer(i).toString(), building);
+        	 for(int j= 1; j<= numRobots;j++){
+              	
+         		building.createRobot();
+             	System.out.println("Robot created with id:" + Integer.toString(i)+"@"+Integer.toString(j));
+              }
         }
     }
     
@@ -109,7 +117,7 @@ public class Simulation extends SimState {
         	agents.put(new Integer(i).toString(), new Building(new Integer(i).toString()));
         }*/
         pushIncoming.setAccountDetails("simulation.ece5574", password);
-  //      schedule.scheduleRepeating(pushIncoming);
+        schedule.scheduleRepeating(pushIncoming);
       //  public HashMap<String, Agent> agents;
         Iterator it = agents.entrySet().iterator();
         while (it.hasNext()) {
