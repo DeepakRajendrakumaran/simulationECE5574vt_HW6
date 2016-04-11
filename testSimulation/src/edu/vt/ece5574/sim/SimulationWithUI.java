@@ -56,7 +56,7 @@ public class SimulationWithUI extends GUIState
 		 Simulation sim = (Simulation)state;
 		 Building building = (Building)sim.getAgentByID("0");
 		 Robot robot0 = building.createRobot(); //robot0 is not being used here. but we may find use for it.
-		// Robot robot1 = building.createRobot();
+		 Robot robot1 = building.createRobot();
 		//movement gives errors when 2 robots are added.
 
      // tell the portrayals what to portray and how to portray them

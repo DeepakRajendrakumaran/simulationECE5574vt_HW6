@@ -53,7 +53,7 @@ public class Building extends Agent{
 
 		
 		//Deepak: Take this out..there for initial testing only
-		createRobot();
+		//createRobot();
 		
 		//Dummy - needs to be removed later.
 	}
@@ -269,7 +269,7 @@ public class Building extends Agent{
 		//Deepak: need more dynamic way of deciding initial pos
 		//Ameya: provided a random initial position
 		Int2D pos = genStartPos();
-		Robot robot = new Robot(state,id, String.valueOf(agentsInBld.size()),pos.getX(),pos.getY());
+		Robot robot = new Robot(state, String.valueOf(agentsInBld.size()),id,pos.getX(),pos.getY());
 		
 		agents.setObjectLocation(robot,pos.getX(),pos.getY());
 		agentsInBld.add(robot);
