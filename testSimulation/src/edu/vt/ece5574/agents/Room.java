@@ -18,6 +18,8 @@ public class Room {
 	public Temperature roomTemperature;
 	protected Simulation state;
 
+	public int closedDoor = 2;
+
 
 	//constructor 
 	public Room(int x_, int y_, int width_, int height_,SimState state_){
