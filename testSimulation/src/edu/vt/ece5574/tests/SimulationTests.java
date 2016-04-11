@@ -106,4 +106,6 @@ public class SimulationTests {
 	public void agentMessageWaitingGood(){
 		assertTrue(sim.agentPushReceived("0"));
 	}
+	
+	
 }
