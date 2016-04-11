@@ -292,7 +292,7 @@ public class Building extends Agent{
 		//Deepak: need more dynamic way of deciding initial pos
 		//Ameya: provided a random initial position
 		Int2D pos = genStartPos();
-		Robot robot = new Robot(state, String.valueOf(agentsInBld.size()),id,pos.getX(),pos.getY());
+		Robot robot = new Robot(state, String.valueOf(agentsInBld.size()+1),id,pos.getX(),pos.getY());
 		
 		agents.setObjectLocation(robot,pos.getX(),pos.getY());
 		agentsInBld.add(robot);
