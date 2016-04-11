@@ -1,6 +1,8 @@
 package edu.vt.ece5574.agents;
 
 import java.awt.Color;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,7 +38,29 @@ public class Robot extends Agent {
     private Event currEvent = null;
     private List<Coordinate> route = null;
     private Coordinate nextPoint = null;
-    
+
+	private Simulation simState;
+	private enum Curr_Direction {
+	    North(0), South(1), East(2), West(3), Same(4) ;
+	
+	    private int posVal;
+	
+	Curr_Direction(int posVal) {
+        this.posVal = posVal;
+    }
+	public int getCurr_Direction() {
+		  return posVal;
+		 }
+		}
+		
+		class dirComparator implements Comparator<Curr_Direction> {
+
+		@Override
+		 public int compare(Curr_Direction c1, Curr_Direction c2) {
+		  return c1.getCurr_Direction() - c2.getCurr_Direction();
+		 }
+		}
+	private Curr_Direction c_dir;
     
 	/**
 	 * Constructor to initialize position, id.
@@ -45,8 +69,10 @@ public class Robot extends Agent {
 	 * @param x_loc : x coordinate position of the robot
 	 * @param y_loc : y coordinate position of the robot
 	 */
-	public Robot(String rID, String bID, int x_loc, int y_loc){
+	public Robot(Simulation state,String rID, String bID, int x_loc, int y_loc){
 		super(Color.blue,true,rID, bID);
+		simState = (Simulation)state;
+		c_dir = Curr_Direction.Same;
 		robot_loc = new MutableInt2D(x_loc,y_loc);
 		lastVisitedLocs = new Vector<MutableInt2D>();
 		toBeSavedLocs = 8;
@@ -61,9 +87,11 @@ public class Robot extends Agent {
 	 * @param rID
 	 * @param bID
 	 */
-	public Robot(String rID, String bID){
+	public Robot(Simulation state,String rID, String bID){
 		super(Color.blue,true,rID, bID);
-		robot_loc = new MutableInt2D(2,2);
+		simState = (Simulation)state;
+		c_dir = Curr_Direction.Same;
+		robot_loc = new MutableInt2D(15,15);
 	}
 	
 	/**
@@ -87,7 +115,7 @@ public class Robot extends Agent {
 	 * Logic to simulate 'normal' movement of robot in the building 
 	 * @param state 
 	 */
-	public void randomMovement(SimState state){
+	public void randomMovement_old(SimState state){
 		Simulation simState = (Simulation)state;
 		Building bld = (Building)simState.getAgentByID(buildingID);
 		int x_pos = robot_loc.x;
@@ -142,6 +170,141 @@ public class Robot extends Agent {
 		bld.updateAgentPos(this,robot_loc.x, robot_loc.y);
 		//simState.storage.updRobotPos(super.getID(), robot_loc.x, robot_loc.y);
 				
+	}
+	
+	/**
+	 * Logic to simulate 'normal' movement of robot in the building 
+	 * @param state 
+	 */
+	public void randomMovement(){
+		
+		Building bld = (Building)simState.getAgentByID(buildingID);
+		int x = robot_loc.x;
+		int y = robot_loc.y;
+		if((c_dir==Curr_Direction.Same)){
+			if(bld.checkStep(x,y+1)){
+			robot_loc.x = x;
+			 robot_loc.y = y+1;
+			 bld.updateAgentPos(this,robot_loc.x, robot_loc.y);
+			 return;
+			}
+			else{
+				c_dir=Curr_Direction.West;
+			}
+		}
+		
+		
+		 List<Curr_Direction> dirList = Arrays.asList(Curr_Direction.values());
+		 TreeSet<Curr_Direction> dirs = new TreeSet<Curr_Direction>(new dirComparator());
+		 dirs.addAll(dirList);
+		 for (Curr_Direction dir : dirs) {
+			  
+			  if(dir == c_dir){
+				  switch(c_dir){
+				  case Same:
+				  case North:
+					  if(bld.checkStep(x+1,y)){
+						  x=x+1;
+						  c_dir = Curr_Direction.East;
+						  
+					  }
+					  else if(bld.checkStep(x,y+1)){
+						  y=y+1;
+						  c_dir = Curr_Direction.North;
+						  
+					  }
+					  else if(bld.checkStep(x-1,y)){
+						  
+						  c_dir = Curr_Direction.West;
+						  
+					  }
+					  else if(bld.checkStep(x,y-1)){
+						  y=y-1;
+						  c_dir = Curr_Direction.South;
+						  
+					  }
+					  break;
+				  case South:
+					 
+					   if(bld.checkStep(x-1,y)){
+						  x=x-1;
+						  c_dir = Curr_Direction.West;
+						  
+					  }
+					  else if(bld.checkStep(x,y-1)){
+						  y=y-1;
+						  
+					  }
+					  else if(bld.checkStep(x+1,y)){
+						  x=x+1;
+						  c_dir = Curr_Direction.East;
+						  
+					  }
+					  else if(bld.checkStep(x,y+1)){
+						  y=y+1;
+						  c_dir = Curr_Direction.North;
+						 
+					  }
+					   break;
+				  case East:
+					  
+					   if(bld.checkStep(x,y-1)){
+						  y=y-1;
+						  c_dir = Curr_Direction.South;
+						 
+					  }
+					  else if(bld.checkStep(x+1,y)){
+						  x=x+1;
+						  c_dir = Curr_Direction.East;
+						 
+					  }
+					  else if(bld.checkStep(x,y+1)){
+						  y=y+1;
+						  c_dir = Curr_Direction.North;
+						 
+					  }
+					  else if(bld.checkStep(x-1,y)){
+						  x=x-1;
+						  c_dir = Curr_Direction.West;
+						  
+					  }
+					   break;
+				  case West:
+					  
+					  if(bld.checkStep(x,y+1)){
+						  y=y+1;
+						  c_dir = Curr_Direction.North;
+						  
+					  }
+					  else if(bld.checkStep(x-1,y)){
+						  x=x-1;
+						  c_dir = Curr_Direction.West;
+						  
+					  }
+					  else if(bld.checkStep(x,y-1)){
+						  y=y-1;
+						  c_dir = Curr_Direction.South;
+						  
+					  }
+					  else if(bld.checkStep(x+1,y)){
+						  x=x+1;
+						  c_dir = Curr_Direction.East;
+						  
+					  }
+					  break;
+				  }
+				  break;
+			  }
+			  
+			  
+		   
+		  }
+		
+		
+		
+		 robot_loc.x = x;
+		 robot_loc.y = y;
+		 bld.updateAgentPos(this,robot_loc.x, robot_loc.y);
 	}
 	
 	/**
@@ -286,7 +449,7 @@ public class Robot extends Agent {
 			
 		}
 		else if(events.isEmpty()){
-			randomMovement(state);
+			randomMovement();
 		}
 		else{
 			dealWithHouseEvents(state, bld);

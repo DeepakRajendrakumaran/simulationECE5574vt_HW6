@@ -34,7 +34,7 @@ public class RobotAgentTest {
 	
 	@Test(timeout=1000)
 	public void addRobot(){
-		Robot rob = new Robot("2",bID,5,100);
+		Robot rob = new Robot(sim,"2",bID,5,100);
 		assertTrue(sim.addAgent(rob));			
 		
 	}
@@ -42,7 +42,7 @@ public class RobotAgentTest {
 	
 	@Test(timeout=1000)
 	public void chckRobotID(){
-		Robot rob = new Robot("3",bID,9,90);
+		Robot rob = new Robot(sim,"3",bID,9,90);
 		sim.addAgent(rob);
 		assertTrue(rob.getID().compareTo("3")==0);
 			
@@ -53,7 +53,7 @@ public class RobotAgentTest {
 	public void chckRobotLoc(){
 		int x_loc=55;
 		int y_loc=19;
-		Robot rob = new Robot("3",bID,x_loc,y_loc);
+		Robot rob = new Robot(sim,"3",bID,x_loc,y_loc);
 		sim.addAgent(rob);
 		assertTrue((rob.getX()==x_loc)&&(rob.getY()==y_loc));
 			
@@ -63,23 +63,23 @@ public class RobotAgentTest {
 	@Test(timeout=1000)
 	public void randomMovement(){
 		String rID ="1";
-		Robot rob = new Robot(rID,bID,1,1);
+		Robot rob = new Robot(sim,rID,bID,1,1);
 		sim.addAgent(rob);
 		double initial_x= rob.getX();
 		double initial_y= rob.getY();
-		rob.randomMovement(sim);
+		rob.randomMovement();
 		assertFalse((rob.getX()==initial_x)&&(rob.getY()==initial_y));	
 	}
 	
 	@Test(timeout=1000)
 	public void continuousRandomMovement(){
 		String rID ="1";
-		Robot rob = new Robot(rID,bID,3,2);
+		Robot rob = new Robot(sim,rID,bID,3,2);
 		sim.addAgent(rob);
 		assertTrue(bld.checkStep(9, 9));	
 		int steps=100;
 		while(steps!=0){
-			rob.randomMovement(sim);
+			rob.randomMovement();
 			bld.checkStep(rob.getX(), rob.getY());
 			steps--;
 		}
@@ -90,7 +90,7 @@ public class RobotAgentTest {
 	@Test(timeout=1000)
 	public void respondtoNoEvent(){
 		String rID ="1";
-		Robot rob = new Robot(rID,bID,2,2);
+		Robot rob = new Robot(sim,rID,bID,2,2);
 		sim.addAgent(rob);
 		rob.step(sim);
 		assertFalse(rob.isBusy());
@@ -100,7 +100,7 @@ public class RobotAgentTest {
 	@Test(timeout=1000)
 	public void moveToaPoint(){
 		String rID ="1";
-		Robot rob = new Robot(rID,bID,2,5);
+		Robot rob = new Robot(sim,rID,bID,2,5);
 		sim.addAgent(rob);
 
 		String details = 
@@ -137,7 +137,7 @@ public class RobotAgentTest {
 	@Test(timeout=1000)
 	public void respondtoFireEvent(){
 		String rID ="1";
-		Robot rob = new Robot(rID,bID,2,5);
+		Robot rob = new Robot(sim,rID,bID,2,5);
 
 		String details = 
 				"{"
@@ -172,7 +172,7 @@ public class RobotAgentTest {
 	@Test(timeout=1000)
 	public void respondtoWaterEvent(){
 		String rID ="1";
-		Robot rob = new Robot(rID,bID,2,4);
+		Robot rob = new Robot(sim,rID,bID,2,4);
 
 		String details = 
 				"{"
@@ -208,7 +208,7 @@ public class RobotAgentTest {
 	@Test(timeout=1000)
 	public void respondtoMoveRobotEvent(){
 		String rID ="1";
-		Robot rob = new Robot(rID,bID,2,4);
+		Robot rob = new Robot(sim,rID,bID,2,4);
 
 		String details = 
 				"{"
@@ -244,7 +244,7 @@ public class RobotAgentTest {
 	@Test(timeout=1000)
 	public void respondtoIntruderEvent(){
 		String rID ="1";
-		Robot rob = new Robot(rID,bID,3,4);
+		Robot rob = new Robot(sim,rID,bID,3,4);
 
 		String details = 
 				"{"

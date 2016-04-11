@@ -20,7 +20,7 @@ public class SimulationTests {
 
 	@Test
 	public void agentAddGoodID(){
-		assertTrue(sim.addAgent(new Robot("1", "0")));
+		assertTrue(sim.addAgent(new Robot(sim,"1", "0")));
 		assertNotNull(sim.getAgentByID("1"));
 		assertEquals("1", sim.getAgentByID("1").getID());
 	}
@@ -32,23 +32,23 @@ public class SimulationTests {
 	
 	@Test 
 	public void agentAddDuplicate(){
-		assertTrue(sim.addAgent(new Robot("1", "0")));
-		assertFalse(sim.addAgent(new Robot("1", "0")));
+		assertTrue(sim.addAgent(new Robot(sim,"1", "0")));
+		assertFalse(sim.addAgent(new Robot(sim,"1", "0")));
 	}
 	
 	@Test
 	public void agentAddNullBuilding(){
-		assertFalse(sim.addAgent(new Robot("1", null)));
+		assertFalse(sim.addAgent(new Robot(sim,"1", null)));
 	}
 
 	@Test
 	public void agentAddBadBuilding(){
-		assertFalse(sim.addAgent(new Robot("2", "1")));
+		assertFalse(sim.addAgent(new Robot(sim,"2", "1")));
 	}
 	
 	@Test
 	public void agentAddNullID(){
-		assertFalse(sim.addAgent(new Robot(null, "0")));
+		assertFalse(sim.addAgent(new Robot(sim,null, "0")));
 	}
 	
 	@Test
@@ -58,19 +58,19 @@ public class SimulationTests {
 	
 	@Test
 	public void agentAddIDSameAsBuildingDoesntExist(){
-		assertFalse(sim.addAgent(new Robot("1", "1")));
+		assertFalse(sim.addAgent(new Robot(sim,"1", "1")));
 	}
 	
 	@Test
 	public void agentAddIDSameAsBuildingDoesExist(){
-		assertFalse(sim.addAgent(new Robot("0", "0")));
+		assertFalse(sim.addAgent(new Robot(sim,"0", "0")));
 	}
 	
 	
 	
 	@Test
 	public void agentRemoveGood(){
-		Robot rob = new Robot("1", "0");
+		Robot rob = new Robot(sim,"1", "0");
 		assertTrue(sim.addAgent(rob));
 		assertNotNull(sim.removeAgent(rob));
 	}
@@ -82,14 +82,14 @@ public class SimulationTests {
 	
 	@Test
 	public void agentRemoveBadID(){
-		Robot rob = new Robot("1", "0");
+		Robot rob = new Robot(sim,"1", "0");
 		assertTrue(sim.addAgent(rob));
-		assertNull(sim.removeAgent(new Robot("2", "0")));
+		assertNull(sim.removeAgent(new Robot(sim,"2", "0")));
 	}
 	
 	@Test
 	public void agentRemoveNullID(){
-		assertNull(sim.removeAgent(new Robot(null, "0")));
+		assertNull(sim.removeAgent(new Robot(sim,null, "0")));
 	}
 	
 	@Test

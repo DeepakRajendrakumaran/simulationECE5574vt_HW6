@@ -33,7 +33,7 @@ public class RecvMsgSimIntegrationTest {
 	public void setUp(){
 		sim = new Simulation(10);
 		bld = new Building("0");
-		rob1 = new Robot("1", "0");
+		rob1 = new Robot(sim,"1", "0");
 		sim.addAgent(bld);
 		sim.addAgent(rob1);
 		testNotifications.deleteAll();

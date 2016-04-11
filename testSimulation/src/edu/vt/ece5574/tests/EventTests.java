@@ -53,10 +53,10 @@ public class EventTests {
 		}*/
 		sim = new Simulation(1);
 		bld = new Building("0");
-		rob1 = new Robot("1", "0");
-		rob10 = new Robot("10", "0");
-		rob5 = new Robot("5", "0");
-		rob2 = new Robot("2", "0");
+		rob1 = new Robot(sim,"1", "0");
+		rob10 = new Robot(sim,"10", "0");
+		rob5 = new Robot(sim,"5", "0");
+		rob2 = new Robot(sim,"2", "0");
 		sim.addAgent(bld);
 		sim.addAgent(rob1);
 		sim.addAgent(rob10);
@@ -439,7 +439,7 @@ public class EventTests {
 	@Test
 	public void agentAddedButRequestingByBadID(){
 		UserMessageEvent event = createUserMessage();
-		Robot rob4 = new Robot("4", "0");
+		Robot rob4 = new Robot(sim,"4", "0");
 		sim.addAgent(rob4);
 		rob1.addEvent(event);
 		rob4.addEvent(event);
@@ -523,7 +523,7 @@ public class EventTests {
 	@Test
 	public void badIDRequested(){
 		FireEvent event = createFireBadRobotID();
-		Robot rob11 = new Robot("11", "0");
+		Robot rob11 = new Robot(sim,"11", "0");
 		sim.addAgent(rob11);
 		rob11.addEvent(event); //add it to 11 just because (and to get rid of warning)
 		
