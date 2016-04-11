@@ -275,6 +275,7 @@ public class Building extends Agent{
 		agentsInBld.add(robot);
 
 		state.addAgent(robot);
+		state.schedule.scheduleRepeating(robot);
 		return robot;
 
 		//deal with no space for Robot in building later.
@@ -329,11 +330,7 @@ public class Building extends Agent{
 	public void step(SimState arg0) {
 		// TODO Auto-generated method stub
 		super.step(arg0);
-		 ListIterator<Agent> listIterator = agentsInBld.listIterator();
-	        while (listIterator.hasNext()) {
-	        	arg0.schedule.scheduleRepeating(listIterator.next());
-	        }
-
+	
 	    //Default temperature changes per step in each room :-
 		for(int idx = 0; idx < rooms.size(); idx++)
       	{
