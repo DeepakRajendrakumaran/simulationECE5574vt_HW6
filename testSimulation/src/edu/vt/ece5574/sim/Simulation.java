@@ -153,7 +153,9 @@ public class Simulation extends SimState {
     		return false;
     	}
     	agents.put(agent.getID(), agent);
-    	schedule.scheduleRepeating(agent);
+    	//Moving this to the create<agent> method in building, since for some reason, 
+    	// the first agent created does not move when adding here-will check later
+    	//schedule.scheduleRepeating(agent);
     	return true;
     }
     
