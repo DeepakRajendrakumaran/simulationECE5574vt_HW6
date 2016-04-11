@@ -18,7 +18,7 @@ public class Room {
 	public Temperature roomTemperature;
 	protected Simulation state;
 
-	public int closedDoor = 2;
+	private static final int closedDoor = 2;
 
 
 	//constructor 

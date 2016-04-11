@@ -31,14 +31,14 @@ public class Building extends Agent{
 	//private int maxRooms = 10;
 
 	//#DEFINEs
-	public int emptyTile = 0;
-	public int wall =1;
-	public int closedDoor = 2;
+	private static final int emptyTile = 0;
+	private static final int wall = 1;
+	private static final int closedDoor = 2;
 
-	public int ROOMWIDTH = 10;
-	public int ROOMHEIGHT = 10;
+	private static final int ROOMWIDTH = 10;
+	private static final int ROOMHEIGHT = 10;
 
-	//note :- x-axis is actually the vertical line in the UI/Layout. Confirm this.
+	
 
 	private static final long serialVersionUID = 1;
 	protected int width;  // building width
