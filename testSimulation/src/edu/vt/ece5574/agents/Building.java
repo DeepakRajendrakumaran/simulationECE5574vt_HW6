@@ -333,7 +333,14 @@ public class Building extends Agent{
 	        while (listIterator.hasNext()) {
 	        	arg0.schedule.scheduleRepeating(listIterator.next());
 	        }
-		
+
+	    //Default temperature changes per step in each room :-
+		for(int idx = 0; idx < rooms.size(); idx++)
+      	{
+      		(rooms.get(idx)).roomTemperature.defTempChange();
+      	}
+      	hallTemperature.defTempChange();
+      	//add similar methods for Smoke change per step in each room:-
 	}
 
 
