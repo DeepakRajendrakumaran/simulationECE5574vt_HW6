@@ -31,9 +31,12 @@ public class Robot extends Agent {
 	private static final long serialVersionUID = 1;	
     
     private MutableInt2D robot_loc;
-    private Vector<MutableInt2D> lastVisitedLocs;
+    
+    //Was used in earlier random movement algo- currently not used
+    /*private Vector<MutableInt2D> lastVisitedLocs;
     private int noOfSavedLocs =0;
-    private int toBeSavedLocs =0;
+    private int toBeSavedLocs =0;*/
+    
     private boolean handlingEvent=false;
     private Event currEvent = null;
     private List<Coordinate> route = null;
@@ -74,11 +77,10 @@ public class Robot extends Agent {
 		simState = (Simulation)state;
 		c_dir = Curr_Direction.Same;
 		robot_loc = new MutableInt2D(x_loc,y_loc);
-		lastVisitedLocs = new Vector<MutableInt2D>();
-		toBeSavedLocs = 8;
-		//Simulation simState = (Simulation)state;
-		//Building bld = (Building)simState.getAgentByID(buildingID);
-		//toBeSavedLocs = (int)(bld.getFloorHeight()*bld.getFloorWidth())/bld.getNumRooms();
+		//Was used in earlier random movement algo- currently not used
+		/*lastVisitedLocs = new Vector<MutableInt2D>();
+		toBeSavedLocs = 8;*/
+		
 	}
 	
 	/**
@@ -110,12 +112,12 @@ public class Robot extends Agent {
     public boolean isBusy() { return handlingEvent; }
     
     
-    
+  //Was used in earlier random movement algo- currently not used
 	/**
 	 * Logic to simulate 'normal' movement of robot in the building 
 	 * @param state 
 	 */
-	public void randomMovement_old(SimState state){
+	/*public void randomMovement_old(SimState state){
 		Simulation simState = (Simulation)state;
 		Building bld = (Building)simState.getAgentByID(buildingID);
 		int x_pos = robot_loc.x;
@@ -146,9 +148,7 @@ public class Robot extends Agent {
 					}
 						
 				}
-				/*else{
-					System.out.println("Check Fail");
-				}*/
+				
 			}
 		}
 		
@@ -170,11 +170,11 @@ public class Robot extends Agent {
 		bld.updateAgentPos(this,robot_loc.x, robot_loc.y);
 		//simState.storage.updRobotPos(super.getID(), robot_loc.x, robot_loc.y);
 				
-	}
+	}*/
 	
 	/**
-	 * Logic to simulate 'normal' movement of robot in the building 
-	 * @param state 
+	 * Logic to simulate 'normal' movement of robot in the building -wall-follower
+	 * @param 
 	 */
 	public void randomMovement(){
 		
@@ -307,24 +307,26 @@ public class Robot extends Agent {
 		 bld.updateAgentPos(this,robot_loc.x, robot_loc.y);
 	}
 	
+	//Was used in earlier random movement algo- currently not used	
 	/**
 	 * Add the latest location visited by the robot and update the visited loc list 
 	 * @param new_loc - New location to be added  to the visited location.
 	 */
-	private void updateVisitedLocs(MutableInt2D new_loc){
+/*	private void updateVisitedLocs(MutableInt2D new_loc){
 		lastVisitedLocs.add(new_loc);
 		if(toBeSavedLocs == noOfSavedLocs)
 			lastVisitedLocs.remove(noOfSavedLocs-1);
 		else
 			noOfSavedLocs++;
 	}
-
+*/
+	//Was used in earlier random movement algo- currently not used	
 	/**
 	 * Check if the given location is in the recently visited location list 
 	 * @param x
 	 * @param y 
 	 */
-	private int checkIfRecentlyVisited(int x, int y){
+	/*private int checkIfRecentlyVisited(int x, int y){
 		int weight=0;
 		int index=0;
 	    for ( Iterator<MutableInt2D> iter = this.lastVisitedLocs.iterator(); iter.hasNext(); ) {  
@@ -337,7 +339,7 @@ public class Robot extends Agent {
 	
 	    }  
 	    return (weight);
-	}
+	}*/
 
 
 
@@ -385,7 +387,8 @@ public class Robot extends Agent {
 		if(y_inc!=0)
 			y_inc = (y_inc)/(Math.abs(y_inc));
 		MutableInt2D new_loc = new MutableInt2D(robot_loc.x + x_inc, robot_loc.y + y_inc);
-		updateVisitedLocs(new_loc);
+		//Was used in earlier random movement algo- currently not used	
+		//updateVisitedLocs(new_loc);
 		robot_loc.x = new_loc.x;
 		robot_loc.y = new_loc.y;
 		bld.updateAgentPos(this,robot_loc.x, robot_loc.y);
