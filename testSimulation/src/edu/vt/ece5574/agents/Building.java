@@ -45,6 +45,7 @@ public class Building extends Agent{
 	protected int height; // building height
 	protected LinkedList<Room> rooms;
 	protected LinkedList<Agent> agentsInBld;
+	protected LinkedList<Sensor> sensorsInBld;
 
 	//protected int[][] tilemap;
 	protected IntGrid2D tile_map;
@@ -59,7 +60,7 @@ public class Building extends Agent{
 		super(id, id);
 		rooms = new LinkedList<Room>();
 		agentsInBld = new LinkedList<Agent>();
-
+		sensorsInBld = new LinkedList<Sensor>();
 		
 		//Deepak: Take this out..there for initial testing only
 		//createRobot();
@@ -73,7 +74,9 @@ public class Building extends Agent{
 		state = (Simulation)state_;
 		rooms = new LinkedList<Room>();
 		agentsInBld = new LinkedList<Agent>();
-		
+		sensorsInBld = new LinkedList<Sensor>();
+
+
 		width = 30;
 		height = 30;
 
@@ -138,7 +141,11 @@ public class Building extends Agent{
 				tile_map = new IntGrid2D(width, height,0);
 				obstacles = new IntGrid2D(width, height,0);
 				agents = new SparseGrid2D(width,height);
-				
+			
+			hallTemperature = new Temperature(state);
+			rooms = new LinkedList<Room>();
+			agentsInBld = new LinkedList<Agent>();
+			sensorsInBld = new LinkedList<Sensor>();				
 				
 			for(int i = 0 ; i < width ; i++){
 				//tilemap[i][0] = 1; //1 indicates wall
@@ -153,10 +160,7 @@ public class Building extends Agent{
 				obstacles.field[0][j] = wall;
 				obstacles.field[width - 1][j] = wall;
 			}
-			hallTemperature = new Temperature(state);
-			rooms = new LinkedList<Room>();
-			agentsInBld = new LinkedList<Agent>();
-			
+
 			
 			//Deepak: Take this out..there for initial testing only
 			
@@ -298,6 +302,25 @@ public class Building extends Agent{
 
 		//deal with no space for Robot in building later.
 		
+	}
+
+	public Sensor createSensor(String type, int x, int y){
+
+		//Int2D pos = genStartPos();
+		Sensor newSensor = new TempSensor("0","0");
+
+		if(type == "temperature"){
+
+			newSensor = new TempSensor(String.valueOf(agentsInBld.size()), id,state, x,y);
+
+			agents.setObjectLocation(newSensor,x,y);
+			agentsInBld.add(newSensor);
+			state.addAgent(newSensor);
+			sensorsInBld.add(newSensor);
+		}
+
+		return newSensor;
+
 	}
 	
 	//generates a unique random position unoccupied by any obstacle or other agent (this also includes sensors for now)
