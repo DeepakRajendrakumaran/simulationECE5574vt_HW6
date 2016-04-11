@@ -319,6 +319,7 @@ public class Building extends Agent{
 			state.addAgent(newSensor);
 			sensorsInBld.add(newSensor);
 		}
+		state.schedule.scheduleRepeating(newSensor);
 
 		return newSensor;
 
