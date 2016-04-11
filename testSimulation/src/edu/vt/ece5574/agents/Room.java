@@ -71,33 +71,33 @@ public class Room {
 		//adds closed door
 		if(side == "bottom"){
 			position = y + height/2 ;
-			doors.field[x + width-1][position] = 2; 
-			doors.field[x + width-1][position + 1] = 2 ; 
-			doors.field[x + width-1][position + 2] = 2; 
+			doors.field[x + width-1][position] = closedDoor; 
+			doors.field[x + width-1][position + 1] = closedDoor ; 
+			doors.field[x + width-1][position + 2] = closedDoor; 
 			
 		
 		}
 		else if(side == "left"){
 			position = x + width/2 ;
-			doors.field[position][y] = 2 ; 
-			doors.field[position + 1][y] = 2 ; 
-			doors.field[position + 2][y] = 2 ; 
+			doors.field[position][y] = closedDoor ; 
+			doors.field[position + 1][y] = closedDoor ; 
+			doors.field[position + 2][y] = closedDoor ; 
 			
 			
 		}
 		else if(side == "right"){
 			position = x + width/2 ;
-			doors.field[position][y + height - 1] = 2 ; 
-			doors.field[position + 1][y + height - 1] = 2 ; 
-			doors.field[position + 2][y + height - 1] = 2 ; 
+			doors.field[position][y + height - 1] = closedDoor ; 
+			doors.field[position + 1][y + height - 1] = closedDoor ; 
+			doors.field[position + 2][y + height - 1] = closedDoor ; 
 			
 			
 		}
 		else if(side == "top"){
 			position = y + height/2 ;
-			doors.field[x ][position] = 2 ; 
-			doors.field[x ][position + 1] = 2 ; 
-			doors.field[x ][position + 2] = 2 ; 
+			doors.field[x ][position] = closedDoor ; 
+			doors.field[x ][position + 1] = closedDoor ; 
+			doors.field[x ][position + 2] = closedDoor ; 
 			
 		
 		}
