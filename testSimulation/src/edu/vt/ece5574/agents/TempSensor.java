@@ -72,7 +72,7 @@ public class TempSensor extends Sensor {
 		}
 	}
 
-
+	public int getTempValue(){return temp.getTemperature();}
 //send Temperature Data in each timestep to storage API.
 
 	@Override

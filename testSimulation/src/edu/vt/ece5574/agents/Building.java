@@ -29,13 +29,23 @@ public class Building extends Agent{
 	
 	//private int minRooms = 1;
 	//private int maxRooms = 10;
-	public int wall =1;
+
+	//#DEFINEs
+	private static final int emptyTile = 0;
+	private static final int wall = 1;
+	private static final int closedDoor = 2;
+
+	private static final int ROOMWIDTH = 10;
+	private static final int ROOMHEIGHT = 10;
+
+	
 
 	private static final long serialVersionUID = 1;
-	protected int width;
-	protected int height; 
+	protected int width;  // building width
+	protected int height; // building height
 	protected LinkedList<Room> rooms;
 	protected LinkedList<Agent> agentsInBld;
+	protected LinkedList<Sensor> sensorsInBld;
 
 	//protected int[][] tilemap;
 	protected IntGrid2D tile_map;
@@ -50,7 +60,7 @@ public class Building extends Agent{
 		super(id, id);
 		rooms = new LinkedList<Room>();
 		agentsInBld = new LinkedList<Agent>();
-
+		sensorsInBld = new LinkedList<Sensor>();
 		
 		//Deepak: Take this out..there for initial testing only
 		//createRobot();
@@ -64,15 +74,19 @@ public class Building extends Agent{
 		state = (Simulation)state_;
 		rooms = new LinkedList<Room>();
 		agentsInBld = new LinkedList<Agent>();
-		
+		sensorsInBld = new LinkedList<Sensor>();
+
+
 		width = 30;
 		height = 30;
 
-		tile_map = new IntGrid2D(width,height,0); //creates a building with a tilemap full of 0s. Thus empty building with plain floor.
+		//creates a building with a tilemap full of 0s. Thus empty building with plain floor.
+		tile_map = new IntGrid2D(width,height,0); 
 		obstacles = new IntGrid2D(width,height,0);
 		agents = new SparseGrid2D(width,height);
 		//doors = new IntGrid2D(width,height,0);
 		//windows = new IntGrid2D(width,height,0);
+
 		for(int i = 0 ; i < width ; i++){
 				//tilemap[i][0] = 1; //1 indicates wall
 				//tilemap[i][height - 1] = 1;
@@ -87,21 +101,29 @@ public class Building extends Agent{
 			obstacles.field [width - 1][j]= wall;
 		}
 		hallTemperature = new Temperature(state);
-		addRoom(1, 1, 10, 10);
+
+		//simple building layout for default use
+
+		Int2D room0Corner = new Int2D(1,1);
+		Int2D room1Corner = new Int2D(19,1);
+		Int2D room2Corner = new Int2D(1,19);
+		Int2D room3Corner = new Int2D(19,19);
+
+		addRoom(room0Corner.getX(), room0Corner.getY(), ROOMWIDTH, ROOMHEIGHT);
 		rooms.get(0).addDoor(obstacles,"bottom");
-		addRoom(19,1,10,10);
+		addRoom(room1Corner.getX(), room1Corner.getY(),ROOMWIDTH,ROOMHEIGHT);
 		rooms.get(1).addDoor(obstacles,"right");
-		addRoom(1,19,10,10);
+		addRoom(room2Corner.getX(), room2Corner.getY(),ROOMWIDTH,ROOMHEIGHT);
 		rooms.get(2).addDoor(obstacles,"left");
-		addRoom(19,19,10,10);
+		addRoom(room3Corner.getX(), room3Corner.getY(),ROOMWIDTH,ROOMHEIGHT);
 		rooms.get(3).addDoor(obstacles,"top");
 
 
 		//add Door to Hallway from outside - 
-		obstacles.field[0][14] = 2;
-		obstacles.field[0][15] = 2;
-		obstacles.field[0][16] = 2;
-		obstacles.field[0][17] = 2;
+		obstacles.field[0][14] = closedDoor;
+		obstacles.field[0][15] = closedDoor;
+		obstacles.field[0][16] = closedDoor;
+		obstacles.field[0][17] = closedDoor;
 		//Deepak: Take this out..there for initial testing only
 		//createRobot();
 
@@ -119,7 +141,11 @@ public class Building extends Agent{
 				tile_map = new IntGrid2D(width, height,0);
 				obstacles = new IntGrid2D(width, height,0);
 				agents = new SparseGrid2D(width,height);
-				
+			
+			hallTemperature = new Temperature(state);
+			rooms = new LinkedList<Room>();
+			agentsInBld = new LinkedList<Agent>();
+			sensorsInBld = new LinkedList<Sensor>();				
 				
 			for(int i = 0 ; i < width ; i++){
 				//tilemap[i][0] = 1; //1 indicates wall
@@ -134,10 +160,7 @@ public class Building extends Agent{
 				obstacles.field[0][j] = wall;
 				obstacles.field[width - 1][j] = wall;
 			}
-			hallTemperature = new Temperature(state);
-			rooms = new LinkedList<Room>();
-			agentsInBld = new LinkedList<Agent>();
-			
+
 			
 			//Deepak: Take this out..there for initial testing only
 			
@@ -252,10 +275,10 @@ public class Building extends Agent{
 	//need to be changed when adding more functionality
 	public boolean checkStep(int x, int y){
 		if((x>=0) && (y>=0) && (x < width) && (y < height)){
-			if(obstacles.field[x][y]==0){
+			if(obstacles.field[x][y] == emptyTile){
 				return true;
 			}
-			else if(obstacles.field[x][y]==2){
+			else if(obstacles.field[x][y] == closedDoor){
 				return true;
 			}
 		}
@@ -281,6 +304,25 @@ public class Building extends Agent{
 		//deal with no space for Robot in building later.
 		
 	}
+
+	public Sensor createSensor(String type, int x, int y){
+
+		//Int2D pos = genStartPos();
+		Sensor newSensor = new TempSensor("0","0");
+
+		if(type == "temperature"){
+
+			newSensor = new TempSensor(String.valueOf(agentsInBld.size()), id,state, x,y);
+
+			agents.setObjectLocation(newSensor,x,y);
+			agentsInBld.add(newSensor);
+			state.addAgent(newSensor);
+			sensorsInBld.add(newSensor);
+		}
+
+		return newSensor;
+
+	}
 	
 	//generates a unique random position unoccupied by any obstacle or other agent (this also includes sensors for now)
 	public Int2D genStartPos(){
@@ -302,7 +344,7 @@ public class Building extends Agent{
 
 			if(flag == true)
 				continue;
-			if((obstacles.field[x][y]==0) && (tile_map.field[x][y]==0))
+			if((obstacles.field[x][y] == emptyTile) && (tile_map.field[x][y] == emptyTile))
 				break;
 		}
 
