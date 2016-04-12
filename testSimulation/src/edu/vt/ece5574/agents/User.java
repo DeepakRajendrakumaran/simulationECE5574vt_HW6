@@ -29,6 +29,12 @@ public class User extends Agent{
 		isAppUser = bAppUser;
 		location = new Coordinate(x,y);		
 	}	
+	
+	public User(Simulation state,String userid, String buildingID, boolean bAppUser, int x, int y){
+		super(Color.GREEN,true,userid, buildingID);
+		isAppUser = bAppUser;
+		location = new Coordinate(x,y);		
+	}
 
 	/**
 	 * @param usrID
