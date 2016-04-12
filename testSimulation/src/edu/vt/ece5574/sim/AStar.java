@@ -1,7 +1,7 @@
 package edu.vt.ece5574.sim;
 import java.util.*;
-import mason.sim.field.grid.*;
-import mason.sim.util.Int2D;
+import sim.field.grid.*;
+import sim.util.Int2D;
 
 
 /* Author: Tyler Olson
