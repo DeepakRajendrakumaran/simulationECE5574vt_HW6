@@ -24,7 +24,7 @@ public class Simulation extends SimState {
     private int numRobots;
     private int numBuildings;
     
-    private static final String password = "fill_in_password";
+    private static final String password = "Cae@5574";
  
     public HashMap<String, Agent> agents; //map the agent id to the agent itself
     
