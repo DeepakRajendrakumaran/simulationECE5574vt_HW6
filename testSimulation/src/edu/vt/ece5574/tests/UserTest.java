@@ -11,6 +11,7 @@ import edu.vt.ece5574.events.FireEvent;
 import edu.vt.ece5574.events.IntruderEvent;
 import edu.vt.ece5574.events.WaterLeakEvent;
 import edu.vt.ece5574.sim.Simulation;
+import edu.vt.ece5574.events.MoveUserEvent;
 
 /**
  * Test cases for Users class
@@ -179,5 +180,50 @@ public class UserTest {
 		usr.step(sim);
 		assertEquals(usr.getIntruderNotification(),false);	
 	}
+	
+		@Test(timeout=1000)
+	public void randomMovement(){
+		String rID ="1";
+		User oUsr = new User(sim,rID,bID,true,1,1);
+		sim.addAgent(oUsr);
+		double initial_x= oUsr.getX();
+		double initial_y= oUsr.getY();
+		oUsr.createRandomMovement(sim);
+		assertFalse((oUsr.getX()==initial_x)&&(oUsr.getY()==initial_y));	
+	}
+	
+	@Test(timeout=1000)
+	public void moveToaPoint(){
+		String rID ="1";
+		User oUsr = new User(sim,rID,bID,true,2,5);
+		sim.addAgent(oUsr);
+
+		String details = 
+				"{"
+				+ "\"messageId\": \"0\","
+				+ "\"message\": {"
+					+ "\"msg_type\": \"move robot\","
+					+ "\"body\": {"
+						+ "\"building\": \"0\","
+						+ "\"room\": 1,"
+						+ "\"floor\": 1,"
+						+ "\"xpos\": 3,"
+						+ "\"ypos\": 2,"
+						+ "\"severity\": 5,"
+						+ "\"action\": \"move\""
+						+ "}"
+					+ "}"
+				+ "}";
+		
+		MoveUserEvent event = new MoveUserEvent();
+		event.init(details);
+		oUsr.addEvent(event);
+		for (int i=0;i<5;i++){
+			oUsr.step(sim);			
+		}		
+		assertEquals((int)oUsr.getX(),event.getX_pos());
+		assertEquals((int)oUsr.getY(),event.getY_pos());		
+	}
+	
 	
 }
