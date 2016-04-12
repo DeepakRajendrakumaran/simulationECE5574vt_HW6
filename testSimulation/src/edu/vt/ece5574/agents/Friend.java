@@ -1,4 +1,4 @@
-package edu.vt.ece5574.agents;
+/*package edu.vt.ece5574.agents;
 
 public class Friend extends User {
 
@@ -16,3 +16,4 @@ public class Friend extends User {
 		super.move();
 	}
 }
+*/

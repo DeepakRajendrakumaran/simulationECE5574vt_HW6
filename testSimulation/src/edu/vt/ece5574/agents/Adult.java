@@ -1,4 +1,4 @@
-package edu.vt.ece5574.agents;
+/*package edu.vt.ece5574.agents;
 
 public class Adult extends User{
 	
@@ -11,8 +11,9 @@ public class Adult extends User{
 	}
 
 	@Override
-	public void move() {
+	//public void move() {
 		// TODO Auto-generated method stub
-		super.move();
-	}	
+		//super.move();
+	//}	
 }
+*/
