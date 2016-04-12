@@ -46,6 +46,7 @@ public class Building extends Agent{
 	protected LinkedList<Room> rooms;
 	protected LinkedList<Agent> agentsInBld;
 	protected LinkedList<Sensor> sensorsInBld;
+	protected LinkedList<User> usersInBId;
 
 	//protected int[][] tilemap;
 	protected IntGrid2D tile_map;
@@ -61,7 +62,7 @@ public class Building extends Agent{
 		rooms = new LinkedList<Room>();
 		agentsInBld = new LinkedList<Agent>();
 		sensorsInBld = new LinkedList<Sensor>();
-
+		usersInBId = new LinkedList<User>();
 		//Deepak: Take this out..there for initial testing only
 		//createRobot();
 
@@ -75,7 +76,7 @@ public class Building extends Agent{
 		rooms = new LinkedList<Room>();
 		agentsInBld = new LinkedList<Agent>();
 		sensorsInBld = new LinkedList<Sensor>();
-
+		usersInBId = new LinkedList<User>();
 
 		width = 30;
 		height = 30;
@@ -146,7 +147,7 @@ public class Building extends Agent{
 			rooms = new LinkedList<Room>();
 			agentsInBld = new LinkedList<Agent>();
 			sensorsInBld = new LinkedList<Sensor>();
-
+			usersInBId = new LinkedList<User>();
 			for(int i = 0 ; i < width ; i++){
 				//tilemap[i][0] = 1; //1 indicates wall
 				//tilemap[i][height - 1] = 1;
@@ -324,7 +325,16 @@ public class Building extends Agent{
 		return newSensor;
 
 	}
+	public User createUser(){		
+		Int2D pos = genStartPos();
+		User oUser = new User(state, String.valueOf(agentsInBld.size()),id,true, pos.getX(),pos.getY());
+		agents.setObjectLocation(oUser,pos.getX(),pos.getY());
+		agentsInBld.add(oUser);
 
+		state.addAgent(oUser);
+		state.schedule.scheduleRepeating(oUser);
+		return oUser;		
+	}
 	//generates a unique random position unoccupied by any obstacle or other agent (this also includes sensors for now)
 	public Int2D genStartPos(){
 		int x , y ;
