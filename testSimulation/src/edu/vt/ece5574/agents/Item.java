@@ -1,19 +1,9 @@
 package edu.vt.ece5574.agents;
 
-/*
-tilemap key :- 
-0 - empty position
-1 - wall
-2 - closed door
-3 - open door
-*/
-
-
-
 public class Item {
 	
 	public static enum Obstacle {
-	    openspace,wall,closeddoor,opendoor, emergency  
+	    obstacle, emergency, wall, door 
 	}
 	
 	private String buildingID;
