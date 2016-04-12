@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedSet;
+import java.util.Stack;
 import java.util.TreeSet;
 import java.util.Vector;
 
@@ -15,8 +16,10 @@ import edu.vt.ece5574.events.FireEvent;
 import edu.vt.ece5574.events.IntruderEvent;
 import edu.vt.ece5574.events.MoveRobotEvent;
 import edu.vt.ece5574.events.WaterLeakEvent;
+import edu.vt.ece5574.sim.AStar;
 import edu.vt.ece5574.sim.Simulation;
 import sim.engine.SimState;
+import sim.util.Int2D;
 import sim.util.MutableInt2D;
 
 /**
@@ -39,8 +42,10 @@ public class Robot extends Agent {
     
     private boolean handlingEvent=false;
     private Event currEvent = null;
-    private List<Coordinate> route = null;
-    private Coordinate nextPoint = null;
+   // private List<Coordinate> route = null;
+  //  private Coordinate nextPoint = null;
+    
+    Stack<Int2D> routePath;
 
 	private Simulation simState;
 	private enum Curr_Direction {
@@ -305,6 +310,8 @@ public class Robot extends Agent {
 		 robot_loc.x = x;
 		 robot_loc.y = y;
 		 bld.updateAgentPos(this,robot_loc.x, robot_loc.y);
+		 //Deepak:uncomment once storage api works
+		//simState.storage.updRobotPos(super.getID(), robot_loc.x, robot_loc.y);
 	}
 	
 	//Was used in earlier random movement algo- currently not used	
@@ -375,23 +382,15 @@ public class Robot extends Agent {
 	 * Take one step while moving towards an event location
 	 * @param state 
 	 */
-	public void moveToEventSrc(SimState state){
+	public void moveToEventSrc(){
 	
-		Simulation simState = (Simulation)state;
 		Building bld = (Building)simState.getAgentByID(buildingID);
-		int x_inc,y_inc;
-		x_inc =  nextPoint.x - robot_loc.x;
-		y_inc =  nextPoint.y - robot_loc.y;
-		if(x_inc!=0)
-			x_inc = (x_inc)/(Math.abs(x_inc));
-		if(y_inc!=0)
-			y_inc = (y_inc)/(Math.abs(y_inc));
-		MutableInt2D new_loc = new MutableInt2D(robot_loc.x + x_inc, robot_loc.y + y_inc);
-		//Was used in earlier random movement algo- currently not used	
-		//updateVisitedLocs(new_loc);
-		robot_loc.x = new_loc.x;
-		robot_loc.y = new_loc.y;
+		Int2D nextStep = routePath.pop();
+		
+		robot_loc.x = nextStep.x;
+		robot_loc.y = nextStep.y;
 		bld.updateAgentPos(this,robot_loc.x, robot_loc.y);
+		//Deepak:uncomment once storage api works
 		//simState.storage.updRobotPos(super.getID(), robot_loc.x, robot_loc.y);
 			
 	}
@@ -404,23 +403,13 @@ public class Robot extends Agent {
 	 */
 	public void dealWithHouseEvents(SimState state,Building bld){
 		currEvent = events.removeFirst();
-		handlingEvent = true;
-		Coordinate curr_coord = new Coordinate(robot_loc.x,
-				robot_loc.y);
-		Coordinate dest_coord = new Coordinate(currEvent.getX_pos(),
-				currEvent.getY_pos());
-		route = bld.getRoute(curr_coord, dest_coord);
-		if(route.size()==0){
-			
-			nextPoint = new Coordinate(currEvent.getX_pos(),
-					currEvent.getY_pos());
-		}
-		else{
-			
-			nextPoint = route.remove(0);
-			
-		}
-		moveToEventSrc(state);
+		handlingEvent = true;		
+		
+		
+		routePath = AStar.findPath(robot_loc.x, robot_loc.y, currEvent.getX_pos(), currEvent.getY_pos(), bld.getObstacles());
+		
+		
+		moveToEventSrc();
 		
 	}
 	
@@ -437,17 +426,9 @@ public class Robot extends Agent {
 				addressEvent();
 			}
 			else {
-				if((robot_loc.x == nextPoint.x) && (robot_loc.y == nextPoint.y )){
-					if(route.size()==0){
-						nextPoint = new Coordinate(currEvent.getX_pos(),
-								currEvent.getY_pos());
-					}
-					else{
-						nextPoint = route.remove(0);
-					}
-				}
-				else
-					moveToEventSrc(state);
+				
+					moveToEventSrc();
+			
 			}
 			
 		}
