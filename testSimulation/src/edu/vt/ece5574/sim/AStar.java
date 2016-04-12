@@ -1,4 +1,4 @@
-package astar;
+package edu.vt.ece5574.sim;
 import java.util.*;
 import mason.sim.field.grid.*;
 import mason.sim.util.Int2D;
