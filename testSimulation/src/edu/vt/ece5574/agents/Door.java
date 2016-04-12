@@ -8,7 +8,7 @@ public class Door extends Item{
 	private int b;
 	
 	public Door(String id, int a, int b){
-		 super(id, Item.Obstacle.closeddoor);
+		 super(id, Item.Obstacle.door);
 		 this.setA(a);
 		 this.setB(b);
 	}
