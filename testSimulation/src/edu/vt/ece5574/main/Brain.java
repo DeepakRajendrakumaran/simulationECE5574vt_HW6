@@ -21,10 +21,10 @@ public class Brain {
 	
 	public void start(){
 		
-		System.out.println("Starting the Simulation Thread");
-		String[] temp = new String[0];
-		this.isSimulatorRunning=1;
-		sim.run(temp);
+		//System.out.println("Starting the Simulation Thread");
+		//String[] temp = new String[0];
+		//this.isSimulatorRunning=1;
+		//sim.run(temp);
 		System.out.println("Testing building construction");
 		building.displayLayout();
 		Int2D position = building.genStartPos();

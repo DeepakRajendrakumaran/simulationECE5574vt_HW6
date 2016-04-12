@@ -24,7 +24,7 @@ public class Simulation extends SimState {
     private int numRobots;
     private int numBuildings;
     
-    private static final String password = "Cae@5574";
+    private static final String password = "fill_in_password";
  
     public HashMap<String, Agent> agents; //map the agent id to the agent itself
     
@@ -82,16 +82,8 @@ public class Simulation extends SimState {
         storage = new StorageAPI();
         pushOutgoing = new PushAPICaller();
         pushIncoming = new ReadNotifications();
-        // add robots and building statically
-        
         for(int i = 0; i < numBuildings; i++){
-        	Building building= new Building(new Integer(i).toString(),this);
-        	agents.put(new Integer(i).toString(), building);
-        	 for(int j= 1; j<= numRobots;j++){
-              	
-         		building.createRobot();
-             	System.out.println("Robot created with id:" + Integer.toString(i)+"@"+Integer.toString(j));
-              }
+        	agents.put(new Integer(i).toString(), new Building(new Integer(i).toString(),this));
         }
     }
     
@@ -117,7 +109,7 @@ public class Simulation extends SimState {
         	agents.put(new Integer(i).toString(), new Building(new Integer(i).toString()));
         }*/
         pushIncoming.setAccountDetails("simulation.ece5574", password);
-        schedule.scheduleRepeating(pushIncoming);
+  //      schedule.scheduleRepeating(pushIncoming);
       //  public HashMap<String, Agent> agents;
         Iterator it = agents.entrySet().iterator();
         while (it.hasNext()) {

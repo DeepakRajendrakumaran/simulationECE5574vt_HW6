@@ -1,6 +1,3 @@
-
-
-
 package edu.vt.ece5574.agents;
 
 import java.awt.Color;
@@ -115,14 +112,9 @@ public abstract class Agent extends OvalPortrayal2D implements Steppable {
 	
 	public ArrayList<Event> checkPushNotification(){
 		ArrayList<Event> myEvents=new ArrayList<Event>();
-		super.paint=Color.blue;
 		if(messageWaiting){
-	    super.paint=Color.red;
 		myEvents=PushAPICaller.callPushSystemAPI(id);
-		System.out.println("Notification Received for:"+id);
-		
 		}
-		messageWaiting=false;
 		return myEvents;
 		
 	}
