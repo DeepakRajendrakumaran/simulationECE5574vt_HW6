@@ -17,7 +17,7 @@ import sim.util.Int2D;
 
 //Author - Ameya Khandekar
 /*
-tilemap key :- 
+tilemap key :-
 0 - empty position
 1 - wall
 2 - closed door
@@ -26,7 +26,7 @@ tilemap key :-
 
 
 public class Building extends Agent{
-	
+
 	//private int minRooms = 1;
 	//private int maxRooms = 10;
 
@@ -38,7 +38,7 @@ public class Building extends Agent{
 	private static final int ROOMWIDTH = 10;
 	private static final int ROOMHEIGHT = 10;
 
-	
+
 
 	private static final long serialVersionUID = 1;
 	protected int width;  // building width
@@ -54,20 +54,20 @@ public class Building extends Agent{
 	protected SparseGrid2D agents;
 
 	protected Simulation state;
-	protected Temperature hallTemperature; 
+	protected Temperature hallTemperature;
 
 	public Building(String id){
 		super(id, id);
 		rooms = new LinkedList<Room>();
 		agentsInBld = new LinkedList<Agent>();
 		sensorsInBld = new LinkedList<Sensor>();
-		
+
 		//Deepak: Take this out..there for initial testing only
 		//createRobot();
-		
+
 		//Dummy - needs to be removed later.
 	}
-	
+
 
 	public Building(String id,SimState state_){
 		super(id, id);
@@ -81,7 +81,7 @@ public class Building extends Agent{
 		height = 30;
 
 		//creates a building with a tilemap full of 0s. Thus empty building with plain floor.
-		tile_map = new IntGrid2D(width,height,0); 
+		tile_map = new IntGrid2D(width,height,0);
 		obstacles = new IntGrid2D(width,height,0);
 		agents = new SparseGrid2D(width,height);
 		//doors = new IntGrid2D(width,height,0);
@@ -119,7 +119,7 @@ public class Building extends Agent{
 		rooms.get(3).addDoor(obstacles,"top");
 
 
-		//add Door to Hallway from outside - 
+		//add Door to Hallway from outside -
 		obstacles.field[0][14] = closedDoor;
 		obstacles.field[0][15] = closedDoor;
 		obstacles.field[0][16] = closedDoor;
@@ -129,8 +129,8 @@ public class Building extends Agent{
 
 		//state.addAgent(new Robot(id,"2",4,4));
 	}
-	
-	//constructor 
+
+	//constructor
 	public Building(String id, int width_, int height_, SimState state_){
 				super(id, id);
 				state = (Simulation)state_;
@@ -141,12 +141,12 @@ public class Building extends Agent{
 				tile_map = new IntGrid2D(width, height,0);
 				obstacles = new IntGrid2D(width, height,0);
 				agents = new SparseGrid2D(width,height);
-			
+
 			hallTemperature = new Temperature(state);
 			rooms = new LinkedList<Room>();
 			agentsInBld = new LinkedList<Agent>();
-			sensorsInBld = new LinkedList<Sensor>();				
-				
+			sensorsInBld = new LinkedList<Sensor>();
+
 			for(int i = 0 ; i < width ; i++){
 				//tilemap[i][0] = 1; //1 indicates wall
 				//tilemap[i][height - 1] = 1;
@@ -161,15 +161,15 @@ public class Building extends Agent{
 				obstacles.field[width - 1][j] = wall;
 			}
 
-			
+
 			//Deepak: Take this out..there for initial testing only
-			
+
 				//createRobot();
-			
+
 	}
 
 	public int getRoomId(int x, int y){
-		
+
 		if( ( x >= 0 ) && (x <= (width - 1)) && ( y >= 0 ) && (y <= (height - 1)) ){
 
 			for(int idx = 0; idx < rooms.size(); idx++)
@@ -183,7 +183,7 @@ public class Building extends Agent{
       		return -1; // -1 indicates hall area
 		}
 		else{
-			return -2; // - 2 indicates x,y doesn't belong to the building 
+			return -2; // - 2 indicates x,y doesn't belong to the building
 		}
 
 	}
@@ -213,17 +213,17 @@ public class Building extends Agent{
 
 		return tile_map;
 	}
-	
+
 	public IntGrid2D getObstacles(){
 
 		return obstacles;
 	}
-	
+
 	public SparseGrid2D getAgents(){
 
 		return agents;
 	}
-	
+
 /*	public IntGrid2D getDoors(){
 
 		return doors;
@@ -232,7 +232,7 @@ public class Building extends Agent{
 
 		Room tempRoom = new Room(x,y,w,h,state);
 
-	//check if it crosses another room :- 
+	//check if it crosses another room :-
 		for(int idx = 0; idx < rooms.size(); idx++)
       	{
       		if(tempRoom.crossesRoom(rooms.get(idx)))
@@ -254,7 +254,7 @@ public class Building extends Agent{
 				//tilemap[i][y + h - 1] = 1;
 				obstacles.field [i][y] = wall;
 				obstacles.field [i][y + h - 1] = wall;
-				
+
 			}
 
 			for(int j = y ; j < y + h ; j++){
@@ -262,7 +262,7 @@ public class Building extends Agent{
 			//	tilemap[x + w - 1][j] = 1;
 				obstacles.field [x][j] = wall;
 				obstacles.field [x + w - 1][j] = wall;
-				
+
 			}
 			return true;
 		}
@@ -271,7 +271,7 @@ public class Building extends Agent{
 		}
 		//return true;
 	}
-	
+
 	//need to be changed when adding more functionality
 	public boolean checkStep(int x, int y){
 		if((x>=0) && (y>=0) && (x < width) && (y < height)){
@@ -283,17 +283,17 @@ public class Building extends Agent{
 			}
 		}
 		return false;
-		
+
 	}
-	
+
 	//Revisit
 	public Robot createRobot(){
 
 		//Deepak: need more dynamic way of deciding initial pos
 		//Ameya: provided a random initial position
 		Int2D pos = genStartPos();
-		Robot robot = new Robot(state, String.valueOf(agentsInBld.size()),id,pos.getX(),pos.getY());
-		
+		Robot robot = new Robot(state, String.valueOf(agentsInBld.size()+1),id,pos.getX(),pos.getY());
+
 		agents.setObjectLocation(robot,pos.getX(),pos.getY());
 		agentsInBld.add(robot);
 
@@ -302,7 +302,7 @@ public class Building extends Agent{
 		return robot;
 
 		//deal with no space for Robot in building later.
-		
+
 	}
 
 	public Sensor createSensor(String type, int x, int y){
@@ -324,10 +324,10 @@ public class Building extends Agent{
 		return newSensor;
 
 	}
-	
+
 	//generates a unique random position unoccupied by any obstacle or other agent (this also includes sensors for now)
 	public Int2D genStartPos(){
-		int x , y ; 
+		int x , y ;
 		while(true){
 			x = state.random.nextInt()%width;
 			y = state.random.nextInt()%height;
@@ -358,22 +358,22 @@ public class Building extends Agent{
 		//agents.setObjectPosition(agnt,x_loc, y_loc);
 		agents.setObjectLocation(agnt,x_loc, y_loc);
 		//state.storage.updRobotPos(agnt.getID(), x_loc, y_loc));
-		
+
 	}
-	
-	
+
+
 	public List<Coordinate> getRoute(Coordinate current,Coordinate destination){
 		List<Coordinate> myList = new ArrayList<Coordinate>();
 		return myList;
 		//Dummy - needs to be changed.
 
-	} 
-	
+	}
+
 	@Override
 	public void step(SimState arg0) {
 		// TODO Auto-generated method stub
 		super.step(arg0);
-	
+
 	    //Default temperature changes per step in each room :-
 		for(int idx = 0; idx < rooms.size(); idx++)
       	{
