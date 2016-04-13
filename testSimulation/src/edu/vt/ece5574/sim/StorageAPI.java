@@ -5,17 +5,8 @@ package edu.vt.ece5574.sim;
  *
  */
 
-import io.swagger.client.*;
-import io.swagger.client.api.*;
-import io.swagger.client.model.*;
-
-import java.math.BigDecimal;
-
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -25,22 +16,18 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONObject;
-import edu.vt.ece5574.main.*;
+import edu.vt.ece5574.main.*;;
 
 
 public class StorageAPI {
 	
 	private String baseURL;
-	ApiClient client;
 	
 	public StorageAPI()
 	{
-		baseURL = new String ( "http://localhost:8080/api" );
-		client = new ApiClient();
-		client.setBasePath(baseURL);
+		baseURL = new String ( "http://localhost:8080/api/" );
 	}
 	
-/*	
 	public HttpResponse getRequest ( URI uri ) throws IOException
 	{
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
@@ -110,97 +97,59 @@ public class StorageAPI {
 		}
 		return response;
 	}
-	*/
-		
-	public boolean updRobotPos ( String robotId , int xpos , int ypos )
+	
+	public boolean updRobotPos ( String robotID , int xpos , int ypos ) 
 	{
-		Robot robot = new Robot();
-		robot.setXpos(int2BD(xpos));
-		robot.setYpos(int2BD(ypos));
+		try 
+		{
+			//hackish. need to write new module to disperse updates
+		//	log.updateEvent("robot", robotID, xpos, ypos);
+
+			JSONObject json = new JSONObject();
+			URI uri = new URI ( baseURL + "robots/" + robotID );
+			HttpResponse response;
 		
-		ByIDApi api = new ByIDApi(client);
-		try
-		{
-			api.controllersDefaultControllerRobotsRobotIdPut(robotId, robot);
+			json.put( "xpos", xpos );
+			json.put( "ypos", ypos );
+		
+			response = putRequest ( uri , json );
+		
+			if ( response == null || response.getStatusLine().getStatusCode() != 200 )
+				return false;
 		}
-		catch(ApiException e)
+		catch ( Exception e )
 		{
-			System.out.println(e.getMessage());
+			System.err.println(e);
 			return false;
 		}
+		
 		return true;
 	}
 	
 	public boolean updUserPos ( String userID , int xpos , int ypos ) 
 	{
-		User user = new User();
-		user.setXpos(int2BD(xpos));
-		user.setYpos(int2BD(ypos));
+		try 
+		{
+			//hackish. need to write new module to disperse updates
+		//	log.updateEvent("user", userID, xpos, ypos);
+
+			JSONObject json = new JSONObject();
+			URI uri = new URI ( baseURL + "users/" + userID );
+			HttpResponse response;
 		
-		ByIDApi api = new ByIDApi(client);
-		try
-		{
-			api.controllersDefaultControllerUsersUserIdPut(userID, user);
+			json.put( "xpos", xpos );
+			json.put( "ypos", ypos );
+		
+			response = putRequest ( uri , json );
+		
+			if ( response == null || response.getStatusLine().getStatusCode() != 200 )
+				return false;
 		}
-		catch(ApiException e)
+		catch ( Exception e )
 		{
-			System.out.println(e.getMessage());
+			System.err.println(e);
 			return false;
 		}
 		return true;
 	}
-	
-	// returns the building id
-	public String AddBuilding()
-	{
-		ByTypeApi obj1 = new ByTypeApi(client);
-		Building b;
-		try
-		{
-			b = obj1.controllersDefaultControllerBuildingsPost();
-		}
-		catch(ApiException e)
-		{
-			return e.getMessage();
-		}
-		return b.getId();
-	}
-	
-	public List<Building> GetBuildings()
-	{
-		ByTypeApi api = new ByTypeApi(client);
-		List<Building> buildings;
-		try
-		{
-			buildings = api.controllersDefaultControllerBuildingsGet();
-		}
-		catch(ApiException e)
-		{
-			// log something, maybe we should just throw the exception
-			return new ArrayList<Building>();
-		}
-		return buildings;
-	}
-	
-	// deletes all buildings
-	public String DeleteBuildings()
-	{
-		ByTypeApi api = new ByTypeApi(client);
-		String s;
-		try
-		{
-			s = api.controllersDefaultControllerBuildingsDelete();
-		}
-		catch(ApiException e)
-		{
-			return e.getMessage();
-		}
-		return s;
-	}
-
-	private BigDecimal int2BD(int i)
-	{
-		return new BigDecimal(i + "");
-	}
-
 }
