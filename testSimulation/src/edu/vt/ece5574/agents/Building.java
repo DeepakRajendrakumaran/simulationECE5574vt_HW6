@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Map;
 
+import edu.vt.ece5574.events.Event;
+import edu.vt.ece5574.events.FireEvent;
 import edu.vt.ece5574.roomconditions.Temperature;
 import edu.vt.ece5574.sim.Simulation;
 import sim.engine.SimState;
@@ -378,6 +380,25 @@ public class Building extends Agent{
 		//Dummy - needs to be changed.
 
 	}
+	
+	
+	public void handleBuildingEvents(){
+		while(events.size()!=0)
+		{
+			Event currentEvent = events.removeFirst();
+			if(currentEvent instanceof FireEvent){
+				FireEvent fireevent = (FireEvent)currentEvent;
+				if(fireevent.is_fireActive()){
+				(rooms.get((int)fireevent.getRoom())).roomTemperature.fireTempChange(fireevent.getSeverity());	
+				}
+			}
+					
+		}
+	}
+	
+	
+	
+	
 
 	@Override
 	public void step(SimState arg0) {

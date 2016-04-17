@@ -56,11 +56,12 @@ public class TempSensor extends Sensor {
 			Event currentEvent = events.removeFirst();
 			if(currentEvent instanceof FireEvent){
 				FireEvent fireevent = (FireEvent)currentEvent;
-				if(fireevent.is_fireActive()){
+				// UPDATE :- MOVING FIRE TEMPERATURE CHANGE TO THE BUILDING
+				/*if(fireevent.is_fireActive()){
 					temp.fireTempChange(5); // using a default severity of 5. 
 					//will have to request server logic to implement way of sending severity value.
 
-				}
+				}*/
 /*				else{
 					//send sensor data = "Fire de-activated" to storage API.
 					//fireStatus = false;
