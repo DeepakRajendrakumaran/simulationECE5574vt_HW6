@@ -405,6 +405,10 @@ public class Building extends Agent{
 		// TODO Auto-generated method stub
 		super.step(arg0);
 
+		if(!events.isEmpty()){
+			handleBuildingEvents();		
+		}
+		
 	    //Default temperature changes per step in each room :-
 		for(int idx = 0; idx < rooms.size(); idx++)
       	{

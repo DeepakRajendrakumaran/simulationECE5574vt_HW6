@@ -29,8 +29,8 @@ public class SensorAgentTest {
 	//	TempSensor tempsensor = new TempSensor("1","0");
 		 Simulation sim = new Simulation(0);
 		 Building building = (Building)sim.getAgentByID("0");
-		 Robot robot0 = building.createRobot(); 
-		 TempSensor tempsensor = (TempSensor)building.createSensor("temperature",robot0.getX(),robot0.getY());
+		// Robot robot0 = building.createRobot(); 
+		 TempSensor tempsensor = (TempSensor)building.createSensor("temperature",20,3);
 		 
 		String details = 
 				"{"
@@ -60,9 +60,10 @@ public class SensorAgentTest {
 		System.out.println("current temperature is:- "+tempsensor.getTempValue());
 		FireEvent event = new FireEvent();
 		event.init(details);
-		tempsensor.addEvent(event);
-		tempsensor.step(sim);
-		tempsensor.step(sim);
+		building.addEvent(event);
+		building.step(sim);
+		building.step(sim);
+		building.step(sim);
 		System.out.println("current temperature is:- "+tempsensor.getTempValue());
 
 	
