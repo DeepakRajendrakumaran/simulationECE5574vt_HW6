@@ -158,12 +158,11 @@ public class RobotAgentTest {
 						+ "}"
 					+ "}"
 				+ "}";
-		
+	
 		FireEvent event = new FireEvent();
 		event.init(details);
 		int orig_temp = bld.getRoomTempById(bld. getRoomId(
-				rob.getX(),rob.getY())).getTemperature();
-		System.out.println(orig_temp);
+				2,3)).getTemperature();
 		bld.getRoomTempById(bld. getRoomId(
 				rob.getX(),rob.getY())).fireTempChange(5);
 		bld.step(sim);
@@ -172,7 +171,7 @@ public class RobotAgentTest {
 		bld.step(sim);
 		bld.step(sim);
 		int orig_temp_latest= bld.getRoomTempById(bld. getRoomId(
-				rob.getX(),rob.getY())).getTemperature();
+				2,3)).getTemperature();
 //		assertEquals(orig_temp_latest,orig_temp);
 		assertNotSame(orig_temp_latest,orig_temp);
 		rob.addEvent(event);
@@ -186,6 +185,7 @@ public class RobotAgentTest {
 			orig_temp_latest= bld.getRoomTempById(bld. getRoomId(
 				rob.getX(),rob.getY())).getTemperature();
 		}
+	
 		assertEquals(orig_temp_latest,orig_temp);
 		//assertFalse(event.is_fireActive());
 		
