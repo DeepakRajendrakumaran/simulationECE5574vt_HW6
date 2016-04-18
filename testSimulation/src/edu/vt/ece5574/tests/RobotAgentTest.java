@@ -28,7 +28,7 @@ public class RobotAgentTest {
 	@Before
 	public void init(){
 		sim = new Simulation(1);		
-		bld = new Building(bID);
+		bld = new Building(bID,sim);
 		sim.addAgent(bld);
 	}
 	
@@ -62,9 +62,10 @@ public class RobotAgentTest {
 	
 	@Test(timeout=1000)
 	public void randomMovement(){
-		String rID ="1";
-		Robot rob = new Robot(sim,rID,bID,1,1);
-		sim.addAgent(rob);
+		//String rID ="1";
+		//Robot rob = new Robot(sim,rID,bID,1,1);
+		Robot rob = bld.createRobot();
+		//sim.addAgent(rob);
 		double initial_x= rob.getX();
 		double initial_y= rob.getY();
 		rob.randomMovement();
@@ -73,10 +74,11 @@ public class RobotAgentTest {
 	
 	@Test(timeout=1000)
 	public void continuousRandomMovement(){
-		String rID ="1";
-		Robot rob = new Robot(sim,rID,bID,3,2);
-		sim.addAgent(rob);
-		assertTrue(bld.checkStep(9, 9));	
+		//String rID ="1";
+		//Robot rob = new Robot(sim,rID,bID,3,2);
+		//sim.addAgent(rob);
+		Robot rob = bld.createRobot();
+	//	assertTrue(bld.checkStep(9, 9));	
 		int steps=100;
 		while(steps!=0){
 			rob.randomMovement();
@@ -89,9 +91,10 @@ public class RobotAgentTest {
 	
 	@Test(timeout=1000)
 	public void respondtoNoEvent(){
-		String rID ="1";
-		Robot rob = new Robot(sim,rID,bID,2,2);
-		sim.addAgent(rob);
+		//String rID ="1";
+		//Robot rob = new Robot(sim,rID,bID,2,2);
+		//sim.addAgent(rob);
+		Robot rob = bld.createRobot();
 		rob.step(sim);
 		assertFalse(rob.isBusy());
 		
@@ -99,10 +102,10 @@ public class RobotAgentTest {
 	
 	@Test(timeout=1000)
 	public void moveToaPoint(){
-		String rID ="1";
-		Robot rob = new Robot(sim,rID,bID,2,5);
-		sim.addAgent(rob);
-
+		//String rID ="1";
+		//Robot rob = new Robot(sim,rID,bID,2,5);
+		//sim.addAgent(rob);
+		Robot rob = bld.createRobot();
 		String details = 
 				"{"
 				+ "\"messageId\": \"0\","
@@ -136,9 +139,9 @@ public class RobotAgentTest {
 	
 	@Test(timeout=1000)
 	public void respondtoFireEvent(){
-		String rID ="1";
-		Robot rob = new Robot(sim,rID,bID,2,5);
-
+	//	String rID ="1";
+	//	Robot rob = new Robot(sim,rID,bID,2,5);
+		Robot rob = bld.createRobot();
 		String details = 
 				"{"
 				+ "\"messageId\": \"0\","
@@ -158,22 +161,41 @@ public class RobotAgentTest {
 		
 		FireEvent event = new FireEvent();
 		event.init(details);
+		int orig_temp = bld.getRoomTempById(bld. getRoomId(
+				rob.getX(),rob.getY())).getTemperature();
+		System.out.println(orig_temp);
+		bld.getRoomTempById(bld. getRoomId(
+				rob.getX(),rob.getY())).fireTempChange(5);
+		bld.step(sim);
+		bld.step(sim);
+		bld.step(sim);
+		bld.step(sim);
+		bld.step(sim);
+		int orig_temp_latest= bld.getRoomTempById(bld. getRoomId(
+				rob.getX(),rob.getY())).getTemperature();
+//		assertEquals(orig_temp_latest,orig_temp);
+		assertNotSame(orig_temp_latest,orig_temp);
 		rob.addEvent(event);
 		while(true){
 			rob.step(sim);
 			if(rob.isBusy()==false)
 				break;
 		}
-		
-		assertFalse(event.is_fireActive());
+		while(orig_temp_latest>orig_temp){
+			bld.step(sim);
+			orig_temp_latest= bld.getRoomTempById(bld. getRoomId(
+				rob.getX(),rob.getY())).getTemperature();
+		}
+		assertEquals(orig_temp_latest,orig_temp);
+		//assertFalse(event.is_fireActive());
 		
 	}
 	
 	@Test(timeout=1000)
 	public void respondtoWaterEvent(){
-		String rID ="1";
-		Robot rob = new Robot(sim,rID,bID,2,4);
-
+		//String rID ="1";
+		//Robot rob = new Robot(sim,rID,bID,2,4);
+		Robot rob = bld.createRobot();
 		String details = 
 				"{"
 				+ "\"messageId\": \"0\","
@@ -207,9 +229,9 @@ public class RobotAgentTest {
 	
 	@Test(timeout=1000)
 	public void respondtoMoveRobotEvent(){
-		String rID ="1";
-		Robot rob = new Robot(sim,rID,bID,2,4);
-
+		//String rID ="1";
+		//Robot rob = new Robot(sim,rID,bID,2,4);
+		Robot rob = bld.createRobot();
 		String details = 
 				"{"
 				+ "\"messageId\": \"0\","
@@ -243,9 +265,9 @@ public class RobotAgentTest {
 	
 	@Test(timeout=1000)
 	public void respondtoIntruderEvent(){
-		String rID ="1";
-		Robot rob = new Robot(sim,rID,bID,3,4);
-
+		//String rID ="1";
+		//Robot rob = new Robot(sim,rID,bID,3,4);
+		Robot rob = bld.createRobot();
 		String details = 
 				"{"
 				+ "\"messageId\": \"0\","
