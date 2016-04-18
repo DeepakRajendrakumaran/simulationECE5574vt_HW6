@@ -39,8 +39,8 @@ public class Building extends Agent{
 
 	private static final int ROOMWIDTH = 10;
 	private static final int ROOMHEIGHT = 10;
-
-
+	private static final int TIME_STEP = 60; //Step time by specified seconds 
+	
 
 	private static final long serialVersionUID = 1;
 	protected int width;  // building width
@@ -49,6 +49,7 @@ public class Building extends Agent{
 	protected LinkedList<Agent> agentsInBld;
 	protected LinkedList<Sensor> sensorsInBld;
 	protected LinkedList<User> usersInBId;
+	private ClockTime clockTime;
 
 	//protected int[][] tilemap;
 	protected IntGrid2D tile_map;
@@ -65,6 +66,7 @@ public class Building extends Agent{
 		agentsInBld = new LinkedList<Agent>();
 		sensorsInBld = new LinkedList<Sensor>();
 		usersInBId = new LinkedList<User>();
+		clockTime = new ClockTime();
 		//Deepak: Take this out..there for initial testing only
 		//createRobot();
 
@@ -79,6 +81,7 @@ public class Building extends Agent{
 		agentsInBld = new LinkedList<Agent>();
 		sensorsInBld = new LinkedList<Sensor>();
 		usersInBId = new LinkedList<User>();
+		clockTime = new ClockTime();
 
 		width = 30;
 		height = 30;
@@ -150,6 +153,8 @@ public class Building extends Agent{
 			agentsInBld = new LinkedList<Agent>();
 			sensorsInBld = new LinkedList<Sensor>();
 			usersInBId = new LinkedList<User>();
+			clockTime = new ClockTime();
+				
 			for(int i = 0 ; i < width ; i++){
 				//tilemap[i][0] = 1; //1 indicates wall
 				//tilemap[i][height - 1] = 1;
@@ -265,7 +270,7 @@ public class Building extends Agent{
 			//	tilemap[x + w - 1][j] = 1;
 				obstacles.field [x][j] = wall;
 				obstacles.field [x + w - 1][j] = wall;
-
+				
 			}
 			return true;
 		}
@@ -274,7 +279,7 @@ public class Building extends Agent{
 		}
 		//return true;
 	}
-
+	
 	//need to be changed when adding more functionality
 	public boolean checkStep(int x, int y){
 		if((x>=0) && (y>=0) && (x < width) && (y < height)){
@@ -327,19 +332,21 @@ public class Building extends Agent{
 		return newSensor;
 
 	}
+	
+	
 	public User createUser(){		
 		Int2D pos = genStartPos();
-		User oUser = new User(state, String.valueOf(agentsInBld.size()),id,true, pos.getX(),pos.getY());
-		agents.setObjectLocation(oUser,pos.getX(),pos.getY());
+		User oUser = new User(state, String.valueOf(agentsInBld.size()+1),id,true, pos.getX(),pos.getY());		
+		agents.setObjectLocation(oUser,pos.getX(),pos.getY());		
 		agentsInBld.add(oUser);
-
 		state.addAgent(oUser);
 		state.schedule.scheduleRepeating(oUser);
 		return oUser;		
 	}
+	
 	//generates a unique random position unoccupied by any obstacle or other agent (this also includes sensors for now)
 	public Int2D genStartPos(){
-		int x , y ;
+		int x , y ; 
 		while(true){
 			x = state.random.nextInt()%width;
 			y = state.random.nextInt()%height;
@@ -372,8 +379,15 @@ public class Building extends Agent{
 		//state.storage.updRobotPos(agnt.getID(), x_loc, y_loc));
 
 	}
-
-
+	
+	
+	public void updateAgentPos(User agnt,int x_loc,int y_loc){
+		//agents.setObjectPosition(agnt,x_loc, y_loc);
+		agents.setObjectLocation(agnt,x_loc, y_loc);
+		//state.storage.updRobotPos(agnt.getID(), x_loc, y_loc));		
+	}
+	
+	
 	public List<Coordinate> getRoute(Coordinate current,Coordinate destination){
 		List<Coordinate> myList = new ArrayList<Coordinate>();
 		return myList;
@@ -396,10 +410,6 @@ public class Building extends Agent{
 		}
 	}
 	
-	
-	
-	
-
 	@Override
 	public void step(SimState arg0) {
 		// TODO Auto-generated method stub
@@ -416,7 +426,7 @@ public class Building extends Agent{
       	}
       	hallTemperature.defTempChange();
       	//add similar methods for Smoke change per step in each room:-
+      	//Increment the simulation clock by TIME_STEP units.
+      	clockTime.incrementTimeBySeconds(TIME_STEP);
 	}
-
-
 }

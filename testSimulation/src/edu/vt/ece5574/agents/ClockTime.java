@@ -11,7 +11,8 @@ import java.util.Calendar;
  * @author vedahari
  *
  */
-public class ClockTime {
+public class ClockTime {	
+
 	public static enum TIMEPERIOD {
 	    UNKNOWN, MORNING, AFTERNOON, EVENING, NIGHT  
 	}
@@ -40,15 +41,6 @@ public class ClockTime {
 	public int getSeconds() {
 		return seconds;
 	}
-
-	public static void main(String args[]){
-		System.out.println("Hello world!");
-		ClockTime clock = new ClockTime();
-		System.out.println(clock.toString());
-		clock.incrementTimeBySeconds(240);
-		System.out.println(clock.toString());
-		System.out.println(clock.getTimePeriod());
-	}	
 	
 	public ClockTime() {
 		Calendar calendar = Calendar.getInstance();

@@ -112,7 +112,7 @@ public abstract class Agent extends OvalPortrayal2D implements Steppable {
 
 	public ArrayList<Event> checkPushNotification(){
 		ArrayList<Event> myEvents=new ArrayList<Event>();
-		super.paint=Color.blue;
+		//super.paint=Color.blue; //FIXME: Commenting this because all agents color are modified to blue.
 		if(messageWaiting){
         super.paint=Color.red;
 		myEvents=PushAPICaller.callPushSystemAPI(id);
