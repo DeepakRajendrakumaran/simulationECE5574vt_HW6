@@ -388,19 +388,24 @@ public class Building extends Agent{
 
 	}
 
-	public void updateAgentPos(Robot agnt,int x_loc,int y_loc){
+	public  boolean updateAgentPos(Agent agnt,int x_loc,int y_loc){
 		//agents.setObjectPosition(agnt,x_loc, y_loc);
-		agents.setObjectLocation(agnt,x_loc, y_loc);
-		//state.storage.updRobotPos(agnt.getID(), x_loc, y_loc));
+		boolean ret_val = false;
+		synchronized (this) {
+			if(agents.numObjectsAtLocation(x_loc, y_loc)==0){
+				agents.setObjectLocation(agnt,x_loc, y_loc);
+				//state.storage.updRobotPos(agnt.getID(), x_loc, y_loc));
+				ret_val = true;
+			}
+			
 
+	    }
+		return ret_val;
+		
 	}
 	
 	
-	public void updateAgentPos(User agnt,int x_loc,int y_loc){
-		//agents.setObjectPosition(agnt,x_loc, y_loc);
-		agents.setObjectLocation(agnt,x_loc, y_loc);
-		//state.storage.updRobotPos(agnt.getID(), x_loc, y_loc));		
-	}
+
 	
 	
 	public List<Coordinate> getRoute(Coordinate current,Coordinate destination){

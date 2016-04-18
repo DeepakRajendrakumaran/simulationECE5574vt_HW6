@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 
 import edu.vt.ece5574.agents.Building;
 import edu.vt.ece5574.agents.Robot;
+import edu.vt.ece5574.agents.TempSensor;
 import edu.vt.ece5574.agents.User;
 import sim.display.Controller;
 import sim.display.Display2D;
@@ -58,6 +59,7 @@ public class SimulationWithUI extends GUIState
 		 Building building = (Building)sim.getAgentByID("0");
 		 Robot robot0 = building.createRobot(); //robot0 is not being used here. but we may find use for it.
 		 Robot robot1 = building.createRobot();
+		 TempSensor tempsensor = (TempSensor)building.createSensor("temperature",20,3);
 		 User user0 = building.createUser();
 		//movement gives errors when 2 robots are added.
 
