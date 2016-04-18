@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import sim.engine.SimState;
 import sim.field.grid.IntGrid2D;
 import edu.vt.ece5574.roomconditions.Temperature;
+import edu.vt.ece5574.roomconditions.Smoke;
 import edu.vt.ece5574.sim.Simulation;
 public class Room {
 	
@@ -16,6 +17,7 @@ public class Room {
 	public int width;
 	public int height;
 	public Temperature roomTemperature;
+	public Smoke roomSmoke;
 	protected Simulation state;
 
 	private static final int closedDoor = 2;
@@ -29,6 +31,7 @@ public class Room {
 			height = height_;
 			state = (Simulation)state_;
 			roomTemperature = new Temperature(state);
+			roomSmoke = new Smoke(state);
 	}
 
 	public boolean inRoom(int x1, int y1){

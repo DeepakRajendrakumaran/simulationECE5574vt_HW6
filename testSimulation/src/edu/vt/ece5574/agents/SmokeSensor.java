@@ -4,20 +4,14 @@ package edu.vt.ece5574.agents;
 import edu.vt.ece5574.events.Event;
 import edu.vt.ece5574.events.FireEvent;
 import sim.engine.SimState;
-import edu.vt.ece5574.roomconditions.Temperature;
+import edu.vt.ece5574.roomconditions.Smoke;
 import edu.vt.ece5574.sim.Simulation;
 import sim.engine.SimState;
 //Class for temperature sensors. - Author - Ameya Khandekar
 
-/*
-Status :-
-- at each step send temperatureValue to cloud storage.
-- handle Sensor events - works as though there's an event list addressed to this sensor. But right now it supports just 
-fire event
-- Sensor ON-OFF Events need to be implemented. 
-*/
 
-public class TempSensor extends Sensor {
+
+public class SmokeSensor extends Sensor {
 	
 
 
@@ -25,23 +19,23 @@ public class TempSensor extends Sensor {
 	private static final long serialVersionUID = 1;
  	int x,y;
  	Building bld;
- 	Temperature temp;
+ 	Smoke smk;
 //	private boolean fireStatus;
 
- 	public TempSensor(String id_, String buildingID_){
+ 	public SmokeSensor(String id_, String buildingID_){
  		//dummy constructor kept to avoid conflicts for now.
-		super(id_,buildingID_,"temperature");
+		super(id_,buildingID_,"smoke");
 
  	}
 
 	//Constructors for Sensor class :- for now only providing support for 1st Agent class constructor
-	public TempSensor(String id_, String buildingID_,SimState state_, int x_, int y_){
-		super(id_,buildingID_,"temperature");
+	public SmokeSensor(String id_, String buildingID_,SimState state_, int x_, int y_){
+		super(id_,buildingID_,"smoke");
 		Simulation state = (Simulation)state_;
 		x = x_;
 		y = y_;
 	    bld = (Building)state.getAgentByID(buildingID);
-	    temp = bld.getRoomTempById(bld.getRoomId(x,y));
+	    smk = bld.getRoomSmokeById(bld.getRoomId(x,y));
 	}
 
 /*	public boolean getFireStatus(){
@@ -72,7 +66,7 @@ public class TempSensor extends Sensor {
 		}
 	}
 
-	public int getTempValue(){return temp.getTemperature();}
+	public boolean getSmokeValue(){return smk.getSmoke();}
 //send Temperature Data in each timestep to storage API.
 
 	@Override
@@ -81,7 +75,7 @@ public class TempSensor extends Sensor {
 
 		//TO_DO 
 		//SEND temperature value to cloud storage.
-		int temperatureValue = temp.getTemperature();
+		boolean SmokeValue = smk.getSmoke();
 		//
 
 		if(!events.isEmpty()){
