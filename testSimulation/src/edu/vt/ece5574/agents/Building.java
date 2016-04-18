@@ -9,6 +9,8 @@ import java.util.Map;
 import edu.vt.ece5574.events.Event;
 import edu.vt.ece5574.events.FireEvent;
 import edu.vt.ece5574.roomconditions.Temperature;
+import edu.vt.ece5574.roomconditions.Smoke;
+
 import edu.vt.ece5574.sim.Simulation;
 import sim.engine.SimState;
 import sim.field.continuous.Continuous2D;
@@ -59,6 +61,7 @@ public class Building extends Agent{
 
 	protected Simulation state;
 	protected Temperature hallTemperature;
+	protected Smoke hallSmoke;
 
 	public Building(String id){
 		super(id, id);
@@ -107,6 +110,7 @@ public class Building extends Agent{
 			obstacles.field [width - 1][j]= wall;
 		}
 		hallTemperature = new Temperature(state);
+		hallSmoke = new Smoke(state);
 
 		//simple building layout for default use
 
@@ -149,6 +153,7 @@ public class Building extends Agent{
 				agents = new SparseGrid2D(width,height);
 
 			hallTemperature = new Temperature(state);
+			hallSmoke = new Smoke(state);
 			rooms = new LinkedList<Room>();
 			agentsInBld = new LinkedList<Agent>();
 			sensorsInBld = new LinkedList<Sensor>();
@@ -216,6 +221,16 @@ public class Building extends Agent{
 			return (rooms.get(idx)).roomTemperature ;
 
 	}
+	public Smoke getRoomSmokeById(int idx){
+
+		if(idx == -1){
+			return hallSmoke;
+		}
+		else
+			return (rooms.get(idx)).roomSmoke ;
+
+	}
+
 
 	public IntGrid2D getTileMap(){
 
@@ -373,19 +388,24 @@ public class Building extends Agent{
 
 	}
 
-	public void updateAgentPos(Robot agnt,int x_loc,int y_loc){
+	public  boolean updateAgentPos(Agent agnt,int x_loc,int y_loc){
 		//agents.setObjectPosition(agnt,x_loc, y_loc);
-		agents.setObjectLocation(agnt,x_loc, y_loc);
-		//state.storage.updRobotPos(agnt.getID(), x_loc, y_loc));
+		boolean ret_val = false;
+		synchronized (this) {
+			if(agents.numObjectsAtLocation(x_loc, y_loc)==0){
+				agents.setObjectLocation(agnt,x_loc, y_loc);
+				//state.storage.updRobotPos(agnt.getID(), x_loc, y_loc));
+				ret_val = true;
+			}
+			
 
+	    }
+		return ret_val;
+		
 	}
 	
 	
-	public void updateAgentPos(User agnt,int x_loc,int y_loc){
-		//agents.setObjectPosition(agnt,x_loc, y_loc);
-		agents.setObjectLocation(agnt,x_loc, y_loc);
-		//state.storage.updRobotPos(agnt.getID(), x_loc, y_loc));		
-	}
+
 	
 	
 	public List<Coordinate> getRoute(Coordinate current,Coordinate destination){
@@ -423,8 +443,10 @@ public class Building extends Agent{
 		for(int idx = 0; idx < rooms.size(); idx++)
       	{
       		(rooms.get(idx)).roomTemperature.defTempChange();
+      		(rooms.get(idx)).roomSmoke.defSmokeChange();
       	}
       	hallTemperature.defTempChange();
+      	hallSmoke.defSmokeChange();
       	//add similar methods for Smoke change per step in each room:-
       	//Increment the simulation clock by TIME_STEP units.
       	clockTime.incrementTimeBySeconds(TIME_STEP);

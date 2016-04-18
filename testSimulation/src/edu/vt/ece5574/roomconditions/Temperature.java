@@ -21,7 +21,7 @@ public class Temperature  {
 	
 	public Temperature(SimState state_){
 		state = (Simulation)state_;
-		temp = new AtomicInteger(75);
+		temp = new AtomicInteger(10);
 	}
 	
 	public Temperature(int temperature_,SimState state_){
@@ -40,7 +40,7 @@ public class Temperature  {
 
 		int prev = val;
 		val = (((state.random.nextInt()%10) + 100)* val)/100  ;
-		if(val < 75 || val > 10000){
+		if(val < 10 || val > 1000){
 			val = prev;
 		} 
 		temp.set(val);
@@ -51,7 +51,7 @@ public class Temperature  {
 
 		int val = temp.get();
 
-		if(val < 10000){
+		if(val < 1000){
 			val = val + severity*100;
 		}
 		temp.set(val);

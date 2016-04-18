@@ -423,19 +423,22 @@ public class Robot extends Agent {
 		
 		if(handlingEvent == true){
 			if(robot_loc.x == currEvent.getX_pos() && robot_loc.y == currEvent.getY_pos()){
+				//System.out.println("Reached: x="+robot_loc.x+"y="+robot_loc.y);
 				addressEvent();
 			}
 			else {
-				
-					moveToEventSrc();
+				//System.out.println("Path: x="+robot_loc.x+"y="+robot_loc.y);
+				moveToEventSrc();
 			
 			}
 			
 		}
 		else if(events.isEmpty()){
+			//System.out.println("Random: x="+robot_loc.x+"y="+robot_loc.y);
 			randomMovement();
 		}
 		else{
+			//System.out.println("Starting: x="+robot_loc.x+"y="+robot_loc.y);
 			dealWithHouseEvents(state, bld);
 		}
 		

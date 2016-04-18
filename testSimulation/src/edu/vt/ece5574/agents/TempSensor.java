@@ -14,7 +14,6 @@ Status :-
 - at each step send temperatureValue to cloud storage.
 - handle Sensor events - works as though there's an event list addressed to this sensor. But right now it supports just 
 fire event
-- in case of FireEvent, sensor increases room temperature . (sensor is doing the work of fire too if need be)
 - Sensor ON-OFF Events need to be implemented. 
 */
 
