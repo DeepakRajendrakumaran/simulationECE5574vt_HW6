@@ -1,7 +1,7 @@
 package edu.vt.ece5574.sim;
 
 /**
- * @author Vinit Gala
+ * @author Owen Nugent
  *
  */
 
@@ -11,107 +11,47 @@ import io.swagger.client.model.*;
 
 import java.math.BigDecimal;
 
-import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.json.JSONObject;
-import edu.vt.ece5574.main.*;
-
-
 public class StorageAPI {
 	
-	private String baseURL;
+	private String basePath;
 	ApiClient client;
 	
 	public StorageAPI()
 	{
-		baseURL = new String ( "http://localhost:8080/api" );
+		basePath = new String ( "http://localhost:8080/api" );
 		client = new ApiClient();
-		client.setBasePath(baseURL);
+		client.setBasePath(basePath);
 	}
 	
-/*	
-	public HttpResponse getRequest ( URI uri ) throws IOException
+	public StorageAPI(String basePath)
 	{
-		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-		HttpResponse response = null;
-		
-		try {
-		    HttpGet request = new HttpGet(uri);
-		    response = httpClient.execute(request);
-		} catch (Exception e) {
-			System.err.println(e);
-		} finally {
-		    httpClient.close();
-		}
-		return response;
+		this.basePath = basePath;
+		client = new ApiClient();
+		client.setBasePath(basePath);
 	}
 	
-	public HttpResponse deleteRequest ( URI uri ) throws IOException
+	public boolean updSensorData ( String sensorId, String data )
 	{
-		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-		HttpResponse response = null;
+		Sensor sensor = new Sensor();
+		sensor.setId(sensorId);
+		sensor.setData(data);
 		
-		try {
-		    HttpDelete request = new HttpDelete(uri);
-		    response = httpClient.execute(request);
-		} catch (Exception e) {
-			System.err.println(e);
-		} finally {
-		    httpClient.close();
+		ByIDApi api = new ByIDApi(client);
+		try
+		{
+			api.controllersDefaultControllerSensorsSensorIdPut(sensorId, sensor);
 		}
-		return response;
+		catch(ApiException e)
+		{
+			System.out.println(e.getMessage());
+			return false;
+		}
+		return true;
 	}
 	
-	public HttpResponse postRequest ( URI uri , JSONObject json ) throws IOException
-	{
-		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-		HttpResponse response = null;
-		
-		try {
-		    HttpPost request = new HttpPost(uri);
-		    StringEntity params = new StringEntity(json.toString());
-		    request.addHeader("content-type", "application/json");
-		    request.setEntity(params);
-		    response = httpClient.execute(request);
-		} catch (Exception e) {
-			System.err.println(e);
-		} finally {
-		    httpClient.close();
-		}
-		return response;
-	}
-	
-	public HttpResponse putRequest ( URI uri , JSONObject json ) throws IOException
-	{
-		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-		HttpResponse response = null;
-		
-		try {
-		    HttpPut request = new HttpPut(uri);
-		    StringEntity params = new StringEntity(json.toString());
-		    request.addHeader("content-type", "application/json");
-		    request.setEntity(params);
-		    response = httpClient.execute(request);
-		} catch (Exception e) {
-			System.err.println(e);
-		} finally {
-		    httpClient.close();
-		}
-		return response;
-	}
-	*/
-		
 	public boolean updRobotPos ( String robotId , int xpos , int ypos )
 	{
 		Robot robot = new Robot();
