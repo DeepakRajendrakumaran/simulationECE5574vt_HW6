@@ -6,6 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.vt.ece5574.agents.Building;
+import edu.vt.ece5574.agents.Child;
+import edu.vt.ece5574.agents.Coordinate;
 import edu.vt.ece5574.agents.User;
 import edu.vt.ece5574.events.FireEvent;
 import edu.vt.ece5574.events.IntruderEvent;
@@ -181,18 +183,6 @@ public class UserTest {
 		assertEquals(usr.getIntruderNotification(),false);	
 	}
 	
-		@Test(timeout=1000)
-	public void randomMovement(){
-		String rID ="1";
-		String bID ="0";
-		User oUsr = new User(sim,rID,bID,true,1,1);
-		sim.addAgent(oUsr);
-		double initial_x= oUsr.getX();
-		double initial_y= oUsr.getY();
-		oUsr.createRandomMovement(sim);
-		assertFalse((oUsr.getX()==initial_x)&&(oUsr.getY()==initial_y));	
-	}
-	
 /*	@Test(timeout=1000)
 	public void moveToaPoint(){
 		String rID ="1";
@@ -227,5 +217,49 @@ public class UserTest {
 		assertEquals((int)oUsr.getY(),event.getY_pos());		
 	}
 	*/
+		
+		@Test(timeout=1000)
+		public void randomMovement(){
+			String rID ="1";
+			String bID ="0";
+			User oUsr = new User(sim,rID,bID,true,1,1);
+			sim.addAgent(oUsr);
+			double initial_x= oUsr.getX();
+			double initial_y= oUsr.getY();
+			oUsr.createRandomMovement(sim);
+			assertFalse((oUsr.getX()==initial_x)&&(oUsr.getY()==initial_y));	
+		}
+			
+			@Test(timeout=1000)
+			public void ChildMovement(){
+				String rID ="1";
+				String bID ="0";
+				User oUsr = new Child(sim,rID,bID,true,1,1);
+				sim.addAgent(oUsr);
+				oUsr.step(sim);
+				oUsr.step(sim);
+				oUsr.step(sim);
+				bld.getBuildingTime().setTime(18, 01, 10);
+				double initial_x= oUsr.getX();
+				double initial_y= oUsr.getY();
+				oUsr.createRandomMovement(sim);
+				assertFalse((oUsr.getX()==initial_x)&&(oUsr.getY()==initial_y));	
+			}
+		
+		@Test(timeout=1000)
+		public void moveToaPoint(){
+			String rID ="1";
+			String bID ="0";
+			User oUsr = new User(sim,rID,bID,true,2,5);
+			sim.addAgent(oUsr);			
+			Coordinate destination = new Coordinate(14,15);
+			oUsr.setDestination(destination);
+			while ((oUsr.getLocation().x != destination.x)||(oUsr.getLocation().y != destination.y))
+			{
+				oUsr.step(sim);
+			}
+			assertEquals((int)oUsr.getX(),destination.x);
+			assertEquals((int)oUsr.getY(),destination.y);		
+		}
 	
 }

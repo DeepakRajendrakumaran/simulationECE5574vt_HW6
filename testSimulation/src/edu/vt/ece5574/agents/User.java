@@ -25,7 +25,7 @@ public class User extends Agent{
 	private static final long serialVersionUID = 1;
 	private boolean isAppUser;
 	private Coordinate location;
-	private double randomStepFactor = 0.1;
+	//private double randomStepFactor = 0.1;
 	//private double centerStepFactor = 0.2;
 	private boolean fireNotification = false;
 	private boolean waterLeakNotification = false;
@@ -291,16 +291,10 @@ public class User extends Agent{
 		//simState.storage.updUserPos(super.getID(), location.x, location.y);	
 	}	
 	
-	/*
-	 * Create movement based on the time in the system.
-	 * Creates event based on the system clock.
-	 * Night an intruder walks in. After 15 minutes the intruder walks out.
-	 * Morning a 
-	 * 
-	 */
-	public void createMovementBasedOnTime()
-	{
-		
+
+	public void setDestination(Coordinate destination2) {
+		// TODO Auto-generated method stub
+		destination = destination2;		
 	}
 	
 	/**
@@ -430,13 +424,13 @@ public class User extends Agent{
 			{
 				if (isTimeForActivity(state))
 				{
-					missionMode = missionMode.MOVE_TO_ROOM;
+					missionMode = MISSIONMODE.MOVE_TO_ROOM;
 					setOnMission(true);
 					createMissionMovement(state);
 					
 				}
 				else{
-					missionMode = missionMode.MOVE_RANDOM;
+					missionMode = MISSIONMODE.MOVE_RANDOM;
 					setOnMission (false);
 					createRandomMovement(state);
 				}
@@ -449,7 +443,7 @@ public class User extends Agent{
 				}
 				else
 				{
-					missionMode = missionMode.WAIT_AT_ROOM;
+					missionMode = MISSIONMODE.WAIT_AT_ROOM;
 					eventFinishTime = bld.getBuildingTime().getMinutes()+15;
 				}
 			}
@@ -458,7 +452,7 @@ public class User extends Agent{
 				if (eventFinishTime>0 && eventFinishTime<bld.getBuildingTime().getMinutes())					
 				{
 					eventFinishTime = 0;
-					missionMode = missionMode.MOVE_TO_CENTER;
+					missionMode = MISSIONMODE.MOVE_TO_CENTER;
 					setOnMission(true);
 					returnToCenter();					
 				}
@@ -471,7 +465,7 @@ public class User extends Agent{
 				}
 				else
 				{
-					missionMode = missionMode.MOVE_RANDOM;					
+					missionMode = MISSIONMODE.MOVE_RANDOM;					
 					createRandomMovement(state);					
 				}				
 			}			
@@ -479,7 +473,7 @@ public class User extends Agent{
 			{
 				if (isTimeForActivity(state))
 				{
-					missionMode = missionMode.MOVE_TO_ROOM;
+					missionMode = MISSIONMODE.MOVE_TO_ROOM;
 					setOnMission(true);
 					createMissionMovement(state);					
 				}
@@ -495,4 +489,5 @@ public class User extends Agent{
 		}
 		
 	}
+
 }
