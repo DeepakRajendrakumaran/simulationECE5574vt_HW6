@@ -40,15 +40,32 @@ public class SensorAgentTest {
 		 TempSensor tempsensor = (TempSensor)building.createSensor("temperature",20,3);
 		 int original = tempsensor.getTempValue();
 		System.out.println("temperatureChanges test originalTemp ="+tempsensor.getTempValue());
-		for(int i = 0; i < 100; i++){
+		for(int i = 0; i < 10; i++){
 			building.step(sim);
+			//System.out.println("temperatureChanges test Intermediate Values ="+tempsensor.getTempValue());
 		}
 		System.out.println("temperatureChanges test finalTemp ="+tempsensor.getTempValue());
 		assertTrue(tempsensor.getTempValue() != original);
 
 	}
 	
+	@Test
+	public void longertemperatureChanges(){
+		 Simulation sim = new Simulation(0);
+		 Building building = (Building)sim.getAgentByID("0");
+		// Robot robot0 = building.createRobot(); 
+		 TempSensor tempsensor = (TempSensor)building.createSensor("temperature",20,3);
+		 int original = tempsensor.getTempValue();
+		System.out.println("Longer temperatureChanges test originalTemp ="+tempsensor.getTempValue());
+		for(int i = 0; i < 1000; i++){
+			building.step(sim);
+			//System.out.println("temperatureChanges test Intermediate Values ="+tempsensor.getTempValue());
+		}
+		System.out.println("Longer temperatureChanges test finalTemp ="+tempsensor.getTempValue());
+		assertTrue(tempsensor.getTempValue() != original);
 
+	}
+	
 	
 	@Test
 	public void burningFire(){
