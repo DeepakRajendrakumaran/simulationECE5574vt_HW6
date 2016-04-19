@@ -41,6 +41,59 @@ public class StorageAPITests{
 		storageAPIInterface = new StorageAPI();
 	}	
 
+
+	@Test
+	public void addUser()
+	{
+		ByTypeApi byTypeApi = new ByTypeApi(client);
+		edu.vt.ece5574.agents.User user_sim = new edu.vt.ece5574.agents.User(null, "userId", "buildingId", false, 3, 5);
+		
+		try
+		{
+			byTypeApi.controllersDefaultControllerUsersDelete();
+			User user_local = storageAPIInterface.addUser(user_sim.getID(), user_sim);
+			
+			List<User> users = byTypeApi.controllersDefaultControllerUsersGet();
+			assertFalse("Get users should not return an empty list", users.isEmpty());
+			assertTrue("Get should only return 1 user", users.size() == 1);
+			
+			User user_cloud = users.get(0);			
+			assertEquals("Assert that the user buildingId is unchanged", user_local.getBuildingId(), user_cloud.getBuildingId());
+			assertEquals("Assert that the user floor is unchanged", user_local.getFloor(), user_cloud.getFloor());
+			assertEquals("Assert that the user room is unchanged", user_local.getRoom(), user_cloud.getRoom());
+			assertEquals("Assert that the user Xpos is updated", user_local.getXpos(), user_cloud.getXpos());
+			assertEquals("Assert that the user Ypos is updated", user_local.getYpos(), user_cloud.getYpos());
+			
+			byTypeApi.controllersDefaultControllerUsersDelete();
+		}
+		catch(ApiException e)
+		{
+			Assert.fail(e.getMessage());
+		}
+		
+	}
+	
+	@Test
+	public void deleteUser()
+	{
+		ByTypeApi byTypeApi = new ByTypeApi(client);
+		edu.vt.ece5574.agents.User user_sim = new edu.vt.ece5574.agents.User(null, "userId", "buildingId", false, 3, 5);
+		
+		try
+		{
+			byTypeApi.controllersDefaultControllerUsersDelete();
+			User user_local = storageAPIInterface.addUser(user_sim.getID(), user_sim);
+			storageAPIInterface.deleteUser(user_local.getId());
+			List<User> users = byTypeApi.controllersDefaultControllerUsersGet();
+
+			assertTrue("Get users should return an empty list", users.isEmpty());
+			
+		}
+		catch(ApiException e)
+		{
+			Assert.fail(e.getMessage());
+		}
+	}
 	
 	//This test
 	@Test
@@ -114,8 +167,6 @@ public class StorageAPITests{
 			Building building = byTypeApi.controllersDefaultControllerBuildingsPost();
 			Robot robot = byBuildingApi.controllersDefaultControllerBuildingsBuildingIdRobotsPost(building.getId());
 			String robotId = robot.getId();
-			byIdApi.controllersDefaultControllerRobotsRobotIdPut(robotId, robot);
-			System.out.println(robot.toString());
 			
 			int new_x = (int)(Math.random() * 100); 
 			int new_y = (int)(Math.random() * 100);
