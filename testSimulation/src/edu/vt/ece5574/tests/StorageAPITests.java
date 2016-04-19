@@ -51,18 +51,15 @@ public class StorageAPITests{
 		try
 		{
 			byTypeApi.controllersDefaultControllerUsersDelete();
-			User user_local = storageAPIInterface.addUser(user_sim.getID(), user_sim);
-			
+			String user_local_id = storageAPIInterface.addUser(user_sim.getID(), user_sim);
+
 			List<User> users = byTypeApi.controllersDefaultControllerUsersGet();
 			assertFalse("Get users should not return an empty list", users.isEmpty());
 			assertTrue("Get should only return 1 user", users.size() == 1);
 			
 			User user_cloud = users.get(0);			
-			assertEquals("Assert that the user buildingId is unchanged", user_local.getBuildingId(), user_cloud.getBuildingId());
-			assertEquals("Assert that the user floor is unchanged", user_local.getFloor(), user_cloud.getFloor());
-			assertEquals("Assert that the user room is unchanged", user_local.getRoom(), user_cloud.getRoom());
-			assertEquals("Assert that the user Xpos is updated", user_local.getXpos(), user_cloud.getXpos());
-			assertEquals("Assert that the user Ypos is updated", user_local.getYpos(), user_cloud.getYpos());
+			assertEquals("Assert that the user Xpos is updated", int2BD(user_sim.getLocation().x), user_cloud.getXpos());
+			assertEquals("Assert that the user Ypos is updated", int2BD(user_sim.getLocation().y), user_cloud.getYpos());
 			
 			byTypeApi.controllersDefaultControllerUsersDelete();
 		}
@@ -82,8 +79,8 @@ public class StorageAPITests{
 		try
 		{
 			byTypeApi.controllersDefaultControllerUsersDelete();
-			User user_local = storageAPIInterface.addUser(user_sim.getID(), user_sim);
-			storageAPIInterface.deleteUser(user_local.getId());
+			String userId = storageAPIInterface.addUser(user_sim.getID(), user_sim);
+			storageAPIInterface.deleteUser(userId);
 			List<User> users = byTypeApi.controllersDefaultControllerUsersGet();
 
 			assertTrue("Get users should return an empty list", users.isEmpty());
@@ -232,4 +229,9 @@ public class StorageAPITests{
 			Assert.fail(e.getMessage());
 		}	
     }
+    
+    private BigDecimal int2BD(int i)
+	{
+		return new BigDecimal(i + "");
+	}
 }

@@ -61,6 +61,20 @@ public class RobotAgentTest {
 	}
 	
 	@Test(timeout=1000)
+	public void NormalMovement(){
+		//String rID ="1";
+		//Robot rob = new Robot(sim,rID,bID,1,1);
+		Robot rob = bld.createRobot();
+		//sim.addAgent(rob);
+		double initial_x= rob.getX();
+		double initial_y= rob.getY();
+		rob.normalMovement();
+		rob.normalMovement();
+		rob.normalMovement();
+		assertFalse((rob.getX()==initial_x)&&(rob.getY()==initial_y));	
+	}
+	
+	@Test(timeout=1000)
 	public void randomMovement(){
 		//String rID ="1";
 		//Robot rob = new Robot(sim,rID,bID,1,1);
@@ -73,7 +87,52 @@ public class RobotAgentTest {
 	}
 	
 	@Test(timeout=1000)
-	public void continuousRandomMovement(){
+	public void collisionMovement(){
+		//String rID ="1";
+		//Robot rob = new Robot(sim,rID,bID,1,1);
+		int n =0;
+		Robot rob = bld.createRobot();
+		Robot rob1 = bld.createRobot();
+		Robot rob2 = bld.createRobot();
+		
+		
+		
+		String details = 
+				"{"
+				+ "\"messageId\": \"0\","
+				+ "\"message\": {"
+					+ "\"msg_type\": \"move robot\","
+					+ "\"body\": {"
+						+ "\"building\": \"0\","
+						+ "\"room\": 1,"
+						+ "\"floor\": 1,"
+						+ "\"xpos\": 2,"
+						+ "\"ypos\": 2,"
+						+ "\"severity\": 5,"
+						+ "\"action\": \"move\""
+						+ "}"
+					+ "}"
+				+ "}";
+		
+		MoveRobotEvent event = new MoveRobotEvent();
+		event.init(details);
+		rob.addEvent(event);
+		while(n<500){
+			rob.step(sim);
+			rob2.randomMovement();
+			rob1.normalMovement();
+			assertFalse((rob2.getX()==rob.getX())&&(rob2.getY()==rob.getY()));	
+			assertFalse((rob1.getX()==rob.getX())&&(rob1.getY()==rob.getY()));
+			assertFalse((rob2.getX()==rob1.getX())&&(rob2.getY()==rob1.getY()));
+
+			n++;
+		}
+		
+			
+	}
+	
+	@Test(timeout=1000)
+	public void continuousNormalMovement(){
 		//String rID ="1";
 		//Robot rob = new Robot(sim,rID,bID,3,2);
 		//sim.addAgent(rob);
@@ -81,7 +140,7 @@ public class RobotAgentTest {
 	//	assertTrue(bld.checkStep(9, 9));	
 		int steps=100;
 		while(steps!=0){
-			rob.randomMovement();
+			rob.normalMovement();;
 			bld.checkStep(rob.getX(), rob.getY());
 			steps--;
 		}

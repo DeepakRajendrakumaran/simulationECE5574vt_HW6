@@ -41,6 +41,7 @@ public class Robot extends Agent {
     private int toBeSavedLocs =0;*/
     
     private boolean handlingEvent=false;
+    private int deadlockedsteps=0;
     private Event currEvent = null;
    // private List<Coordinate> route = null;
   //  private Coordinate nextPoint = null;
@@ -176,21 +177,83 @@ public class Robot extends Agent {
 		//simState.storage.updRobotPos(super.getID(), robot_loc.x, robot_loc.y);
 				
 	}*/
+    
+    
+    /**
+	 * Logic to simulate 'random' movement of robot in the building 
+	 * to escape deadlock
+	 * @param state 
+	 */
+	public void randomMovement(){
+		
+		Building bld = (Building)simState.getAgentByID(buildingID);
+		int x_pos = robot_loc.x;
+		int y_pos = robot_loc.x;
+		MutableInt2D new_loc;
+		LinkedList<MutableInt2D> validGridList = new LinkedList<MutableInt2D>();
+		for(int dx = -1; dx < 2; dx++){
+			for(int dy = -1; dy < 2; dy++){
+				if((dx==0) && (dy==0))
+					continue;
+				int x = dx+x_pos;
+				int y = dy+y_pos;
+				
+		
+				if(bld.checkStep(x,y)){
+						validGridList.add(new MutableInt2D(x,y));	
+				}
+			}
+		}
+		while(true){
+			if(!validGridList.isEmpty()){
+				int nextLocIndex = simState.random.nextInt(validGridList.size());
+				new_loc = validGridList.get(nextLocIndex);
+			
+
+				if( bld.updateAgentPos(this,new_loc.x, new_loc.y)==true){
+					robot_loc.x = new_loc.x;
+					robot_loc.y = new_loc.y;
+					c_dir=Curr_Direction.Same;
+					deadlockedsteps=0;
+					//Deepak:uncomment once storage api works
+					/*simState.storage.updRobotPos(super.getID(), 
+			 			robot_loc.x, robot_loc.y);*/
+					break;
+				}
+				else{
+					validGridList.remove(nextLocIndex);
+				}
+			}
+			else{
+				deadlockedsteps++;
+				break;
+			}
+		}
+		
+				
+	}
 	
 	/**
 	 * Logic to simulate 'normal' movement of robot in the building -wall-follower
 	 * @param 
 	 */
-	public void randomMovement(){
+	public void normalMovement(){
 		
 		Building bld = (Building)simState.getAgentByID(buildingID);
 		int x = robot_loc.x;
 		int y = robot_loc.y;
 		if((c_dir==Curr_Direction.Same)){
 			if(bld.checkStep(x,y+1)){
-			robot_loc.x = x;
-			 robot_loc.y = y+1;
-			 bld.updateAgentPos(this,robot_loc.x, robot_loc.y);
+			
+			 if(bld.updateAgentPos(this,x, y+1)){
+				 robot_loc.x = x;
+				 robot_loc.y = y+1;
+				 deadlockedsteps=0;
+			 }
+			 else{
+				 deadlockedsteps++;
+			 }
+			 
 			 return;
 			}
 			else{
@@ -307,11 +370,19 @@ public class Robot extends Agent {
 		
 		
 		
-		 robot_loc.x = x;
-		 robot_loc.y = y;
-		 bld.updateAgentPos(this,robot_loc.x, robot_loc.y);
-		 //Deepak:uncomment once storage api works
-		//simState.storage.updRobotPos(super.getID(), robot_loc.x, robot_loc.y);
+		
+		if( bld.updateAgentPos(this,x, y)){
+			 robot_loc.x = x;
+			 robot_loc.y = y;
+			 deadlockedsteps=0;
+			 //Deepak:uncomment once storage api works
+				/*simState.storage.updRobotPos(super.getID(), 
+			 robot_loc.x, robot_loc.y);*/
+		}
+		else{
+			deadlockedsteps++;
+		}
+		
 	}
 	
 	//Was used in earlier random movement algo- currently not used	
@@ -387,11 +458,19 @@ public class Robot extends Agent {
 		Building bld = (Building)simState.getAgentByID(buildingID);
 		Int2D nextStep = routePath.pop();
 		
-		robot_loc.x = nextStep.x;
-		robot_loc.y = nextStep.y;
-		bld.updateAgentPos(this,robot_loc.x, robot_loc.y);
-		//Deepak:uncomment once storage api works
-		//simState.storage.updRobotPos(super.getID(), robot_loc.x, robot_loc.y);
+		if( bld.updateAgentPos(this,nextStep.x, nextStep.y)){
+			 robot_loc.x = nextStep.x;
+			 robot_loc.y = nextStep.y;
+			 deadlockedsteps=0;
+			 //Deepak:uncomment once storage api works
+				/*simState.storage.updRobotPos(super.getID(), 
+			 robot_loc.x, robot_loc.y);*/
+		}
+		else{
+			deadlockedsteps++;
+			
+		}
+		
 			
 	}
 	
@@ -435,11 +514,20 @@ public class Robot extends Agent {
 		}
 		else if(events.isEmpty()){
 			//System.out.println("Random: x="+robot_loc.x+"y="+robot_loc.y);
-			randomMovement();
+			normalMovement();
 		}
 		else{
 			//System.out.println("Starting: x="+robot_loc.x+"y="+robot_loc.y);
+			c_dir=Curr_Direction.Same;
 			dealWithHouseEvents(state, bld);
+		}
+		if(deadlockedsteps==2){
+			randomMovement();
+			if(handlingEvent == true){
+				routePath = AStar.findPath(robot_loc.x, robot_loc.y,
+						currEvent.getX_pos(), currEvent.getY_pos(), bld.getObstacles());
+			}
+			
 		}
 		
 		

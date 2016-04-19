@@ -33,7 +33,7 @@ public class StorageAPI {
 		client.setBasePath(basePath);
 	}
 		
-	public User addUser(String buildingId, edu.vt.ece5574.agents.User userIn)
+	public String addUser(String buildingId, edu.vt.ece5574.agents.User userIn)
 	{
 		User user = new User();
 		ByTypeApi byTypeApi = new ByTypeApi(client);
@@ -61,7 +61,7 @@ public class StorageAPI {
 			System.out.println(e.getMessage());
 			return null;
 		}
-		return user;
+		return user.getId();
 	}
 	
 	public boolean deleteUser(String userId)
