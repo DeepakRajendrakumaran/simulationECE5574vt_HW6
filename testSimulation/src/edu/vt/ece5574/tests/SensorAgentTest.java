@@ -23,7 +23,51 @@ public class SensorAgentTest {
 
 //simple test for checking if fire is burning.
 //need to write test for where Robot extinguishes fire.
-	@Test(timeout=1000)
+	@Test
+	public void normalTemperature(){
+		 Simulation sim = new Simulation(0);
+		 Building building = (Building)sim.getAgentByID("0");
+		// Robot robot0 = building.createRobot(); 
+		 TempSensor tempsensor = (TempSensor)building.createSensor("temperature",20,3);
+		 assertEquals(tempsensor.getTempValue(),10);
+	}
+	
+	@Test
+	public void temperatureChanges(){
+		 Simulation sim = new Simulation(0);
+		 Building building = (Building)sim.getAgentByID("0");
+		// Robot robot0 = building.createRobot(); 
+		 TempSensor tempsensor = (TempSensor)building.createSensor("temperature",20,3);
+		 int original = tempsensor.getTempValue();
+		System.out.println("temperatureChanges test originalTemp ="+tempsensor.getTempValue());
+		for(int i = 0; i < 10; i++){
+			building.step(sim);
+			//System.out.println("temperatureChanges test Intermediate Values ="+tempsensor.getTempValue());
+		}
+		System.out.println("temperatureChanges test finalTemp ="+tempsensor.getTempValue());
+		assertTrue(tempsensor.getTempValue() != original);
+
+	}
+	
+	@Test
+	public void longertemperatureChanges(){
+		 Simulation sim = new Simulation(0);
+		 Building building = (Building)sim.getAgentByID("0");
+		// Robot robot0 = building.createRobot(); 
+		 TempSensor tempsensor = (TempSensor)building.createSensor("temperature",20,3);
+		 int original = tempsensor.getTempValue();
+		System.out.println("Longer temperatureChanges test originalTemp ="+tempsensor.getTempValue());
+		for(int i = 0; i < 1000; i++){
+			building.step(sim);
+			//System.out.println("temperatureChanges test Intermediate Values ="+tempsensor.getTempValue());
+		}
+		System.out.println("Longer temperatureChanges test finalTemp ="+tempsensor.getTempValue());
+		assertTrue(tempsensor.getTempValue() != original);
+
+	}
+	
+	
+	@Test
 	public void burningFire(){
 
 	//	TempSensor tempsensor = new TempSensor("1","0");
@@ -52,20 +96,20 @@ public class SensorAgentTest {
 		
 
 		
-		assertEquals(tempsensor.getTempValue(),75);
-		System.out.println("current temperature is:- "+tempsensor.getTempValue());
+		
+		System.out.println("burningFire test original temp "+tempsensor.getTempValue());
 		for(int i = 0; i < 10; i++){
 			building.step(sim);
 		}
-		System.out.println("current temperature is:- "+tempsensor.getTempValue());
+		
 		FireEvent event = new FireEvent();
 		event.init(details);
 		building.addEvent(event);
 		building.step(sim);
 		building.step(sim);
 		building.step(sim);
-		System.out.println("current temperature is:- "+tempsensor.getTempValue());
-
+		System.out.println("burningFire final temp:- "+tempsensor.getTempValue());
+		assertTrue(tempsensor.getTempValue() > 400);
 	
 	}
 
