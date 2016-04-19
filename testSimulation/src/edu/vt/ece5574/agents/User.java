@@ -7,12 +7,12 @@ import edu.vt.ece5574.events.WaterLeakEvent;
 import edu.vt.ece5574.sim.AStar;
 import edu.vt.ece5574.sim.Simulation;
 import java.awt.Color;
-import java.util.List;
+
 import java.util.Stack;
 
 import sim.engine.SimState;
 import sim.util.Int2D;
-import sim.util.MutableInt2D;
+
 
 
 /**
@@ -37,6 +37,10 @@ public class User extends Agent{
 	private Coordinate destination;
 	Stack<Int2D> routePath;
 	private int eventFinishTime = 0;
+	public static enum MISSIONMODE {
+	    HALT, MOVE_TO_ROOM, WAIT_AT_ROOM, MOVE_TO_CENTER, MOVE_RANDOM  
+	}
+	private MISSIONMODE missionMode = MISSIONMODE.HALT;
 
 	public boolean isOnMission() {
 		return onMission;
@@ -305,9 +309,13 @@ public class User extends Agent{
 	 */
 	public void createMissionMovement(SimState state)
 	{
-		//Move to a particular room
-		setOnMission(true);
-		destination = new Coordinate(15, 14);		
+		//Move to a particular room	
+		destination = new Coordinate(21, 2);		
+	}
+	
+	public void returnToCenter()
+	{
+		destination = new Coordinate(15, 14);
 	}
 	
 	public void moveOnMission(SimState state)
@@ -316,10 +324,12 @@ public class User extends Agent{
 		Int2D nextPoint;
 		if (destination == null)
 		{
+			setOnMission(false);
 			return;
 		}
 		if (destination.x == location.x && destination.y == location.y)
 		{
+			setOnMission(false);
 			return;
 		}
 		Simulation simState = (Simulation)state;
@@ -328,6 +338,7 @@ public class User extends Agent{
 			
 		if (routePath == null)
 		{
+			setOnMission(false);
 			System.out.println("RoutePath is NULL!");
 			return;
 		}		
@@ -387,10 +398,6 @@ public class User extends Agent{
 		return intruderNotification;		
 	}
 	
-	public void move(){
-		//TODO: Implement in different sub classes.
-	}	
-	
 	public boolean isTimeForActivity(SimState state)
 	{
 		Simulation simState = (Simulation)state;	
@@ -416,30 +423,76 @@ public class User extends Agent{
 		//System.out.println("User Step entered");
 		Simulation simState = (Simulation)state;
 		Building bld = (Building)simState.getAgentByID(buildingID);
-		if(events.isEmpty()){
-			//Modifications made just for now. Need to re-define the actions.
-			if (isOnMission()==false)
-			{				
+		
+		if (events.isEmpty())
+		{
+			if (missionMode == MISSIONMODE.HALT)
+			{
 				if (isTimeForActivity(state))
 				{
+					missionMode = missionMode.MOVE_TO_ROOM;
+					setOnMission(true);
 					createMissionMovement(state);
-					moveOnMission(state);
+					
 				}
 				else{
+					missionMode = missionMode.MOVE_RANDOM;
+					setOnMission (false);
 					createRandomMovement(state);
 				}
 			}
-			else
+			else if (missionMode == MISSIONMODE.MOVE_TO_ROOM)
 			{
-				if (bld.getBuildingTime().getMinutes()>eventFinishTime){
-					setOnMission(false);					
+				if (isOnMission())
+				{
+					moveOnMission(state);
 				}
-				moveOnMission(state);
-			}		
+				else
+				{
+					missionMode = missionMode.WAIT_AT_ROOM;
+					eventFinishTime = bld.getBuildingTime().getMinutes()+15;
+				}
+			}
+			else if (missionMode == MISSIONMODE.WAIT_AT_ROOM)
+			{
+				if (eventFinishTime>0 && eventFinishTime<bld.getBuildingTime().getMinutes())					
+				{
+					eventFinishTime = 0;
+					missionMode = missionMode.MOVE_TO_CENTER;
+					setOnMission(true);
+					returnToCenter();					
+				}
+			}
+			else if (missionMode  == MISSIONMODE.MOVE_TO_CENTER)
+			{
+				if (isOnMission())
+				{
+					moveOnMission(state);
+				}
+				else
+				{
+					missionMode = missionMode.MOVE_RANDOM;					
+					createRandomMovement(state);					
+				}				
+			}			
+			else if (missionMode == MISSIONMODE.MOVE_RANDOM)
+			{
+				if (isTimeForActivity(state))
+				{
+					missionMode = missionMode.MOVE_TO_ROOM;
+					setOnMission(true);
+					createMissionMovement(state);					
+				}
+				else
+				{
+					createRandomMovement(state);
+				}				
+			}			
 		}
 		else{
 			//in case of events react
 			handleUserEvents();
-		}		
+		}
+		
 	}
 }

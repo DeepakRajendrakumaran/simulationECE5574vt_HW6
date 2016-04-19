@@ -53,7 +53,8 @@ public class Building extends Agent{
 	protected LinkedList<Sensor> sensorsInBld;
 	protected LinkedList<User> usersInBId;
 	private ClockTime clockTime;
-
+	
+	
 	//protected int[][] tilemap;
 	protected IntGrid2D tile_map;
 	//protected Continuous2D tilemap;
@@ -389,7 +390,7 @@ public class Building extends Agent{
 	public User createUser(){
 
 		Int2D pos = genStartPos();
-		User oUser = new User(state, String.valueOf(agentsInBld.size()+1),id,true, pos.getX(),pos.getY());
+		User oUser = new Adult(state, String.valueOf(agentsInBld.size()+1),id,true, pos.getX(),pos.getY());
 		agents.setObjectLocation(oUser,pos.getX(),pos.getY());
 		agentsInBld.add(oUser);
 		state.addAgent(oUser);
