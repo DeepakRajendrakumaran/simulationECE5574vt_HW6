@@ -39,7 +39,7 @@ public class Temperature  {
 		int val = temp.get();
 
 		int prev = val;
-		val = (((state.random.nextInt()%10) + 100)* val)/100  ;
+		val = (((state.random.nextInt()%30) + 100)* val)/100  ;
 		if(val < 10 || val > 1000){
 			val = prev;
 		} 
