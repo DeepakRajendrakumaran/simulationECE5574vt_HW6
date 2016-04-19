@@ -191,8 +191,8 @@ public class AStar
            {
         	   for(int j=0; j<obstacles.getHeight(); j++)
         	   {
-        		   if(obstacles.field[i][j] > 0) // 0 on the tilemap means the tile is "walkable".  Anything else means otherwise
-        			   setBlocked(i,j);
+        		   if(obstacles.field[i][j] == 1) // 1 on the tilemap means the tile is wall
+        			   setBlocked(i,j);			  // Doors, and walkable tiles will all be included in the path calculation
         	   }
            }
 
