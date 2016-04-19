@@ -33,6 +33,7 @@ public class User extends Agent{
 	private boolean onMission = false;
 	private Coordinate destination;
 	Stack<Int2D> routePath;
+	private int eventFinishTime = 0;
 
 	public boolean isOnMission() {
 		return onMission;
@@ -151,63 +152,108 @@ public class User extends Agent{
 	/**
 	 * Creates random movement for the User.
 	 */
+	private Coordinate directionFactor = new Coordinate(UNKNOWN_DIRECTION_FACTOR, UNKNOWN_DIRECTION_FACTOR);
+	private static final int UNKNOWN_DIRECTION_FACTOR =2;
+	public void createRandomMovement2(SimState state)
+	{
+		Simulation simState = (Simulation)state;
+		int randomXStep = 1;
+		int randomYStep = 1;
+		if (directionFactor.x == UNKNOWN_DIRECTION_FACTOR && directionFactor.y == UNKNOWN_DIRECTION_FACTOR)
+		{
+			directionFactor.x = state.random.nextInt(3)-1;
+			directionFactor.y = state.random.nextInt(3)-1;
+		}
+		//retain the previous values if next step is permitted
+		Building bld = (Building)simState.getAgentByID(buildingID);
+		if(bld.checkStep( location.x + directionFactor.x*randomXStep, (location.y + directionFactor.y*randomYStep))){				
+			location.x = location.x + directionFactor.x*randomXStep;
+			location.y = location.y + directionFactor.y*randomYStep;
+		}
+		else{//Compute the next random values and proceed
+			do{
+				directionFactor.x = state.random.nextInt(3)-1;
+				directionFactor.y = state.random.nextInt(3)-1;
+			}while(!(bld.checkStep( location.x + directionFactor.x*randomXStep, (location.y + directionFactor.y*randomYStep))));
+			location.x = location.x + directionFactor.x*randomXStep;
+			location.y = location.y + directionFactor.y*randomYStep;
+		}
+		bld.updateAgentPos(this,location.x, location.y);				
+	}
 		
+	public int getRandomDirection(SimState state)
+	{
+		int randomDirection;
+		randomDirection = state.random.nextInt(2);
+		if (randomDirection == 0)
+		{
+			randomDirection = -1;
+		}
+		return randomDirection;
+	}
+	
 	public void createRandomMovement(SimState state)
 	{
 		//TODO: Create random event that is to be handled by the system
 		Simulation simState = (Simulation)state;		
 		int x = location.x;
 		int y = location.y;
-		//Move the user to a random location
-		//double randomX = (randomStepFactor*state.random.nextDouble()*1.0-0.5);
-		//double randomY = (randomStepFactor*state.random.nextDouble()*1.0-0.5);
-		int direction = state.random.nextInt(2);
-		if (direction == 0)
-		{
-			direction = 1;
-		}
-		else
-		{
-			direction = -1;
-		}
-		Building bld = (Building)simState.getAgentByID(buildingID);
-		
 		int randomX = 1;
 		int randomY = 1;
 		
-		
-		if(bld.checkStep((int) (x + direction*randomX), (int) (y))){
-			x = (int) (x + direction*randomX);			
-			location.x = x;						
+		if (directionFactor.x == UNKNOWN_DIRECTION_FACTOR && directionFactor.y == UNKNOWN_DIRECTION_FACTOR)
+		{
+			directionFactor.x = getRandomDirection(state);
+			directionFactor.y = getRandomDirection(state);
 		}
-		
-		else if (bld.checkStep((int) (x), (int) (y + direction*randomY))) {
-			y = (int) (y + direction*randomY);			
-			location.y = y;
-		}
-		
-		else if(bld.checkStep((int) (x - direction*randomX), (int) (y))){
-			x = (int) (x - direction*randomX);			
-			location.x = x;						
-		}
-		
-		else if(bld.checkStep((int) (x), (int) (y-direction*randomY))){
-			y = (int) (y - direction*randomY);			
-			location.y = y;						
-		}
-		
-		else if(bld.checkStep((int) (x + direction*randomX), (int) (y + direction*randomY))){
-			x = (int) (x + direction*randomX);
-			y = (int) (y + direction*randomY);
-			location.x = x;
-			location.y = y;
-		}
-		
-		else if(bld.checkStep((int) (x - direction*randomX), (int) (y - direction*randomY))){
-			x = (int) (x - direction*randomX);
-			y = (int) (y - direction*randomY);
-			location.x = x;
-			location.y = y;
+		//retain the previous values if next step is permitted
+		Building bld = (Building)simState.getAgentByID(buildingID);
+		if(bld.checkStep( location.x + directionFactor.x*randomX, (location.y + directionFactor.y*randomY))){				
+			location.x = location.x + directionFactor.x*randomX;
+			location.y = location.y + directionFactor.y*randomY;
+		}	
+		else{
+			directionFactor.x = getRandomDirection(state);
+			directionFactor.y = getRandomDirection(state);
+			
+			if(bld.checkStep((int) (x + directionFactor.x*randomX), (int) (y + directionFactor.y*randomY))){
+				x = (int) (x + directionFactor.x*randomX);
+				y = (int) (y + directionFactor.y*randomY);
+				location.x = x;
+				location.y = y;
+			}
+
+			else if(bld.checkStep((int) (x - directionFactor.x*randomX), (int) (y - directionFactor.y*randomY))){
+				x = (int) (x - directionFactor.x*randomX);
+				y = (int) (y - directionFactor.y*randomY);
+				location.x = x;
+				location.y = y;
+			}
+			
+			
+			if(bld.checkStep((int) (x + directionFactor.x*randomX), (int) (y))){
+				x = (int) (x + directionFactor.x*randomX);
+				directionFactor.y = 0;
+				location.x = x;						
+			}
+
+			else if (bld.checkStep((int) (x), (int) (y + directionFactor.y*randomY))) {
+				y = (int) (y + directionFactor.y*randomY);
+				directionFactor.x = 0;
+				location.y = y;
+			}
+
+			else if(bld.checkStep((int) (x - directionFactor.x*randomX), (int) (y))){
+				x = (int) (x - directionFactor.x*randomX);
+				directionFactor.y = 0;
+				location.x = x;						
+			}
+
+			else if(bld.checkStep((int) (x), (int) (y-directionFactor.y*randomY))){
+				y = (int) (y - directionFactor.y*randomY);
+				directionFactor.x = 0;
+				location.y = y;						
+			}		
 		}
 		//Update to the simulation window
 		bld.updateAgentPos(this,location.x, location.y);
@@ -235,7 +281,7 @@ public class User extends Agent{
 	{
 		//Move to a particular room
 		setOnMission(true);
-		destination = new Coordinate(23, 5);		
+		destination = new Coordinate(15, 14);		
 	}
 	
 	public void moveOnMission(SimState state)
@@ -243,6 +289,10 @@ public class User extends Agent{
 		//System.out.println("MoveOnMission Entered");
 		Int2D nextPoint;
 		if (destination == null)
+		{
+			return;
+		}
+		if (destination.x == location.x && destination.y == location.y)
 		{
 			return;
 		}
@@ -310,6 +360,22 @@ public class User extends Agent{
 	public void move(){
 		//TODO: Implement in different sub classes.
 	}	
+	
+	public boolean isTimeForActivity(SimState state)
+	{
+		Simulation simState = (Simulation)state;	
+		Building bld = (Building)simState.getAgentByID(buildingID);
+		//Start an event only during the first quarter of an hour
+		if (bld.getBuildingTime().getMinutes() < 15)
+		{
+			eventFinishTime = bld.getBuildingTime().getMinutes() + 15; 
+			return true;
+		}			
+		else 
+		{
+			return false;
+		}
+	}
 
 	/* 
 	 * @see edu.vt.ece5574.agents.Agent#step(SimState)
@@ -318,20 +384,28 @@ public class User extends Agent{
 	public void step(SimState state) {
 		super.step(state);
 		//System.out.println("User Step entered");
-		//Simulation simState = (Simulation)state;		
+		Simulation simState = (Simulation)state;
+		Building bld = (Building)simState.getAgentByID(buildingID);
 		if(events.isEmpty()){
 			//Modifications made just for now. Need to re-define the actions.
 			if (isOnMission()==false)
-			{
-				createMissionMovement(state);
-				moveOnMission(state);
+			{				
+				if (isTimeForActivity(state))
+				{
+					createMissionMovement(state);
+					moveOnMission(state);
+				}
+				else{
+					createRandomMovement(state);
+				}
 			}
 			else
 			{
-				createRandomMovement(state);
-			}
-			//if no event, create event for the robots to handle
-			//createRandomMovement(state);
+				if (bld.getBuildingTime().getMinutes()>eventFinishTime){
+					setOnMission(false);					
+				}
+				moveOnMission(state);
+			}		
 		}
 		else{
 			//in case of events react
