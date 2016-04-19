@@ -61,7 +61,7 @@ public class SimLogger {
 	}
 	
 	// Constructs a message for the text log
-	private String constructMessage(String name, String newStatus, String additionalInfo){
+	public String constructMessage(String name, String newStatus, String additionalInfo){
 		String message = name;
 		if(!newStatus.isEmpty() && !additionalInfo.isEmpty())
 			message += " changed status: " + newStatus + " (" + additionalInfo + ")" + newline;
@@ -69,12 +69,11 @@ public class SimLogger {
 			message += ": " + additionalInfo + newline;
 		else if(!newStatus.isEmpty())
 			message += " changed status: " + newStatus + newline;
-		return message;
-		
+		return message;		
 	}
 	
 	// Adds event to the text log
-	private void appendLogEvent(String name, String newStatus, String additionalInfo) {
+	public Boolean appendLogEvent(String name, String newStatus, String additionalInfo) {
 		try
 		{			
 		    String message = constructMessage(name, newStatus, additionalInfo);
@@ -86,22 +85,24 @@ public class SimLogger {
 		catch(IOException e)
 		{
 		    System.err.println("IOException: " + e.getMessage());
+		    return false;
 		}
+		return true;
 	}
 	
 	// Adds header to the tabular log
-	private void adjustLogHeader(String name, String newStatus) {
+	public Boolean adjustLogHeader(String name, String newStatus) {
 		String newline = System.getProperty("line.separator");
 		
 		try
 		{			
 		    FileWriter fw = new FileWriter(tabularLogName, true); 
 		    for(int i = 0; i < entities.size(); i++){
-		    	fw.write("----------------------");
+		    	fw.write("---------------------");
 		    }
-		    fw.write("--" + newline);
+		    fw.write("-" + newline);
 		    for(int i = 0; i < entities.size(); i++){
-		    	fw.write("| ");
+		    	fw.write("|");
 		    	for(int j = 0; j < 20; j++)
 		    	{
 		    		if(entities.get(i).name.length() > j)
@@ -110,27 +111,29 @@ public class SimLogger {
 		    			fw.write(" ");
 		    	}			    	
 		    }		
-		    fw.write(" |");
+		    fw.write("|");
 		    fw.write(newline);
 		    for(int i = 0; i < entities.size(); i++){
-		    	fw.write("----------------------");
+		    	fw.write("---------------------");
 		    }
-		    fw.write("--" + newline);
+		    fw.write("-" + newline);
 		    fw.close();
 		}
 		catch(IOException e)
 		{
 		    System.err.println("IOException: " + e.getMessage());
+		    return false;
 		}
+		return true;
 	}
 	
 	// Adds events to the tabular log
-	private void appendVisualLog(String name, String newStatus) {
+	public Boolean appendVisualLog(String name, String newStatus) {
 		try
 		{			
 		    FileWriter fw = new FileWriter(tabularLogName, true); 
 		    for(int i = 0; i < entities.size(); i++){
-		    	fw.write("| ");
+		    	fw.write("|");
 		    	for(int j = 0; j < 20; j++)
 		    	{
 		    		if(entities.get(i).status.length() > j)
@@ -139,13 +142,15 @@ public class SimLogger {
 		    			fw.write(" ");
 		    	}			    	
 		    }		
-		    fw.write(" |" + newline);
+		    fw.write("|" + newline);
 		    fw.close();
 		}
 		catch(IOException e)
 		{
 		    System.err.println("IOException: " + e.getMessage());
+		    return false;
 		}
+		return true;
 	}
 	
 	// Public log function, anything that you want to show up in the tabular log should be
