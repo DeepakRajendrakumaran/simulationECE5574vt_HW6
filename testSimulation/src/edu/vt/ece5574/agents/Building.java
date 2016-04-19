@@ -41,7 +41,7 @@ public class Building extends Agent{
 
 	private static final int ROOMWIDTH = 10;
 	private static final int ROOMHEIGHT = 10;
-	private static final int TIME_STEP = 60; //Step time by specified seconds 
+	private static final int TIME_STEP = 30; //Step time by specified seconds 
 	
 
 	private static final long serialVersionUID = 1;
@@ -357,6 +357,11 @@ public class Building extends Agent{
 		state.addAgent(oUser);
 		state.schedule.scheduleRepeating(oUser);
 		return oUser;		
+	}
+	
+	public ClockTime getBuildingTime()
+	{
+		return clockTime;
 	}
 	
 	//generates a unique random position unoccupied by any obstacle or other agent (this also includes sensors for now)
