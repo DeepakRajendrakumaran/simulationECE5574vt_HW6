@@ -52,6 +52,7 @@ public class Simulation extends SimState {
     		debug = Boolean.parseBoolean(config.getProp("debug")); //will be read in from config.  If it's a debug, we'll set seed manually
     		seed = Long.parseLong(config.getProp("seedValue"));
     		numBuildings = Integer.parseInt(config.getProp("numBuildings"));
+    		// ConnectStorage
     		System.out.println("Seed="+ seed + " Number Robots:" + numRobots);
 
     	}

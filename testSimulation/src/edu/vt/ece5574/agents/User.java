@@ -1,5 +1,5 @@
 package edu.vt.ece5574.agents;
-
+import edu.vt.ece5574.sim.StorageAPI;
 import edu.vt.ece5574.events.Event;
 import edu.vt.ece5574.events.FireEvent;
 import edu.vt.ece5574.events.IntruderEvent;
@@ -31,6 +31,9 @@ public class User extends Agent{
 	private boolean waterLeakNotification = false;
 	private boolean intruderNotification = false;
 	private boolean onMission = false;
+	private String APIID = "";
+	private StorageAPI userStorage;
+	
 	private Coordinate destination;
 	Stack<Int2D> routePath;
 
@@ -47,6 +50,8 @@ public class User extends Agent{
 		isAppUser = bAppUser;
 		location = new Coordinate(x,y);
 		
+		userStorage = new StorageAPI();
+		APIID = userStorage.addUser(buildingID, this);
 	}
 	
 	public User(SimState state, String userID, String buildingID, boolean bAppUser, int x, int y)
@@ -54,6 +59,9 @@ public class User extends Agent{
 		super(userID,buildingID);
 		isAppUser = bAppUser;
 		location = new Coordinate(x, y);
+		
+		userStorage = new StorageAPI();
+		APIID = userStorage.addUser(buildingID, this);
 	}
 
 	/**
@@ -64,11 +72,17 @@ public class User extends Agent{
 	public User(String usrID, String buildingID, boolean bAppUser){
 		super(usrID, buildingID);
 		isAppUser = bAppUser;
+		
+		userStorage = new StorageAPI();
+		APIID = userStorage.addUser(buildingID, this);
 	}
 
 	public User(String usrID, String buildingID){
 		super(usrID, buildingID);
 		isAppUser = false;
+		
+		userStorage = new StorageAPI();
+		APIID = userStorage.addUser(buildingID, this);
 	}	
 
 	/**
@@ -211,7 +225,10 @@ public class User extends Agent{
 		}
 		//Update to the simulation window
 		bld.updateAgentPos(this,location.x, location.y);
-		//TODO::Verify whether the storage is updated or not
+		//Verify whether the storage is updated or not
+		// Update position in storage API
+		userStorage.updUserPos(APIID, location.x, location.y);
+		
 		//simState.storage.updUserPos(super.getID(), location.x, location.y);	
 	}	
 	
@@ -266,6 +283,9 @@ public class User extends Agent{
 		location.x = nextPoint.getX();
 		location.y = nextPoint.getY();		
 		bld.updateAgentPos(this,location.x, location.y);
+		
+		// Update position in storage API
+		userStorage.updUserPos(APIID, location.x, location.y);
 	}
 	
 	private void clearAllNotification(){
