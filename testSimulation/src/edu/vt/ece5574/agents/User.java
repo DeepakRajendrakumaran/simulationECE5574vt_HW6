@@ -50,8 +50,11 @@ public class User extends Agent{
 		isAppUser = bAppUser;
 		location = new Coordinate(x,y);
 		
-		userStorage = new StorageAPI();
-		APIID = userStorage.addUser(buildingID, this);
+		if(state.connectStorage==true)
+		{
+			userStorage = state.storage;
+			APIID = userStorage.addUser(buildingID, this);
+		}
 	}
 	
 	public User(SimState state, String userID, String buildingID, boolean bAppUser, int x, int y)
@@ -60,8 +63,13 @@ public class User extends Agent{
 		isAppUser = bAppUser;
 		location = new Coordinate(x, y);
 		
-		userStorage = new StorageAPI();
-		APIID = userStorage.addUser(buildingID, this);
+		Simulation simState = (Simulation)state;
+		if(simState.connectStorage==true)
+		{
+			userStorage = new StorageAPI();
+			APIID = userStorage.addUser(buildingID, this);
+		}
+	
 	}
 
 	/**
@@ -227,7 +235,8 @@ public class User extends Agent{
 		bld.updateAgentPos(this,location.x, location.y);
 		//Verify whether the storage is updated or not
 		// Update position in storage API
-		userStorage.updUserPos(APIID, location.x, location.y);
+		if(simState.connectStorage==true)
+			userStorage.updUserPos(APIID, location.x, location.y);
 		
 		//simState.storage.updUserPos(super.getID(), location.x, location.y);	
 	}	
@@ -285,7 +294,8 @@ public class User extends Agent{
 		bld.updateAgentPos(this,location.x, location.y);
 		
 		// Update position in storage API
-		userStorage.updUserPos(APIID, location.x, location.y);
+		if(simState.connectStorage==true)
+			userStorage.updUserPos(APIID, location.x, location.y);
 	}
 	
 	private void clearAllNotification(){

@@ -28,6 +28,7 @@ public class Simulation extends SimState {
 
     public HashMap<String, Agent> agents; //map the agent id to the agent itself
 
+    public boolean connectStorage;
     public StorageAPI storage;
     public PushAPICaller pushOutgoing;
     public ReadNotifications pushIncoming;
@@ -52,7 +53,7 @@ public class Simulation extends SimState {
     		debug = Boolean.parseBoolean(config.getProp("debug")); //will be read in from config.  If it's a debug, we'll set seed manually
     		seed = Long.parseLong(config.getProp("seedValue"));
     		numBuildings = Integer.parseInt(config.getProp("numBuildings"));
-    		// ConnectStorage
+    		connectStorage = Boolean.parseBoolean(config.getProp("connectStorage")); // ConnectStorage
     		System.out.println("Seed="+ seed + " Number Robots:" + numRobots);
 
     	}
