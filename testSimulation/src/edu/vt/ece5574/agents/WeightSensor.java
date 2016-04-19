@@ -47,7 +47,7 @@ public class WeightSensor extends Sensor
         x = x_;
         y = y_;
         bld = (Building)state.getAgentByID(buildingID);
-        //temp = bld.getRoomTempById(bld.getRoomId(x,y));
     }
+
 
 }

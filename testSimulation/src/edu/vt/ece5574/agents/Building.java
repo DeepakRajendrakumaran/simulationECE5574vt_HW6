@@ -9,6 +9,7 @@ import java.util.Map;
 import edu.vt.ece5574.events.Event;
 import edu.vt.ece5574.events.FireEvent;
 import edu.vt.ece5574.roomconditions.Temperature;
+import edu.vt.ece5574.roomconditions.WaterLevel;
 import edu.vt.ece5574.roomconditions.Smoke;
 
 import edu.vt.ece5574.sim.Simulation;
@@ -41,8 +42,8 @@ public class Building extends Agent{
 
 	private static final int ROOMWIDTH = 10;
 	private static final int ROOMHEIGHT = 10;
-	private static final int TIME_STEP = 30; //Step time by specified seconds 
-	
+	private static final int TIME_STEP = 30; //Step time by specified seconds
+
 
 	private static final long serialVersionUID = 1;
 	protected int width;  // building width
@@ -62,6 +63,7 @@ public class Building extends Agent{
 	protected Simulation state;
 	protected Temperature hallTemperature;
 	protected Smoke hallSmoke;
+	protected WaterLevel hallWaterLevel;
 
 	public Building(String id){
 		super(id, id);
@@ -111,6 +113,7 @@ public class Building extends Agent{
 		}
 		hallTemperature = new Temperature(state);
 		hallSmoke = new Smoke(state);
+		hallWaterLevel = new WaterLevel(state);
 
 		//simple building layout for default use
 
@@ -154,12 +157,14 @@ public class Building extends Agent{
 
 			hallTemperature = new Temperature(state);
 			hallSmoke = new Smoke(state);
+			hallWaterLevel = new WaterLevel(state);
+
 			rooms = new LinkedList<Room>();
 			agentsInBld = new LinkedList<Agent>();
 			sensorsInBld = new LinkedList<Sensor>();
 			usersInBId = new LinkedList<User>();
 			clockTime = new ClockTime();
-				
+
 			for(int i = 0 ; i < width ; i++){
 				//tilemap[i][0] = 1; //1 indicates wall
 				//tilemap[i][height - 1] = 1;
@@ -221,6 +226,16 @@ public class Building extends Agent{
 			return (rooms.get(idx)).roomTemperature ;
 
 	}
+
+	public WaterLevel getRoomWaterLevelById(int idx) {
+
+	    if(idx == -1) {
+
+	        return hallWaterLevel;
+	    } else
+	        return (rooms.get(idx).roomWaterLevel);
+	}
+
 	public Smoke getRoomSmokeById(int idx){
 
 		if(idx == -1){
@@ -285,7 +300,7 @@ public class Building extends Agent{
 			//	tilemap[x + w - 1][j] = 1;
 				obstacles.field [x][j] = wall;
 				obstacles.field [x + w - 1][j] = wall;
-				
+
 			}
 			return true;
 		}
@@ -294,7 +309,7 @@ public class Building extends Agent{
 		}
 		//return true;
 	}
-	
+
 	//need to be changed when adding more functionality
 	public boolean checkStep(int x, int y){
 		if((x>=0) && (y>=0) && (x < width) && (y < height)){
@@ -331,7 +346,8 @@ public class Building extends Agent{
 	public Sensor createSensor(String type, int x, int y){
 
 		//Int2D pos = genStartPos();
-		Sensor newSensor = new TempSensor("0","0");
+		Sensor newSensor = null;
+		boolean repeating = true;
 
 		if(type == "temperature"){
 
@@ -341,32 +357,55 @@ public class Building extends Agent{
 			agentsInBld.add(newSensor);
 			state.addAgent(newSensor);
 			sensorsInBld.add(newSensor);
+
+		} else if(type == "waterleak") {
+
+		    newSensor = new WaterLeakSensor(String.valueOf(agentsInBld.size()), id, state, x, y);
+
+            agents.setObjectLocation(newSensor, x, y);
+            agentsInBld.add(newSensor);
+            state.addAgent(newSensor);
+            sensorsInBld.add(newSensor);
+
+		} else if(type == "weight") {
+
+		    newSensor = new WeightSensor(String.valueOf(agentsInBld.size()), id, state, x, y);
+
+            agents.setObjectLocation(newSensor, x, y);
+            agentsInBld.add(newSensor);
+            state.addAgent(newSensor);
+            sensorsInBld.add(newSensor);
+
+            repeating = false;
 		}
-		state.schedule.scheduleRepeating(newSensor);
+
+		if(repeating)
+		    state.schedule.scheduleRepeating(newSensor);
 
 		return newSensor;
-
 	}
-	
-	
-	public User createUser(){		
+
+
+	public User createUser(){
+
 		Int2D pos = genStartPos();
-		User oUser = new User(state, String.valueOf(agentsInBld.size()+1),id,true, pos.getX(),pos.getY());		
-		agents.setObjectLocation(oUser,pos.getX(),pos.getY());		
+		User oUser = new User(state, String.valueOf(agentsInBld.size()+1),id,true, pos.getX(),pos.getY());
+		agents.setObjectLocation(oUser,pos.getX(),pos.getY());
 		agentsInBld.add(oUser);
 		state.addAgent(oUser);
 		state.schedule.scheduleRepeating(oUser);
-		return oUser;		
+		return oUser;
 	}
-	
+
 	public ClockTime getBuildingTime()
 	{
 		return clockTime;
 	}
-	
+
 	//generates a unique random position unoccupied by any obstacle or other agent (this also includes sensors for now)
 	public Int2D genStartPos(){
-		int x , y ; 
+
+		int x , y ;
 		while(true){
 			x = state.random.nextInt()%width;
 			y = state.random.nextInt()%height;
@@ -393,7 +432,7 @@ public class Building extends Agent{
 
 	}
 
-	public  boolean updateAgentPos(Agent agnt,int x_loc,int y_loc){
+	public boolean updateAgentPos(Agent agnt,int x_loc,int y_loc){
 		//agents.setObjectPosition(agnt,x_loc, y_loc);
 		boolean ret_val = false;
 		synchronized (this) {
@@ -402,48 +441,42 @@ public class Building extends Agent{
 				//state.storage.updRobotPos(agnt.getID(), x_loc, y_loc));
 				ret_val = true;
 			}
-			
-
 	    }
 		return ret_val;
-		
 	}
-	
-	
 
-	
-	
 	public List<Coordinate> getRoute(Coordinate current,Coordinate destination){
 		List<Coordinate> myList = new ArrayList<Coordinate>();
 		return myList;
 		//Dummy - needs to be changed.
 
 	}
-	
-	
-	public void handleBuildingEvents(){
+
+
+	public void handleBuildingEvents()
+	{
 		while(events.size()!=0)
 		{
 			Event currentEvent = events.removeFirst();
 			if(currentEvent instanceof FireEvent){
 				FireEvent fireevent = (FireEvent)currentEvent;
 				if(fireevent.is_fireActive()){
-				(rooms.get((int)fireevent.getRoom())).roomTemperature.fireTempChange(fireevent.getSeverity());	
+				(rooms.get((int)fireevent.getRoom())).roomTemperature.fireTempChange(fireevent.getSeverity());
 				}
 			}
-					
+
 		}
 	}
-	
+
 	@Override
 	public void step(SimState arg0) {
 		// TODO Auto-generated method stub
 		super.step(arg0);
 
 		if(!events.isEmpty()){
-			handleBuildingEvents();		
+			handleBuildingEvents();
 		}
-		
+
 	    //Default temperature changes per step in each room :-
 		for(int idx = 0; idx < rooms.size(); idx++)
       	{
@@ -452,6 +485,7 @@ public class Building extends Agent{
       	}
       	hallTemperature.defTempChange();
       	hallSmoke.defSmokeChange();
+      	hallWaterLevel.defWaterLevelChange();
       	//add similar methods for Smoke change per step in each room:-
       	//Increment the simulation clock by TIME_STEP units.
       	clockTime.incrementTimeBySeconds(TIME_STEP);

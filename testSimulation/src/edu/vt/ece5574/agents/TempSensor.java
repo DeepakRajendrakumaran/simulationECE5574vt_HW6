@@ -12,15 +12,12 @@ import sim.engine.SimState;
 /*
 Status :-
 - at each step send temperatureValue to cloud storage.
-- handle Sensor events - works as though there's an event list addressed to this sensor. But right now it supports just 
+- handle Sensor events - works as though there's an event list addressed to this sensor. But right now it supports just
 fire event
-- Sensor ON-OFF Events need to be implemented. 
+- Sensor ON-OFF Events need to be implemented.
 */
 
 public class TempSensor extends Sensor {
-	
-
-
 
 	private static final long serialVersionUID = 1;
  	int x,y;
@@ -28,14 +25,16 @@ public class TempSensor extends Sensor {
  	Temperature temp;
 //	private boolean fireStatus;
 
- 	public TempSensor(String id_, String buildingID_){
+ 	public TempSensor(String id_, String buildingID_)
+ 	{
  		//dummy constructor kept to avoid conflicts for now.
 		super(id_,buildingID_,"temperature");
 
  	}
 
 	//Constructors for Sensor class :- for now only providing support for 1st Agent class constructor
-	public TempSensor(String id_, String buildingID_,SimState state_, int x_, int y_){
+	public TempSensor(String id_, String buildingID_,SimState state_, int x_, int y_)
+	{
 		super(id_,buildingID_,"temperature");
 		Simulation state = (Simulation)state_;
 		x = x_;
@@ -57,7 +56,7 @@ public class TempSensor extends Sensor {
 				FireEvent fireevent = (FireEvent)currentEvent;
 				// UPDATE :- MOVING FIRE TEMPERATURE CHANGE TO THE BUILDING
 				/*if(fireevent.is_fireActive()){
-					temp.fireTempChange(5); // using a default severity of 5. 
+					temp.fireTempChange(5); // using a default severity of 5.
 					//will have to request server logic to implement way of sending severity value.
 
 				}*/
@@ -67,26 +66,30 @@ public class TempSensor extends Sensor {
 				}
 				*/
 			}
-			
-				
+
+
 		}
 	}
 
-	public int getTempValue(){return temp.getTemperature();}
+	public int getTempValue()
+	{
+	    return temp.getTemperature();
+	}
 //send Temperature Data in each timestep to storage API.
 
 	@Override
-	public void step(SimState state) {
+	public void step(SimState state)
+	{
 		super.step(state);
 
-		//TO_DO 
+		//TO_DO
 		//SEND temperature value to cloud storage.
 		int temperatureValue = temp.getTemperature();
 		//
 
 		if(!events.isEmpty()){
-			handleSensorEvents();		
-		}		
+			handleSensorEvents();
+		}
 	}
 
 
