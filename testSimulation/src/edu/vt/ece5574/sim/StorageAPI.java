@@ -32,11 +32,56 @@ public class StorageAPI {
 		client = new ApiClient();
 		client.setBasePath(basePath);
 	}
+		
+	public User addUser(String buildingId, edu.vt.ece5574.agents.User userIn)
+	{
+		User user = new User();
+		ByTypeApi byTypeApi = new ByTypeApi(client);
+		ByIDApi byIdApi = new ByIDApi(client);
+		try
+		{
+			user = byTypeApi.controllersDefaultControllerUsersPost();
+			String userId = user.getId();
+			user.setXpos(int2BD(userIn.getLocation().x));
+			user.setYpos(int2BD(userIn.getLocation().y));
+			
+			User userToSend = new User();
+			userToSend.setBuildingId(null);//userToSendIn.getBuildingID());
+			userToSend.setFloor(null);
+			userToSend.setMessage(null);
+			userToSend.setOwner(null);
+			userToSend.setRoom(null);
+			userToSend.setXpos(int2BD(userIn.getLocation().x));
+			userToSend.setYpos(int2BD(userIn.getLocation().y));
+			userToSend.setId(null);
+			byIdApi.controllersDefaultControllerUsersUserIdPut(userId, userToSend);
+		}
+		catch(ApiException e)
+		{
+			System.out.println(e.getMessage());
+			return null;
+		}
+		return user;
+	}
+	
+	public boolean deleteUser(String userId)
+	{
+		ByIDApi api = new ByIDApi(client);
+		try
+		{
+			api.controllersDefaultControllerUsersUserIdDelete(userId);
+		}
+		catch(ApiException e)
+		{
+			System.out.println(e.getMessage());
+			return false;
+		}
+		return true;
+	}
 	
 	public boolean updSensorData ( String sensorId, String data )
 	{
 		Sensor sensor = new Sensor();
-		sensor.setId(sensorId);
 		sensor.setData(data);
 		
 		ByIDApi api = new ByIDApi(client);
@@ -80,6 +125,7 @@ public class StorageAPI {
 		ByIDApi api = new ByIDApi(client);
 		try
 		{
+			System.out.println(user.toString());
 			api.controllersDefaultControllerUsersUserIdPut(userID, user);
 		}
 		catch(ApiException e)
@@ -142,5 +188,7 @@ public class StorageAPI {
 	{
 		return new BigDecimal(i + "");
 	}
+
+
 
 }

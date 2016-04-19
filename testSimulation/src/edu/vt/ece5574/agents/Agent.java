@@ -116,6 +116,11 @@ public abstract class Agent extends OvalPortrayal2D implements Steppable {
 		if(messageWaiting){
         super.paint=Color.red;
 		myEvents=PushAPICaller.callPushSystemAPI(id);
+		for(int i=0;i<myEvents.size();i++){
+			System.out.println("Event:"+myEvents.get(i).getEventType());
+			System.out.println("AgentID:"+ this.id);
+			System.out.println("Event in building "+myEvents.get(i).getBuilding()+" Room:" + myEvents.get(i).getRoom());
+		}
 		messageWaiting=false;
 		}
 

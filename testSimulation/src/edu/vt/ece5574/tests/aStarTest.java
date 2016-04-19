@@ -10,21 +10,6 @@ import sim.field.grid.*;
 import sim.util.Int2D;
 
 
-//public static void main(String[] args) throws Exception
-//{       	
-//	int[][] something  = {{0,0,1,0,1},
-//	    				  {0,0,0,0,0},
-//				    	  {1,0,0,1,0},
-//				    	  {0,0,0,0,0},
-//				    	  {1,1,0,0,0}};
-//	IntGrid2D testGrid = new IntGrid2D(something);
-//	Stack<Int2D> testPath = findPath(0, 0, 4, 3, testGrid); 
-//	
-//	System.out.println("stack: " + testPath);
-//	Int2D a = testPath.pop();
-//	System.out.println("First: " + a);
-//}
-
 public class aStarTest {
 
 	int[][] something  = {{0,0,1,0,1},
@@ -47,6 +32,18 @@ public class aStarTest {
 		a = test.pop();
 		assertEquals(a.x, 1);
 		assertEquals(a.y, 1);
+		
+		a = test.pop();
+		assertEquals(a.x, 2);
+		assertEquals(a.y, 2);
+		
+		a = test.pop();
+		assertEquals(a.x, 3);
+		assertEquals(a.y, 3);
+		
+		a = test.pop();
+		assertEquals(a.x, 4);
+		assertEquals(a.y, 3);
 	}
 	
 }
