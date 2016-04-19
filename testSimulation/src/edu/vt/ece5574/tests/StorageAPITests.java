@@ -2,90 +2,91 @@ package edu.vt.ece5574.tests;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import edu.vt.ece5574.sim.StorageAPI;
+import io.swagger.client.ApiClient;
+import io.swagger.client.ApiException;
+import io.swagger.client.api.ByBuildingApi;
+import io.swagger.client.api.ByIDApi;
+import io.swagger.client.api.ByTypeApi;
 import io.swagger.client.model.Building;
+import io.swagger.client.model.Robot;
+import io.swagger.client.model.Sensor;
+import io.swagger.client.model.User;
 
 /**
  * Test cases for StorageAPI class
  * 
- * @author Vinit Gala 
+ * @author Owen Nugent
  * */
 
 public class StorageAPITests{
-	/*
-	@Test
-    public void testGet() throws URISyntaxException, IOException
-    {
-    	StorageAPI var = new StorageAPI();
-    	URI uri;
-		uri = new URI ( "http://localhost:8080/api/sensors/");
-		assertEquals( 200 , var.getRequest(uri).getStatusLine().getStatusCode() );
-    }
+	private static String baseURL;
+	private static ApiClient client;
+	private static StorageAPI storageAPIInterface;
 	
+	@BeforeClass
+	public static void init()
+	{
+		baseURL = new String ( "http://localhost:8080/api" );
+		client = new ApiClient();
+		client.setBasePath(baseURL);
+		storageAPIInterface = new StorageAPI();
+	}	
+
+	
+	//This test
 	@Test
-    public void testPost() throws JSONException, URISyntaxException, IOException
-    {
-    	StorageAPI var = new StorageAPI();
-    	URI uri;
-		uri = new URI ( "http://localhost:8080/api/sensors/");
-		JSONObject json = new JSONObject();
-		json.put("robot", "robot1");
-		json.put("from", "string");
-		json.put("buildingID", "building1");
-		json.put("room", 1);
-		json.put("ypos", 30);
-		json.put("xpos", 20);
-		json.put("id", "sensor1");
-		json.put("type", "fire");
-		json.put("floor", 0 );
-		assertEquals( 200 , var.postRequest(uri,json).getStatusLine().getStatusCode() );
-    }
-    
-	@Test
-    public void testPut() throws JSONException, URISyntaxException, IOException
-    {
-    	StorageAPI var = new StorageAPI();
-    	URI uri;
-		uri = new URI ( "http://localhost:8080/api/sensors/sensor1");
-		JSONObject json = new JSONObject();
-		json.put("ypos", 99);
-		json.put("xpos", 99);
-		assertEquals( 200 , var.putRequest(uri,json).getStatusLine().getStatusCode() );
-    }
-    
-    @Test
-    public void testDelete() throws URISyntaxException, IOException
-    {
-    	StorageAPI var = new StorageAPI();
-    	URI uri;
-		uri = new URI ( "http://localhost:8080/api/sensors/sensor1");
-		assertEquals( 200 , var.deleteRequest(uri).getStatusLine().getStatusCode() );
-    }
-	*/
+	public void updSensorData()
+	{
+		ByTypeApi byTypeApi = new ByTypeApi(client);
+		ByIDApi byIdApi = new ByIDApi(client);
+		try
+		{
+			Sensor sensor = byTypeApi.controllersDefaultControllerSensorsPost();
+			String sensorId = sensor.getId();
+			
+			String data = "Data chunk value is:" + Math.random();
+			
+			sensor.setData(data);
+			storageAPIInterface.updSensorData(sensorId, data);
+			Sensor updatedSensor = byIdApi.controllersDefaultControllerSensorsSensorIdGet(sensorId);
+
+			assertEquals("Assert that the sensor data has been updated", sensor.getData(), updatedSensor.getData());
+			assertEquals("Assert that the sensor buildingId is unchanged", sensor.getBuildingId(), updatedSensor.getBuildingId());
+			assertEquals("Assert that the sensor floor is unchanged", sensor.getFloor(), updatedSensor.getFloor());
+			assertEquals("Assert that the sensor room is unchanged", sensor.getRoom(), updatedSensor.getRoom());
+			assertEquals("Assert that the sensor Xpos is unchanged", sensor.getXpos(), updatedSensor.getXpos());
+			assertEquals("Assert that the sensor Ypos is unchanged", sensor.getYpos(), updatedSensor.getYpos());
+			assertEquals("Assert that the sensor type is unchanged", sensor.getType(), updatedSensor.getType());
+			
+			byTypeApi.controllersDefaultControllerSensorsDelete();
+		}
+		catch(ApiException e)
+		{
+			Assert.fail(e.getMessage());
+		}
+
+	}
 	
 	// This test will remove all the buildings from whatever aws storage is being used
 	@Test
 	public void addBuildingsByTypeGetByTypeDeleteById()
 	{
-		StorageAPI var = new StorageAPI();
-
-		var.DeleteBuildings();
+		storageAPIInterface.DeleteBuildings();
 		
-		String building_id_1 = var.AddBuilding();
-		String building_id_2 = var.AddBuilding();
-		String building_id_3 = var.AddBuilding();
+		String building_id_1 = storageAPIInterface.AddBuilding();
+		String building_id_2 = storageAPIInterface.AddBuilding();
+		String building_id_3 = storageAPIInterface.AddBuilding();
 		
-		List<Building> buildings = var.GetBuildings();
+		List<Building> buildings = storageAPIInterface.GetBuildings();
 		for(int i = 0; i < buildings.size(); i++)
 		{
 			assertTrue("Assert that the buildings stored correspond to the IDs sent",
@@ -94,25 +95,90 @@ public class StorageAPITests{
 					Objects.equals(buildings.get(i).getId(), building_id_3));
 		}
 		
-		String s = var.DeleteBuildings();
-		System.out.println(s + " in StorageAPITests.java method addBuildingsByTypeGetByTypeDeleteById");
+		storageAPIInterface.DeleteBuildings();
+		// maybe log that the buildings are deleted
 		
-		buildings = var.GetBuildings();
+		buildings = storageAPIInterface.GetBuildings();
 		assertTrue("Asserting that get buildings returns an empty list when it is empty", buildings.isEmpty());
-		
 	}
 	
     @Test
     public void updRobotPos()
-    {
-    	StorageAPI var = new StorageAPI();
-    	assertEquals( var.updRobotPos( "robot1", 10 , 20 ), true ) ;
+    {	
+		ByTypeApi byTypeApi = new ByTypeApi(client);
+		ByIDApi byIdApi = new ByIDApi(client);
+		ByBuildingApi byBuildingApi = new ByBuildingApi(client);
+		
+		try
+		{
+			Building building = byTypeApi.controllersDefaultControllerBuildingsPost();
+			Robot robot = byBuildingApi.controllersDefaultControllerBuildingsBuildingIdRobotsPost(building.getId());
+			String robotId = robot.getId();
+			byIdApi.controllersDefaultControllerRobotsRobotIdPut(robotId, robot);
+			System.out.println(robot.toString());
+			
+			int new_x = (int)(Math.random() * 100); 
+			int new_y = (int)(Math.random() * 100);
+			
+			BigDecimal new_xBD = new BigDecimal("" + new_x);
+			BigDecimal new_yBD = new BigDecimal("" + new_y);
+			
+			robot.setXpos(new_xBD);
+			robot.setYpos(new_yBD);
+						
+			storageAPIInterface.updRobotPos(robotId, new_x, new_y);
+			Robot updatedRobot = byIdApi.controllersDefaultControllerRobotsRobotIdGet(robotId);
+			assertEquals("Assert that the robot movement is unchanged", robot.getMovement(), updatedRobot.getMovement());
+			assertEquals("Assert that the robot buildingId is unchanged", robot.getBuildingId(), updatedRobot.getBuildingId());
+			assertEquals("Assert that the robot floor is unchanged", robot.getFloor(), updatedRobot.getFloor());
+			assertEquals("Assert that the robot room is unchanged", robot.getRoom(), updatedRobot.getRoom());
+			assertEquals("Assert that the robot Xpos is updated", robot.getXpos(), updatedRobot.getXpos());
+			assertEquals("Assert that the robot Ypos is updated", robot.getYpos(), updatedRobot.getYpos());
+			
+			byTypeApi.controllersDefaultControllerRobotsDelete();
+			byTypeApi.controllersDefaultControllerBuildingsDelete();
+			
+		}
+		catch(ApiException e)
+		{
+			Assert.fail(e.getMessage());
+		}	
     }
     
     @Test
     public void updUserPos()
-    {    	
-    	StorageAPI var = new StorageAPI();
-    	assertEquals( var.updUserPos( "user1", 10 , 20 ) ,  true ) ;
+    {   	
+		ByTypeApi byTypeApi = new ByTypeApi(client);
+		ByIDApi byIdApi = new ByIDApi(client);
+		try
+		{
+			User user = byTypeApi.controllersDefaultControllerUsersPost();
+			String userId = user.getId();
+			
+			int new_x = (int)(Math.random() * 100); 
+			int new_y = (int)(Math.random() * 100);
+			
+			BigDecimal new_xBD = new BigDecimal("" + new_x);
+			BigDecimal new_yBD = new BigDecimal("" + new_y);
+			
+			user.setXpos(new_xBD);
+			user.setYpos(new_yBD);
+
+			storageAPIInterface.updUserPos(userId, new_x, new_y);
+			User updatedUser = byIdApi.controllersDefaultControllerUsersUserIdGet(userId);
+			
+			assertEquals("Assert that the user buildingId is unchanged", user.getBuildingId(), updatedUser.getBuildingId());
+			assertEquals("Assert that the user floor is unchanged", user.getFloor(), updatedUser.getFloor());
+			assertEquals("Assert that the user room is unchanged", user.getRoom(), updatedUser.getRoom());
+			assertEquals("Assert that the user Xpos is updated", user.getXpos(), updatedUser.getXpos());
+			assertEquals("Assert that the user Ypos is updated", user.getYpos(), updatedUser.getYpos());
+			
+			byTypeApi.controllersDefaultControllerUsersDelete();
+
+		}
+		catch(ApiException e)
+		{
+			Assert.fail(e.getMessage());
+		}	
     }
 }
