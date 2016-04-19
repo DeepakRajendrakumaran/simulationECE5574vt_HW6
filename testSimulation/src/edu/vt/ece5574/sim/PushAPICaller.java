@@ -1,3 +1,8 @@
+/**
+ * @author Saket
+ */
+
+
 package edu.vt.ece5574.sim;
 
 import java.io.IOException;
@@ -29,11 +34,12 @@ public static ArrayList<Event> callPushSystemAPI(String userID) {
     CloseableHttpClient httpclient = HttpClients.createDefault();
     	ArrayList<Event> myEvents=new ArrayList<Event>();
     //String url="https://55izr0k3b7.execute-api.us-east-1.amazonaws.com/test/"+userID+"/messages/"+messageID;
-    String url="https://2bj29vv7f3.execute-api.us-east-1.amazonaws.com/testing/"+userID+"/messages/";
+    //String url="https://2bj29vv7f3.execute-api.us-east-1.amazonaws.com/testing/"+userID+"/messages/";
+     String url= "http://localhost:8080/"+ userID + "/messages";
     try {
     	
         HttpGet httpget = new HttpGet(url);
-        httpget.addHeader("x-api-key", "F2yxLdt3dNfvsncGwl0g8eCik3OxNej3LO9M2iHj");
+      //  httpget.addHeader("x-api-key", "F2yxLdt3dNfvsncGwl0g8eCik3OxNej3LO9M2iHj");
         HttpDelete httpdelete;
        
 
@@ -71,17 +77,19 @@ public static ArrayList<Event> callPushSystemAPI(String userID) {
         for (int i = 0; i < MessageArray.length(); i++) {
         	String msg_type="";
         	JSONObject fullBody=MessageArray.getJSONObject(i);
+        //	System.out.println(fullBody);
         	msg_type=getMessageType(fullBody);
-        	
+        	//System.out.println(msg_type);
         	//Create and initialize events based on message type
         	Event e=getEvent(msg_type,fullBody);
+        	//System.out.println(e.getEventType());
         	if(e!=null)
         		myEvents.add(e);
         	String messageId=fullBody.getString("messageId");
         	
         	//delete messages once events are added
         	httpdelete = new HttpDelete(url+messageId);
-      	  	httpdelete.addHeader("x-api-key", "F2yxLdt3dNfvsncGwl0g8eCik3OxNej3LO9M2iHj");
+      	  	//httpdelete.addHeader("x-api-key", "F2yxLdt3dNfvsncGwl0g8eCik3OxNej3LO9M2iHj");
       	  	
       	  	//Delete the message once read
       	    httpclient.execute(httpdelete, responseHandler);
@@ -107,9 +115,9 @@ public static ArrayList<Event> callPushSystemAPI(String userID) {
 public static String getMessageType(JSONObject fullBody){
 	String msg_type="";
 	try {
-		JSONObject message=fullBody.getJSONObject("message");
-		if(!message.isNull("msg_type"))
-       	 msg_type=message.getString("msg_type");
+		//JSONObject message=fullBody.getJSONObject("messageType");
+		//if(!message.isNull("msg_type"))
+       	 msg_type=fullBody.getString("messageType");
        	 msg_type=msg_type.toLowerCase();
        	 return msg_type;
 		
@@ -124,7 +132,9 @@ public static Event getEvent(String msg_type, JSONObject fullBody){
 	
 	if(msg_type.equals("fire")){
     	FireEvent fire = new FireEvent();
+    	//System.out.println("fire detected");
     	if(fire.init(fullBody.toString())){
+    		//System.out.print("sucess");
     		return fire;
     	}
     	return null;

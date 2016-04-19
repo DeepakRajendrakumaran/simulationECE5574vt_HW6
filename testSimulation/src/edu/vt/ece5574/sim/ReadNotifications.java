@@ -1,5 +1,5 @@
 
-//author: Saket Vishwasrao
+/**@author Saket
 /*
  This class implements methods to read push notification from email:simulation.ece5574@gmail.com
  The format of the email expected is as follows:
@@ -98,6 +98,7 @@ public class ReadNotifications implements Steppable {
 						if (subject[1] != null) {
 							// //delete message
 							if (sim.agentPushReceived(subject[1])) {
+								System.out.println("push notification received..querying back to server");
 								message[i].setFlag(Flags.Flag.DELETED, true); // delete message
 							}
 						}

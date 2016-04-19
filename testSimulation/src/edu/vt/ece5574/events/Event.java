@@ -9,6 +9,7 @@ import org.json.simple.parser.ParseException;
 /**
  * The abstract class  for all events to inherit
  * @author David Kindel
+ * @updated by Saket
  *
  */
 public abstract class Event {
@@ -40,16 +41,16 @@ public abstract class Event {
 
 			Object attr = json.get("messageId");
 			if(attr == null){
-				System.err.println("Missing required event/message ID.");
+				System.out.println("Missing required event/message ID.");
 				return false;
 			}
 			eventID = (String) attr;
 
-			json = (JSONObject) json.get("message");
+			//json = (JSONObject) json.get("message");
 			
-			attr = json.get("msg_type");
+			attr = json.get("messageType");
 			if(attr == null){
-				System.err.println("Missing required type.");
+				System.out.println("Missing required type.");
 				return false;
 			}
 			type = ((String) attr).toLowerCase();
@@ -66,8 +67,8 @@ public abstract class Event {
 					|| type.equals("new robot") || type.equals("new sensor") 
 					|| type.equals("new user"))
 			{
-				System.err.println("Missing required building ID for type " + type);
-				return false;
+				System.out.println("Missing required building ID for type " + type);
+				//return false;
 			}
 
 			attr = body.get("room");
@@ -80,8 +81,8 @@ public abstract class Event {
 					|| type.equals("new robot") || type.equals("new sensor") 
 					|| type.equals("new user"))
 			{
-				System.err.println("Missing required room number for type " + type);
-				return false;
+				System.out.println("Missing required room number for type " + type);
+				//return false;
 			}
 			
 			attr = body.get("floor");
@@ -94,8 +95,8 @@ public abstract class Event {
 					|| type.equals("new robot") || type.equals("new sensor") 
 					|| type.equals("new user"))
 			{
-				System.err.println("Missing required floor number for type " + type);
-				return false;
+				System.out.println("Missing required floor number for type " + type);
+				//return false;
 			}
 			
 			attr = body.get("xpos");
@@ -108,8 +109,8 @@ public abstract class Event {
 					|| type.equals("new robot") || type.equals("new sensor") 
 					|| type.equals("new user"))
 			{
-				System.err.println("Missing required x position for type " + type);
-				return false;
+				System.out.println("Missing required x position for type " + type);
+				//return false;
 			}
 			
 
@@ -123,8 +124,8 @@ public abstract class Event {
 					|| type.equals("new robot") || type.equals("new sensor") 
 					|| type.equals("new user"))
 			{
-				System.err.println("Missing required y position for type " + type);
-				return false;
+				System.out.println("Missing required y position for type " + type);
+				//return false;
 			}
 			
 			attr = body.get("severity");
@@ -135,8 +136,8 @@ public abstract class Event {
 					|| type.equals("gas leak") || type.equals("intruder") 
 					|| type.equals("move robot") || type.equals("update status"))
 			{
-				System.err.println("Missing required severity level for type " + type);
-				return false;
+				System.out.println("Missing required severity level for type " + type);
+				//return false;
 			}
 			
 			
@@ -151,13 +152,14 @@ public abstract class Event {
 			}
 			else if(type.equals("notification"))
 			{
-				System.err.println("Missing required message for type " + type);
-				return false;
+				System.out.println("Missing required message for type " + type);
+				//return false;
 			}
 			
 			
 		}catch (ParseException e){
-			System.err.println(e);
+			System.out.println(e);
+			System.out.println("found");
 			return false;
 		}
 		return true;
@@ -252,7 +254,7 @@ public abstract class Event {
 			
 			Object attr = json.get("msg_type");
 			if(attr == null){
-				System.err.println("Missing required type.");
+				System.out.println("Missing required type.");
 				return null;
 			}
 			else{
@@ -260,8 +262,8 @@ public abstract class Event {
 			}
 
 		}catch (ParseException e){
-			System.err.println("position: " + e.getPosition());
-			System.err.println(e);
+			System.out.println("position: " + e.getPosition());
+			System.out.println(e);
 		}
 		return null;
 	}
