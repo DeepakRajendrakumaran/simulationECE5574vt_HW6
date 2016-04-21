@@ -242,7 +242,7 @@ public class RobotAgentTest {
 		while(orig_temp_latest>orig_temp){
 			bld.step(sim);
 			orig_temp_latest= bld.getRoomTempById(bld. getRoomId(
-				rob.getX(),rob.getY())).getTemperature();
+				2,3)).getTemperature();
 		}
 	
 		assertEquals(orig_temp_latest,orig_temp);

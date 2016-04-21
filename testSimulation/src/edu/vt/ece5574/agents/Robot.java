@@ -480,15 +480,17 @@ public class Robot extends Agent {
 	 * @param state 
 	 * @param bld - building in which the robot is moving
 	 */
-	public void dealWithHouseEvents(SimState state,Building bld){
+	public boolean dealWithHouseEvents(SimState state,Building bld){
 		currEvent = events.removeFirst();
 		handlingEvent = true;		
+		boolean ret_val=false;
 		
-		
-		routePath = AStar.findPath(robot_loc.x, robot_loc.y, currEvent.getX_pos(), currEvent.getY_pos(), bld.getObstacles());
-		
-		
-		moveToEventSrc();
+		if(bld.checkStep(currEvent.getX_pos(), currEvent.getY_pos()) ){
+			routePath = AStar.findPath(robot_loc.x, robot_loc.y, currEvent.getX_pos(), currEvent.getY_pos(), bld.getObstacles());
+			moveToEventSrc();
+			ret_val = true;
+		}
+		return ret_val;
 		
 	}
 	
@@ -518,8 +520,14 @@ public class Robot extends Agent {
 		}
 		else{
 			//System.out.println("Starting: x="+robot_loc.x+"y="+robot_loc.y);
-			c_dir=Curr_Direction.Same;
-			dealWithHouseEvents(state, bld);
+			
+			if(dealWithHouseEvents(state, bld)){
+				c_dir=Curr_Direction.Same;
+			}
+			else{
+				//invalid event loc
+				normalMovement();
+			}
 		}
 		if(deadlockedsteps==2){
 			randomMovement();
