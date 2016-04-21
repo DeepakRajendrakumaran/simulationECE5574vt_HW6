@@ -481,11 +481,11 @@ public class Robot extends Agent {
 	 * @param bld - building in which the robot is moving
 	 */
 	public boolean dealWithHouseEvents(SimState state,Building bld){
-		currEvent = events.removeFirst();
-		handlingEvent = true;		
+		currEvent = events.removeFirst();				
 		boolean ret_val=false;
 		
 		if(bld.checkStep(currEvent.getX_pos(), currEvent.getY_pos()) ){
+			handlingEvent = true;
 			routePath = AStar.findPath(robot_loc.x, robot_loc.y, currEvent.getX_pos(), currEvent.getY_pos(), bld.getObstacles());
 			moveToEventSrc();
 			ret_val = true;
